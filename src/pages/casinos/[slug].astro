@@ -19,6 +19,7 @@ const { Content } = await render(post);
 const depositArr = d.depositMethods?.split("|").map((s) => s.trim()) ?? [];
 const withdrawalArr = d.withdrawalMethods?.split("|").map((s) => s.trim()) ?? [];
 const providersArr = d.gameProviders?.split("|").map((s) => s.trim()) ?? [];
+const currenciesArr = d.currencies?.split("|").map((s) => s.trim()) ?? [];
 
 const authorEntry = d.authorSlug
   ? await getEntry("authors", d.authorSlug)
@@ -76,10 +77,12 @@ const authorEntry = d.authorSlug
     <div class="key-facts">
       {d.licences && <div class="key-facts__item"><span class="key-facts__label">Licence</span><span>{d.licences}</span></div>}
       {d.established && <div class="key-facts__item"><span class="key-facts__label">Established</span><span>{d.established}</span></div>}
+      {d.company && <div class="key-facts__item"><span class="key-facts__label">Operator</span><span>{d.company}</span></div>}
       {d.game_count && <div class="key-facts__item"><span class="key-facts__label">Games</span><span>{d.game_count.toLocaleString()}+</span></div>}
       {d.cryptoWithdrawalSpeedMinutes && <div class="key-facts__item"><span class="key-facts__label">Crypto Payout</span><span>~{d.cryptoWithdrawalSpeedMinutes} min</span></div>}
       {d.min_deposit && <div class="key-facts__item"><span class="key-facts__label">Min Deposit</span><span>{d.min_deposit}</span></div>}
       {d.wagering && <div class="key-facts__item"><span class="key-facts__label">Wagering</span><span>{d.wagering}</span></div>}
+      {d.vip_program !== undefined && <div class="key-facts__item"><span class="key-facts__label">VIP Program</span><span>{d.vip_program ? "Yes" : "No"}</span></div>}
       {d.kycRequired !== undefined && <div class="key-facts__item"><span class="key-facts__label">KYC Required</span><span>{d.kycRequired ? "Yes" : "No"}</span></div>}
       {d.lastVerified && <div class="key-facts__item"><span class="key-facts__label">Last Verified</span><span>{d.lastVerified}</span></div>}
     </div>
@@ -184,6 +187,14 @@ const authorEntry = d.authorSlug
         <div class="sidebar-card">
           <h3 class="sidebar-card__title">Game Providers</h3>
           <ul class="method-list">{providersArr.map((p) => <li>{p}</li>)}</ul>
+        </div>
+      )}
+
+      <!-- Currencies -->
+      {currenciesArr.length > 0 && (
+        <div class="sidebar-card">
+          <h3 class="sidebar-card__title">Currencies</h3>
+          <ul class="method-list">{currenciesArr.map((c) => <li>{c}</li>)}</ul>
         </div>
       )}
 
