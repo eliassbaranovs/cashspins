@@ -47,10 +47,7 @@ const personSchema = JSON.stringify({
       "name": c,
     })),
   } : {}),
-  "sameAs": [
-    author.data.socialLinks?.twitter,
-    author.data.socialLinks?.linkedin,
-  ].filter(Boolean),
+  "sameAs": [],
   "url": `https://cashspins.online/team/${author.data.slug}/`,
   ...(author.data.avatar ? { "image": `https://cashspins.online${author.data.avatar}` } : {}),
 });
@@ -103,9 +100,11 @@ const personSchema = JSON.stringify({
           </div>
         )}
 
-        <p class="text-on-surface-variant leading-relaxed max-w-2xl">
-          {d.bio}
-        </p>
+        <div class="text-on-surface-variant leading-relaxed max-w-2xl space-y-3">
+          {d.bio.split('\n').filter((p: string) => p.trim()).map((paragraph: string) => (
+            <p>{paragraph}</p>
+          ))}
+        </div>
 
         {d.expertise && d.expertise.length > 0 && (
           <div class="flex flex-wrap items-center gap-2">
@@ -118,32 +117,6 @@ const personSchema = JSON.stringify({
           </div>
         )}
 
-        {d.socialLinks && (
-          <div class="flex gap-3 mt-1">
-            {d.socialLinks.twitter && (
-              <a
-                href={d.socialLinks.twitter}
-                class="text-sm text-on-surface-variant border border-outline-variant/30 px-3 py-1.5 rounded-md hover:text-primary hover:border-primary transition-colors"
-                rel="noopener noreferrer"
-                target="_blank"
-              >
-                <span class="material-symbols-outlined text-sm align-middle mr-1">open_in_new</span>
-                Twitter / X
-              </a>
-            )}
-            {d.socialLinks.linkedin && (
-              <a
-                href={d.socialLinks.linkedin}
-                class="text-sm text-on-surface-variant border border-outline-variant/30 px-3 py-1.5 rounded-md hover:text-primary hover:border-primary transition-colors"
-                rel="noopener noreferrer"
-                target="_blank"
-              >
-                <span class="material-symbols-outlined text-sm align-middle mr-1">open_in_new</span>
-                LinkedIn
-              </a>
-            )}
-          </div>
-        )}
       </div>
     </div>
 
