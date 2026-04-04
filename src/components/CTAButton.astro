@@ -2,34 +2,45 @@
 interface Props {
   href: string;
   label?: string;
-  variant?: "primary" | "outline";
+  variant?: "primary" | "secondary" | "tertiary";
+  size?: "sm" | "md" | "lg";
+  sponsored?: boolean;
+  ariaLabel?: string;
 }
-const { href, label = "Claim Bonus", variant = "primary" } = Astro.props;
+const {
+  href,
+  label = "Claim Bonus",
+  variant = "primary",
+  size = "md",
+  sponsored = false,
+  ariaLabel,
+} = Astro.props;
+
+const sizeClasses: Record<string, string> = {
+  sm: "px-4 py-2 text-sm",
+  md: "px-6 py-3",
+  lg: "px-10 py-5 text-lg",
+};
+
+const variantClasses: Record<string, string> = {
+  primary: `liquid-gradient text-on-primary-fixed-variant font-headline font-bold rounded-md shadow-lg shadow-primary/20 hover:scale-105 active:scale-95 transition-transform inline-flex items-center justify-center gap-2 ${sizeClasses[size]}`,
+  secondary: `border border-outline-variant/30 text-on-surface-variant hover:bg-surface-container-highest rounded-md transition-all inline-flex items-center justify-center gap-2 ${sizeClasses[size]}`,
+  tertiary: `text-primary font-bold hover:underline inline-flex items-center gap-1 transition-colors ${sizeClasses[size]}`,
+};
+
+const rel = sponsored ? "nofollow sponsored" : undefined;
+const target = sponsored ? "_blank" : undefined;
 ---
 
-<a href={href} class={`cta-btn cta-btn--${variant}`} rel="nofollow sponsored" target="_blank">
+<a
+  href={href}
+  class={variantClasses[variant]}
+  rel={rel}
+  target={target}
+  aria-label={ariaLabel}
+>
   {label}
+  {variant === "tertiary" && (
+    <span class="material-symbols-outlined text-sm">arrow_forward</span>
+  )}
 </a>
-
-<style>
-  .cta-btn {
-    display: inline-block;
-    padding: 0.65rem 1.4rem;
-    border-radius: 8px;
-    font-weight: 700;
-    font-size: 0.95rem;
-    text-decoration: none;
-    transition: opacity 0.15s, transform 0.1s;
-    cursor: pointer;
-    white-space: nowrap;
-  }
-  .cta-btn:hover { opacity: 0.88; transform: translateY(-1px); }
-  .cta-btn--primary {
-    background: linear-gradient(135deg, #f0c040, #e07b20);
-    color: #0b0b16;
-  }
-  .cta-btn--outline {
-    border: 2px solid #f0c040;
-    color: #f0c040;
-  }
-</style>

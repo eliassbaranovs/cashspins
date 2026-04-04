@@ -1,0 +1,435 @@
+---
+import { getCollection, render } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Breadcrumbs from "../../components/Breadcrumbs.astro";
+import RatingBadge from "../../components/RatingBadge.astro";
+import FAQSection from "../../components/FAQSection.astro";
+import CTAButton from "../../components/CTAButton.astro";
+import { buildCanonical, generateArticleSchema, generateFAQSchema } from "../../lib/seo";
+
+export async function getStaticPaths() {
+  let items: Awaited<ReturnType<typeof getCollection>> = [];
+  try {
+    items = await getCollection("comparisons");
+  } catch {
+    return [];
+  }
+  return items
+    .filter((c: any) => !c.data.draft)
+    .map((comp: any) => ({
+      params: { slug: comp.data.slug },
+      props: { comp },
+    }));
+}
+
+const { comp } = Astro.props;
+const d = comp.data;
+const { Content } = await render(comp);
+
+// Schema
+const articleSchema = generateArticleSchema({
+  title: d.title,
+  description: d.description,
+  image: d.image,
+  author: d.author,
+  publishedAt: d.publishedAt,
+  updatedAt: d.updatedAt,
+});
+
+const faqSchema =
+  d.faqs?.length ? generateFAQSchema(d.faqs) : undefined;
+
+const combinedSchema = faqSchema
+  ? `[${articleSchema},${faqSchema}]`
+  : articleSchema;
+
+const breadcrumbs = [
+  { label: "Home", href: "/" },
+  { label: "Comparisons", href: "/compare/" },
+  { label: d.title },
+];
+
+const formattedDate = d.publishedAt
+  ? new Date(d.publishedAt).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    })
+  : null;
+
+const updatedDate = d.updatedAt
+  ? new Date(d.updatedAt).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    })
+  : null;
+
+const isAWinner = d.winner && d.winner === d.casino_a_name;
+const isBWinner = d.winner && d.winner === d.casino_b_name;
+---
+
+<BaseLayout
+  title={d.title}
+  seoTitle={d.seoTitle}
+  description={d.description}
+  image={d.image}
+  imageAlt={d.imageAlt}
+  canonical={d.canonical || buildCanonical(`compare/${d.slug}`)}
+  robots={d.robots}
+  schemaJsonLd={combinedSchema}
+  noIndex={d.noIndex}
+  ogType="article"
+>
+  <div class="max-w-screen-2xl mx-auto px-4 md:px-8 pt-8 pb-20">
+    <!-- Breadcrumbs -->
+    <div class="mb-8">
+      <Breadcrumbs items={breadcrumbs} />
+    </div>
+
+    <!-- VS Hero -->
+    <header class="mb-12">
+      <div class="bg-surface-container-low rounded-xl p-6 md:p-10 ghost-border">
+        {/* Title */}
+        <h1 class="font-headline text-2xl md:text-4xl font-extrabold tracking-tight text-on-surface text-center mb-8 leading-tight">
+          {d.title}
+        </h1>
+
+        {/* Side-by-side cards */}
+        <div class="grid grid-cols-1 md:grid-cols-[1fr_auto_1fr] gap-6 md:gap-4 items-center">
+          {/* Casino A */}
+          <div
+            class={`bg-surface-container rounded-xl p-6 md:p-8 text-center transition-all ${
+              isAWinner
+                ? "ring-2 ring-primary shadow-lg shadow-primary/10"
+                : ""
+            }`}
+          >
+            {isAWinner && (
+              <div class="flex justify-center mb-3">
+                <span class="inline-flex items-center gap-1.5 bg-primary/10 text-primary text-xs font-bold px-3 py-1 rounded-full">
+                  <span
+                    class="material-symbols-outlined text-xs"
+                    style="font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;"
+                  >emoji_events</span>
+                  Winner
+                </span>
+              </div>
+            )}
+            {d.casino_a_logo && (
+              <img
+                src={d.casino_a_logo}
+                alt={d.casino_a_name}
+                class="w-20 h-20 mx-auto rounded-xl object-cover mb-4"
+                loading="eager"
+              />
+            )}
+            <h2 class="font-headline font-bold text-xl md:text-2xl text-on-surface mb-3">
+              {d.casino_a_name}
+            </h2>
+            {d.casino_a_rating !== undefined && (
+              <div class="flex justify-center mb-4">
+                <RatingBadge rating={d.casino_a_rating} size="lg" />
+              </div>
+            )}
+            {d.casino_a_slug && (
+              <a
+                href={`/casinos/${d.casino_a_slug}/`}
+                class="text-primary text-sm font-bold hover:underline inline-flex items-center gap-1"
+              >
+                Full Review
+                <span class="material-symbols-outlined text-sm">arrow_forward</span>
+              </a>
+            )}
+          </div>
+
+          {/* VS Divider */}
+          <div class="flex md:flex-col items-center justify-center gap-3">
+            <div class="hidden md:block w-px h-16 bg-outline-variant/30"></div>
+            <span class="inline-flex items-center justify-center w-14 h-14 rounded-full bg-secondary/10 text-secondary font-black text-lg font-headline shadow-inner">
+              VS
+            </span>
+            <div class="hidden md:block w-px h-16 bg-outline-variant/30"></div>
+          </div>
+
+          {/* Casino B */}
+          <div
+            class={`bg-surface-container rounded-xl p-6 md:p-8 text-center transition-all ${
+              isBWinner
+                ? "ring-2 ring-primary shadow-lg shadow-primary/10"
+                : ""
+            }`}
+          >
+            {isBWinner && (
+              <div class="flex justify-center mb-3">
+                <span class="inline-flex items-center gap-1.5 bg-primary/10 text-primary text-xs font-bold px-3 py-1 rounded-full">
+                  <span
+                    class="material-symbols-outlined text-xs"
+                    style="font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;"
+                  >emoji_events</span>
+                  Winner
+                </span>
+              </div>
+            )}
+            {d.casino_b_logo && (
+              <img
+                src={d.casino_b_logo}
+                alt={d.casino_b_name}
+                class="w-20 h-20 mx-auto rounded-xl object-cover mb-4"
+                loading="eager"
+              />
+            )}
+            <h2 class="font-headline font-bold text-xl md:text-2xl text-on-surface mb-3">
+              {d.casino_b_name}
+            </h2>
+            {d.casino_b_rating !== undefined && (
+              <div class="flex justify-center mb-4">
+                <RatingBadge rating={d.casino_b_rating} size="lg" />
+              </div>
+            )}
+            {d.casino_b_slug && (
+              <a
+                href={`/casinos/${d.casino_b_slug}/`}
+                class="text-primary text-sm font-bold hover:underline inline-flex items-center gap-1"
+              >
+                Full Review
+                <span class="material-symbols-outlined text-sm">arrow_forward</span>
+              </a>
+            )}
+          </div>
+        </div>
+
+        {/* Winner banner */}
+        {d.winner && (
+          <div class="mt-8 flex justify-center">
+            <div class="inline-flex items-center gap-2 bg-primary/10 text-primary font-headline font-bold px-6 py-3 rounded-full">
+              <span
+                class="material-symbols-outlined"
+                style="font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;"
+              >emoji_events</span>
+              Our Pick: {d.winner}
+            </div>
+          </div>
+        )}
+
+        {/* Meta line */}
+        <div class="flex items-center justify-center flex-wrap gap-3 text-sm font-label text-on-surface-variant mt-6">
+          {d.author && (
+            <span class="flex items-center gap-1.5">
+              <span class="material-symbols-outlined text-sm">person</span>
+              {d.author}
+            </span>
+          )}
+          {formattedDate && (
+            <>
+              <span class="w-1 h-1 rounded-full bg-outline-variant"></span>
+              <time datetime={d.publishedAt} class="flex items-center gap-1.5">
+                <span class="material-symbols-outlined text-sm">calendar_today</span>
+                {formattedDate}
+              </time>
+            </>
+          )}
+          {updatedDate && updatedDate !== formattedDate && (
+            <>
+              <span class="w-1 h-1 rounded-full bg-outline-variant"></span>
+              <time datetime={d.updatedAt} class="flex items-center gap-1.5">
+                <span class="material-symbols-outlined text-sm">update</span>
+                Updated {updatedDate}
+              </time>
+            </>
+          )}
+        </div>
+      </div>
+    </header>
+
+    {/* Quick Comparison Grid */}
+    {(d.casino_a_bonus || d.casino_b_bonus || d.casino_a_games || d.casino_b_games || d.casino_a_payout_speed || d.casino_b_payout_speed || d.casino_a_license || d.casino_b_license) && (
+      <section class="mb-12">
+        <h2 class="font-headline font-bold text-2xl text-on-surface mb-6">Quick Comparison</h2>
+        <div class="bg-surface-container-low rounded-xl overflow-hidden ghost-border">
+          <div class="grid grid-cols-3 text-sm font-label font-bold text-on-surface-variant bg-surface-container-high">
+            <div class="p-4 text-center">{d.casino_a_name}</div>
+            <div class="p-4 text-center">Category</div>
+            <div class="p-4 text-center">{d.casino_b_name}</div>
+          </div>
+
+          {d.casino_a_rating !== undefined && d.casino_b_rating !== undefined && (
+            <div class="grid grid-cols-3 border-t border-outline-variant/20">
+              <div class="p-4 text-center flex justify-center">
+                <RatingBadge rating={d.casino_a_rating} size="sm" />
+              </div>
+              <div class="p-4 text-center text-on-surface-variant text-sm font-semibold flex items-center justify-center">Rating</div>
+              <div class="p-4 text-center flex justify-center">
+                <RatingBadge rating={d.casino_b_rating} size="sm" />
+              </div>
+            </div>
+          )}
+
+          {(d.casino_a_bonus || d.casino_b_bonus) && (
+            <div class="grid grid-cols-3 border-t border-outline-variant/20">
+              <div class="p-4 text-center text-on-surface text-sm">{d.casino_a_bonus || "—"}</div>
+              <div class="p-4 text-center text-on-surface-variant text-sm font-semibold flex items-center justify-center">Welcome Bonus</div>
+              <div class="p-4 text-center text-on-surface text-sm">{d.casino_b_bonus || "—"}</div>
+            </div>
+          )}
+
+          {(d.casino_a_games || d.casino_b_games) && (
+            <div class="grid grid-cols-3 border-t border-outline-variant/20">
+              <div class="p-4 text-center text-on-surface text-sm">{d.casino_a_games || "—"}</div>
+              <div class="p-4 text-center text-on-surface-variant text-sm font-semibold flex items-center justify-center">Games</div>
+              <div class="p-4 text-center text-on-surface text-sm">{d.casino_b_games || "—"}</div>
+            </div>
+          )}
+
+          {(d.casino_a_payout_speed || d.casino_b_payout_speed) && (
+            <div class="grid grid-cols-3 border-t border-outline-variant/20">
+              <div class="p-4 text-center text-on-surface text-sm">{d.casino_a_payout_speed || "—"}</div>
+              <div class="p-4 text-center text-on-surface-variant text-sm font-semibold flex items-center justify-center">Payout Speed</div>
+              <div class="p-4 text-center text-on-surface text-sm">{d.casino_b_payout_speed || "—"}</div>
+            </div>
+          )}
+
+          {(d.casino_a_license || d.casino_b_license) && (
+            <div class="grid grid-cols-3 border-t border-outline-variant/20">
+              <div class="p-4 text-center text-on-surface text-sm">{d.casino_a_license || "—"}</div>
+              <div class="p-4 text-center text-on-surface-variant text-sm font-semibold flex items-center justify-center">License</div>
+              <div class="p-4 text-center text-on-surface text-sm">{d.casino_b_license || "—"}</div>
+            </div>
+          )}
+        </div>
+      </section>
+    )}
+
+    {/* Article Body */}
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-10">
+      <article class="lg:col-span-8">
+        <div id="comparison-content" class="prose prose-invert max-w-none mb-16
+          [&_h2]:font-headline [&_h2]:font-bold [&_h2]:text-2xl [&_h2]:text-on-surface [&_h2]:border-b [&_h2]:border-outline-variant/20 [&_h2]:pb-3 [&_h2]:mb-6 [&_h2]:mt-10 [&_h2]:scroll-mt-24
+          [&_h3]:font-headline [&_h3]:font-bold [&_h3]:text-xl [&_h3]:text-on-surface [&_h3]:scroll-mt-24
+          [&_a]:text-primary [&_a]:hover:underline
+          [&_strong]:text-on-surface
+          [&_p]:text-on-surface-variant [&_p]:leading-relaxed
+          [&_li]:text-on-surface-variant
+          [&_blockquote]:border-l-4 [&_blockquote]:border-primary/40 [&_blockquote]:pl-6 [&_blockquote]:italic [&_blockquote]:text-on-surface-variant
+          [&_table]:text-sm [&_th]:text-on-surface [&_td]:text-on-surface-variant
+          [&_code]:bg-surface-container-high [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:rounded [&_code]:text-sm
+        ">
+          <Content />
+        </div>
+
+        {/* FAQs */}
+        <div class="mb-12">
+          <FAQSection faqs={d.faqs} />
+        </div>
+
+        {/* Links to both casino reviews */}
+        {(d.casino_a_slug || d.casino_b_slug) && (
+          <section class="bg-surface-container-low rounded-xl p-6 md:p-8 ghost-border">
+            <h2 class="font-headline font-bold text-xl text-on-surface mb-6 text-center">Read the Full Reviews</h2>
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+              {d.casino_a_slug && (
+                <CTAButton
+                  href={`/casinos/${d.casino_a_slug}/`}
+                  label={`${d.casino_a_name} Review`}
+                  variant="secondary"
+                  size="md"
+                />
+              )}
+              {d.casino_b_slug && (
+                <CTAButton
+                  href={`/casinos/${d.casino_b_slug}/`}
+                  label={`${d.casino_b_name} Review`}
+                  variant="secondary"
+                  size="md"
+                />
+              )}
+            </div>
+          </section>
+        )}
+      </article>
+
+      <!-- Sidebar -->
+      <aside class="lg:col-span-4">
+        <div class="lg:sticky lg:top-24 space-y-8">
+          {/* Table of Contents */}
+          <div id="toc-container" class="bg-surface-container-low rounded-xl p-6 hidden">
+            <h3 class="font-headline font-bold text-lg text-on-surface mb-4 flex items-center gap-2">
+              <span class="material-symbols-outlined text-primary">toc</span>
+              In This Comparison
+            </h3>
+            <nav id="toc-nav" aria-label="Table of Contents">
+              <ol class="space-y-2 text-sm" id="toc-list"></ol>
+            </nav>
+          </div>
+
+          {/* Quick Verdict */}
+          {d.winner && (
+            <div class="bg-surface-container-low rounded-xl p-6">
+              <h3 class="font-headline font-bold text-lg text-on-surface mb-4 flex items-center gap-2">
+                <span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;">emoji_events</span>
+                Our Verdict
+              </h3>
+              <p class="text-on-surface-variant text-sm leading-relaxed mb-4">
+                After comparing all key factors, <strong class="text-on-surface">{d.winner}</strong> comes out on top in this matchup.
+              </p>
+              {(d.casino_a_slug || d.casino_b_slug) && (
+                <CTAButton
+                  href={`/casinos/${
+                    d.winner === d.casino_a_name ? d.casino_a_slug : d.casino_b_slug
+                  }/`}
+                  label={`Visit ${d.winner}`}
+                  variant="primary"
+                  size="sm"
+                />
+              )}
+            </div>
+          )}
+
+          {/* Responsible Gambling */}
+          <div class="bg-surface-container-low rounded-xl p-6 border-t-2 border-error/30">
+            <div class="flex items-center gap-2 mb-3">
+              <span class="material-symbols-outlined text-error text-xl">warning</span>
+              <h3 class="font-headline font-bold text-sm text-on-surface">Responsible Gambling</h3>
+            </div>
+            <p class="text-on-surface-variant text-xs leading-relaxed">
+              18+ only. Gambling can be addictive — please play responsibly.
+              <a href="https://www.begambleaware.org" rel="noopener noreferrer" target="_blank" class="text-primary hover:underline">GambleAware</a> ·
+              <a href="https://www.gamblingtherapy.org" rel="noopener noreferrer" target="_blank" class="text-primary hover:underline">Gambling Therapy</a>
+            </p>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </div>
+
+  {/* Client-side TOC generation */}
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const content = document.getElementById("comparison-content");
+      const tocContainer = document.getElementById("toc-container");
+      const tocList = document.getElementById("toc-list");
+      if (!content || !tocContainer || !tocList) return;
+
+      const headings = content.querySelectorAll("h2, h3");
+      if (headings.length < 2) return;
+
+      headings.forEach((heading, i) => {
+        const id = heading.id || `heading-${i}`;
+        heading.id = id;
+
+        const li = document.createElement("li");
+        const a = document.createElement("a");
+        a.href = `#${id}`;
+        a.textContent = heading.textContent || "";
+        a.className =
+          heading.tagName === "H3"
+            ? "block pl-4 text-on-surface-variant hover:text-primary transition-colors"
+            : "block font-semibold text-on-surface hover:text-primary transition-colors";
+        li.appendChild(a);
+        tocList.appendChild(li);
+      });
+
+      tocContainer.classList.remove("hidden");
+    });
+  </script>
+</BaseLayout>

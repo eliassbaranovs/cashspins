@@ -1,177 +1,121 @@
 ---
 import { getCollection } from "astro:content";
-import CTAButton from "../../components/CTAButton.astro";
-import Layout from "../../layouts/Layout.astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import BonusCard from "../../components/BonusCard.astro";
+import Breadcrumbs from "../../components/Breadcrumbs.astro";
 
-const allPosts = await getCollection("bonuses");
-const bonuses = allPosts
-  .filter((p) => !p.data.draft)
-  .sort((a, b) => (b.data.bonus_percentage ?? 0) - (a.data.bonus_percentage ?? 0));
+const allBonuses = await getCollection("bonuses");
+const bonuses = allBonuses
+  .filter((b) => !b.data.draft)
+  .sort(
+    (a, b) =>
+      new Date(b.data.publishedAt).getTime() -
+      new Date(a.data.publishedAt).getTime()
+  );
+
+const breadcrumbs = [
+  { label: "Home", href: "/" },
+  { label: "Bonuses" },
+];
 ---
 
-<Layout
-  title="Best Casino Bonuses 2026 — CasinoRank"
-  seoTitle="Best Casino Bonuses 2026 — Top Welcome Offers Compared"
-  description="Compare the best casino bonuses in 2026. Welcome bonuses, no-deposit free spins, cashback deals — ranked and reviewed by our experts."
+<BaseLayout
+  title="Best Casino Bonuses 2026 | CashSpins"
+  seoTitle="Best Casino Bonuses 2026 — Top Welcome Offers & Free Spins"
+  description="Compare the best casino bonuses in 2026. Welcome bonuses, no-deposit free spins, cashback deals — ranked and reviewed by CashSpins experts."
 >
-  <div class="container">
-    <div class="page-header">
-      <h1>Casino Bonuses</h1>
-      <p class="page-header__sub">
-        We review welcome bonuses, free spins, no-deposit offers, and reload deals.
-        Every bonus is independently verified by our team.
-      </p>
+  <div class="max-w-screen-2xl mx-auto px-8 pt-8 pb-20">
+    <!-- Breadcrumbs -->
+    <div class="mb-8">
+      <Breadcrumbs items={breadcrumbs} />
     </div>
 
-    <!-- Filter chips (static, visual only) -->
-    <div class="filter-chips" role="list" aria-label="Bonus type filters">
-      {["All", "Welcome", "No Deposit", "Free Spins", "Cashback", "Reload"].map((label) => (
-        <span class={`filter-chip${label === "All" ? " filter-chip--active" : ""}`}>{label}</span>
+    <!-- Header -->
+    <header class="mb-12">
+      <h1 class="font-headline text-4xl md:text-5xl font-extrabold tracking-tight text-on-surface mb-4">
+        Casino Bonuses & <span class="text-primary">Promotions</span>
+      </h1>
+      <p class="text-on-surface-variant text-lg max-w-2xl leading-relaxed">
+        Curated bonus offers verified by our editorial team. Welcome packages, free spins, no-deposit deals, and cashback promotions — all with transparent terms.
+      </p>
+    </header>
+
+    {/* Quick Stats */}
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
+      <div class="bg-surface-container-low rounded-xl p-5 text-center">
+        <span class="material-symbols-outlined text-primary text-2xl mb-2 block">redeem</span>
+        <span class="text-2xl font-headline font-bold text-on-surface block">{bonuses.length}</span>
+        <span class="text-xs text-on-surface-variant">Active Bonuses</span>
+      </div>
+      <div class="bg-surface-container-low rounded-xl p-5 text-center">
+        <span class="material-symbols-outlined text-secondary text-2xl mb-2 block">casino</span>
+        <span class="text-2xl font-headline font-bold text-on-surface block">{new Set(bonuses.map(b => b.data.casino || b.data.slug)).size}</span>
+        <span class="text-xs text-on-surface-variant">Casinos</span>
+      </div>
+      <div class="bg-surface-container-low rounded-xl p-5 text-center">
+        <span class="material-symbols-outlined text-tertiary text-2xl mb-2 block">new_releases</span>
+        <span class="text-2xl font-headline font-bold text-on-surface block">Daily</span>
+        <span class="text-xs text-on-surface-variant">Updated</span>
+      </div>
+      <div class="bg-surface-container-low rounded-xl p-5 text-center">
+        <span class="material-symbols-outlined text-primary text-2xl mb-2 block">verified</span>
+        <span class="text-2xl font-headline font-bold text-on-surface block">100%</span>
+        <span class="text-xs text-on-surface-variant">Verified Offers</span>
+      </div>
+    </div>
+
+    <!-- Filter Pills (static/visual) -->
+    <div class="flex flex-wrap gap-3 mb-10">
+      {["All", "Welcome", "No Deposit", "Free Spins", "Cashback", "Reload"].map((label, i) => (
+        <span
+          class={`px-5 py-2 rounded-full text-sm font-bold cursor-pointer transition-all ${
+            i === 0
+              ? "bg-primary text-on-primary shadow-md"
+              : "bg-surface-container-high text-on-surface-variant hover:text-on-surface"
+          }`}
+        >
+          {label}
+        </span>
       ))}
     </div>
 
-    <ul class="bonus-list" role="list">
-      {bonuses.map((post) => {
-        const d = post.data;
-        const primaryBonus = d.bonuses?.[0];
-        return (
-          <li class="bonus-card">
-            <!-- Casino identity -->
-            <div class="bonus-card__brand">
-              {d.logo
-                ? <img src={d.logo} alt={`${d.casinoName} logo`} width="56" height="56" class="bonus-card__logo" loading="lazy" />
-                : <div class="bonus-card__logo-placeholder">{(d.casinoName ?? "?")[0]}</div>
-              }
-              <span class="bonus-card__casino-name">{d.casinoName}</span>
-            </div>
-
-            <!-- Bonus headline -->
-            <div class="bonus-card__offer">
-              {d.bonus_percentage && (
-                <span class="bonus-card__pct">{d.bonus_percentage}%</span>
-              )}
-              <div>
-                <p class="bonus-card__title">{d.bonus_title}</p>
-                {d.wagering && <p class="bonus-card__terms">Wagering: {d.wagering}</p>}
-                {d.min_deposit && <p class="bonus-card__terms">Min deposit: {d.min_deposit}</p>}
-                {d.free_spins && <p class="bonus-card__terms">Free spins: {d.free_spins}</p>}
-              </div>
-            </div>
-
-            <!-- Bonus type chips -->
-            {d.bonuses?.length && (
-              <div class="bonus-card__types">
-                {d.bonuses.map((b) => (
-                  <span class="type-chip">{b.type}</span>
-                ))}
-              </div>
-            )}
-
-            <!-- Actions -->
-            <div class="bonus-card__actions">
-              {d.casino && <CTAButton href={`/go/${d.casino}/`} label="Claim Bonus" />}
-              <a href={`/bonus/${d.slug}/`} class="bonus-card__review-link">Full Review →</a>
-            </div>
-          </li>
-        );
-      })}
-    </ul>
-
-    {bonuses.length === 0 && (
-      <p class="empty-state">No bonuses published yet.</p>
+    <!-- Bonus List -->
+    {bonuses.length > 0 ? (
+      <div class="space-y-5 mb-16">
+        {bonuses.map((bonus) => (
+          <BonusCard bonus={bonus} />
+        ))}
+      </div>
+    ) : (
+      <div class="bg-surface-container-low rounded-xl p-12 text-center mb-16">
+        <span class="material-symbols-outlined text-outline text-4xl mb-4 block">redeem</span>
+        <p class="text-on-surface-variant text-lg">
+          No bonuses published yet. Check back soon for exclusive offers.
+        </p>
+      </div>
     )}
 
+    <!-- SEO Text Block -->
+    <section class="bg-surface-container-low rounded-xl p-8 md:p-12 mb-10">
+      <h2 class="font-headline font-bold text-2xl text-on-surface mb-4">How We Rate Casino Bonuses</h2>
+      <div class="text-on-surface-variant leading-relaxed space-y-4 max-w-3xl">
+        <p>
+          Every bonus listed on CashSpins is independently verified by our editorial team. We evaluate welcome packages, free spin offers, no-deposit bonuses, and reload promotions based on wagering requirements, maximum cashout limits, game restrictions, and overall value.
+        </p>
+        <p>
+          Our methodology prioritises transparency — we break down the fine print so you can make informed decisions. Bonuses are ranked by a combination of bonus value, fair wagering terms, and the reliability of the casino operator.
+        </p>
+        <p>
+          Always read the full terms and conditions before claiming any bonus. Gambling should be fun — if you feel it is becoming a problem, please visit <a href="https://www.begambleaware.org" rel="noopener noreferrer" target="_blank" class="text-primary hover:underline">GambleAware</a> or <a href="https://www.gamblingtherapy.org" rel="noopener noreferrer" target="_blank" class="text-primary hover:underline">Gambling Therapy</a>.
+        </p>
+      </div>
+    </section>
+
     <!-- Responsible gambling note -->
-    <div class="rg-note">
+    <div class="text-center text-xs text-on-surface-variant/60 py-4">
       <strong>18+ only.</strong> Bonus terms apply. Gambling can be addictive.
-      <a href="https://www.begambleaware.org" rel="noopener noreferrer" target="_blank">GambleAware</a> ·
-      <a href="https://www.gamblingtherapy.org" rel="noopener noreferrer" target="_blank">Gambling Therapy</a>
+      <a href="https://www.begambleaware.org" rel="noopener noreferrer" target="_blank" class="hover:text-primary transition-colors">GambleAware</a> ·
+      <a href="https://www.gamblingtherapy.org" rel="noopener noreferrer" target="_blank" class="hover:text-primary transition-colors">Gambling Therapy</a>
     </div>
   </div>
-</Layout>
-
-<style>
-  .page-header { padding: 2.5rem 0 1.5rem; }
-  .page-header__sub { color: #8a90b0; font-size: 1.05rem; max-width: 640px; }
-
-  .filter-chips {
-    display: flex; flex-wrap: wrap; gap: 0.5rem;
-    margin-bottom: 1.75rem;
-  }
-  .filter-chip {
-    padding: 0.35rem 0.85rem;
-    border: 1px solid rgba(255 255 255 / 0.1);
-    border-radius: 99px;
-    font-size: 0.82rem;
-    color: #8a90b0;
-    cursor: pointer;
-    transition: border-color 0.15s, color 0.15s;
-  }
-  .filter-chip--active {
-    border-color: #f0c040;
-    color: #f0c040;
-    background: rgba(240 192 64 / 0.08);
-  }
-
-  .bonus-list {
-    list-style: none; margin: 0; padding: 0;
-    display: flex; flex-direction: column; gap: 1rem;
-    padding-bottom: 2.5rem;
-  }
-
-  .bonus-card {
-    display: grid;
-    grid-template-columns: 130px 1fr auto auto;
-    gap: 1.25rem;
-    align-items: center;
-    background: #14141f;
-    border: 1px solid rgba(255 255 255 / 0.07);
-    border-radius: 12px;
-    padding: 1.1rem 1.4rem;
-    transition: border-color 0.15s;
-  }
-  .bonus-card:hover { border-color: rgba(240 192 64 / 0.35); }
-
-  .bonus-card__brand { display: flex; flex-direction: column; align-items: center; gap: 0.5rem; }
-  .bonus-card__logo { width: 56px; height: 56px; object-fit: contain; border-radius: 8px; }
-  .bonus-card__logo-placeholder {
-    width: 56px; height: 56px; border-radius: 8px;
-    background: rgba(255 255 255 / 0.06);
-    display: grid; place-items: center;
-    font-size: 1.5rem; font-weight: 800; color: #f0c040;
-  }
-  .bonus-card__casino-name { font-size: 0.8rem; color: #8a90b0; text-align: center; }
-
-  .bonus-card__offer { display: flex; align-items: flex-start; gap: 1rem; }
-  .bonus-card__pct {
-    font-size: 2.2rem; font-weight: 900; line-height: 1;
-    background: linear-gradient(135deg, #f0c040, #e07b20);
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-    white-space: nowrap;
-  }
-  .bonus-card__title { margin: 0 0 0.3rem; font-size: 0.95rem; color: #eef0fa; font-weight: 600; }
-  .bonus-card__terms { margin: 0; font-size: 0.8rem; color: #7a80a0; }
-
-  .bonus-card__types { display: flex; flex-wrap: wrap; gap: 0.35rem; align-items: flex-start; }
-  .type-chip { padding: 0.2rem 0.55rem; background: rgba(255 255 255 / 0.06); border-radius: 4px; font-size: 0.72rem; color: #8a90b0; text-transform: capitalize; }
-
-  .bonus-card__actions { display: flex; flex-direction: column; align-items: flex-end; gap: 0.5rem; min-width: 130px; }
-  .bonus-card__review-link { font-size: 0.82rem; color: #7a80a0; text-decoration: none; white-space: nowrap; }
-  .bonus-card__review-link:hover { color: #f0c040; }
-
-  .rg-note { font-size: 0.8rem; color: #585d7a; padding: 1.25rem 0 2rem; text-align: center; }
-  .rg-note a { color: #585d7a; }
-  .rg-note a:hover { color: #9095b0; }
-  .empty-state { color: #585d7a; text-align: center; padding: 3rem 0; }
-
-  @media (max-width: 860px) {
-    .bonus-card { grid-template-columns: 1fr 1fr; grid-template-rows: auto auto; }
-    .bonus-card__brand { flex-direction: row; justify-content: flex-start; }
-    .bonus-card__types { grid-column: 1 / -1; }
-    .bonus-card__actions { grid-column: 1 / -1; flex-direction: row; justify-content: space-between; align-items: center; }
-  }
-  @media (max-width: 540px) {
-    .bonus-card { grid-template-columns: 1fr; }
-    .bonus-card__offer { flex-direction: column; gap: 0.4rem; }
-  }
-</style>
+</BaseLayout>

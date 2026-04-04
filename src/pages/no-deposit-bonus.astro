@@ -1,0 +1,162 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Breadcrumbs from "../components/Breadcrumbs.astro";
+import CasinoCard from "../components/CasinoCard.astro";
+import FAQSection from "../components/FAQSection.astro";
+
+const allCasinos = await getCollection("casinos");
+const filtered = allCasinos
+  .filter(
+    (c) =>
+      !c.data.draft &&
+      c.data.categories?.includes("no-deposit-bonus")
+  )
+  .sort((a, b) => (b.data.ourRating ?? 0) - (a.data.ourRating ?? 0));
+
+const hasFiltered = filtered.length > 0;
+const casinos = hasFiltered
+  ? filtered
+  : allCasinos.filter((c) => !c.data.draft).sort((a, b) => (b.data.ourRating ?? 0) - (a.data.ourRating ?? 0));
+
+const itemListSchema = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "ItemList",
+  "name": "No Deposit Casino Bonuses 2026",
+  "numberOfItems": casinos.length,
+  "itemListElement": casinos.slice(0, 10).map((c: any, i: number) => ({
+    "@type": "ListItem",
+    "position": i + 1,
+    "name": c.data.casinoName ?? c.data.title,
+    "url": `https://cashspins.online/casinos/${c.data.slug}/`,
+  })),
+});
+
+const faqs = [
+  {
+    question: "What is a no deposit bonus?",
+    answer: "A no deposit bonus is a casino promotion that gives you free funds or free spins simply for creating an account — no deposit required. It lets you try real-money games with zero financial risk, though winnings are usually subject to wagering requirements before you can withdraw."
+  },
+  {
+    question: "Can I actually win real money with a no deposit bonus?",
+    answer: "Yes, you can win real money. However, most no deposit bonuses come with wagering requirements (typically 30x-60x) and maximum cashout limits. This means you need to wager the bonus amount a certain number of times before withdrawing, and there may be a cap on how much you can cash out."
+  },
+  {
+    question: "Are no deposit bonuses really free?",
+    answer: "They are free in the sense that you do not need to deposit any money to claim them. However, they come with terms and conditions including wagering requirements, game restrictions, time limits, and maximum withdrawal caps. Always read the full bonus terms before claiming."
+  },
+  {
+    question: "How do I claim a no deposit bonus?",
+    answer: "Typically, you register a new account at the casino, and the bonus is credited automatically or after entering a bonus code. Some casinos require email or phone verification before the bonus is applied. Follow the specific instructions on the casino's promotions page."
+  },
+  {
+    question: "Can I claim multiple no deposit bonuses?",
+    answer: "You can claim no deposit bonuses at different casinos, but each casino typically limits the offer to one per person, household, or IP address. Attempting to create multiple accounts at the same casino to claim the bonus more than once violates terms of service and will result in account closure."
+  },
+];
+---
+
+<BaseLayout
+  title="No Deposit Casino Bonuses 2026 | CashSpins"
+  description="Find the best no deposit casino bonuses in 2026. Free spins and bonus cash with no deposit required — verified and reviewed by our experts."
+  schemaJsonLd={itemListSchema}
+>
+  <div class="max-w-7xl mx-auto px-8 py-12">
+    <Breadcrumbs items={[
+      { label: "Home", href: "/" },
+      { label: "No Deposit Bonuses" },
+    ]} />
+
+    <header class="mt-8 mb-12">
+      <h1 class="font-headline font-extrabold text-4xl md:text-5xl text-on-surface mb-6">
+        No Deposit Bonuses
+      </h1>
+      <div class="max-w-3xl space-y-4 text-on-surface-variant leading-relaxed">
+        <p>
+          No deposit bonuses let you test a casino with real money at zero risk. Whether it is free
+          spins on a popular slot or a small cash bonus credited to your account on sign-up, these
+          offers are the easiest way to explore a new platform before committing your own funds.
+        </p>
+        <p>
+          Our team verifies every no deposit offer listed here: we check wagering requirements,
+          maximum cashout limits, eligible games, and expiry dates. We only list bonuses that are
+          currently active and have terms we consider fair.
+        </p>
+      </div>
+    </header>
+
+    {!hasFiltered && (
+      <div class="bg-surface-container-low rounded-xl p-6 mb-8 flex items-start gap-3">
+        <span class="material-symbols-outlined text-secondary shrink-0">info</span>
+        <p class="text-on-surface-variant text-sm leading-relaxed">
+          We are currently expanding our no deposit bonus listings. In the meantime, here are our
+          top-rated casinos — many of which run periodic no deposit promotions. Check each review
+          for the latest bonus offers.
+        </p>
+      </div>
+    )}
+
+    {/* Casino List */}
+    <section class="space-y-6 mb-16">
+      {casinos.map((casino) => (
+        <CasinoCard casino={casino} />
+      ))}
+    </section>
+
+    {/* How We Rate */}
+    <section class="bg-surface-container-low rounded-xl p-8 md:p-10 mb-16">
+      <h2 class="font-headline font-bold text-2xl text-on-surface mb-6">
+        <span class="material-symbols-outlined text-primary align-middle mr-2">fact_check</span>
+        How We Evaluate No Deposit Bonuses
+      </h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+          <h3 class="font-headline font-semibold text-on-surface mb-2">Wagering Requirements</h3>
+          <p class="text-on-surface-variant text-sm leading-relaxed">
+            Lower wagering means a better chance of actually withdrawing winnings. We flag any bonus with requirements above 50x as high.
+          </p>
+        </div>
+        <div>
+          <h3 class="font-headline font-semibold text-on-surface mb-2">Maximum Cashout</h3>
+          <p class="text-on-surface-variant text-sm leading-relaxed">
+            Many no deposit bonuses cap how much you can withdraw. We always disclose the max cashout so there are no surprises.
+          </p>
+        </div>
+        <div>
+          <h3 class="font-headline font-semibold text-on-surface mb-2">Eligible Games</h3>
+          <p class="text-on-surface-variant text-sm leading-relaxed">
+            Some bonuses are restricted to specific slots or game types. We list which games qualify so you can plan your play.
+          </p>
+        </div>
+        <div>
+          <h3 class="font-headline font-semibold text-on-surface mb-2">Expiry & Time Limits</h3>
+          <p class="text-on-surface-variant text-sm leading-relaxed">
+            No deposit bonuses typically expire within 7-30 days. We track expiry dates and flag short windows.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    {/* Internal Links */}
+    <section class="mb-16">
+      <h2 class="font-headline font-bold text-2xl text-on-surface mb-6">More Casino Guides</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <a href="/best-online-casinos/" class="flex items-center gap-3 bg-surface-container-low rounded-lg px-5 py-4 ghost-border hover:border-primary/30 transition-all">
+          <span class="material-symbols-outlined text-primary">star</span>
+          <span class="text-on-surface font-medium">Best Online Casinos</span>
+        </a>
+        <a href="/crypto-casinos/" class="flex items-center gap-3 bg-surface-container-low rounded-lg px-5 py-4 ghost-border hover:border-primary/30 transition-all">
+          <span class="material-symbols-outlined text-primary">currency_bitcoin</span>
+          <span class="text-on-surface font-medium">Crypto Casinos</span>
+        </a>
+        <a href="/new-casinos/" class="flex items-center gap-3 bg-surface-container-low rounded-lg px-5 py-4 ghost-border hover:border-primary/30 transition-all">
+          <span class="material-symbols-outlined text-primary">new_releases</span>
+          <span class="text-on-surface font-medium">New Casinos 2026</span>
+        </a>
+      </div>
+    </section>
+
+    {/* FAQ */}
+    <FAQSection faqs={faqs} />
+  </div>
+</BaseLayout>

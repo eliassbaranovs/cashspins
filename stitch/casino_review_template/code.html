@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-tertiary-fixed": "#221b00",
+                        "surface-container-highest": "#353534",
+                        "on-secondary-container": "#342800",
+                        "on-secondary-fixed-variant": "#574500",
+                        "on-surface-variant": "#d0c5af",
+                        "on-error-container": "#ffdad6",
+                        "inverse-surface": "#e5e2e1",
+                        "surface-container-high": "#2a2a2a",
+                        "surface-container-low": "#1c1b1b",
+                        "tertiary": "#f2cc00",
+                        "on-primary-container": "#00511d",
+                        "tertiary-fixed": "#ffe16d",
+                        "surface": "#131313",
+                        "tertiary-fixed-dim": "#e9c400",
+                        "surface-dim": "#131313",
+                        "background": "#131313",
+                        "surface-bright": "#393939",
+                        "error": "#ffb4ab",
+                        "surface-container-lowest": "#0e0e0e",
+                        "inverse-primary": "#006e2a",
+                        "on-background": "#e5e2e1",
+                        "secondary": "#e9c349",
+                        "secondary-fixed": "#ffe088",
+                        "surface-tint": "#3ce36a",
+                        "secondary-container": "#af8d11",
+                        "primary-fixed": "#69ff87",
+                        "on-surface": "#e5e2e1",
+                        "on-tertiary-fixed-variant": "#544600",
+                        "on-error": "#690005",
+                        "surface-variant": "#353534",
+                        "on-secondary-fixed": "#241a00",
+                        "primary": "#47eb71",
+                        "outline": "#99907c",
+                        "on-tertiary-container": "#534400",
+                        "on-primary-fixed-variant": "#00531e",
+                        "inverse-on-surface": "#313030",
+                        "on-tertiary": "#3a3000",
+                        "on-primary-fixed": "#002108",
+                        "primary-fixed-dim": "#3ce36a",
+                        "on-secondary": "#3c2f00",
+                        "outline-variant": "#4d4635",
+                        "on-primary": "#003912",
+                        "tertiary-container": "#d2b100",
+                        "primary-container": "#17ce58",
+                        "error-container": "#93000a",
+                        "surface-container": "#201f1f",
+                        "secondary-fixed-dim": "#e9c349"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "fontFamily": {
+                        "headline": ["Manrope"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            background-color: #131313;
+            color: #e5e2e1;
+            font-family: 'Inter', sans-serif;
+        }
+        .glass-header {
+            background: rgba(19, 19, 19, 0.6);
+            backdrop-filter: blur(12px);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background">
+<!-- Top Navigation Bar -->
+<nav class="fixed top-0 w-full z-50 bg-[#131313]/60 backdrop-blur-md shadow-[0_20px_40px_rgba(229,226,225,0.04)]">
+<div class="flex justify-between items-center px-8 h-20 w-full max-w-screen-2xl mx-auto">
+<div class="text-2xl font-bold tracking-tighter text-[#D4AF37] font-['Manrope']">ELITE CURATOR</div>
+<div class="hidden md:flex gap-8 items-center">
+<a class="font-['Manrope'] font-semibold tracking-tight text-[#47EB71] border-b-2 border-[#47EB71] pb-1" href="#">Casinos</a>
+<a class="font-['Manrope'] font-semibold tracking-tight text-[#D0C5AF] hover:text-[#E5E2E1] transition-colors" href="#">Bonuses</a>
+<a class="font-['Manrope'] font-semibold tracking-tight text-[#D0C5AF] hover:text-[#E5E2E1] transition-colors" href="#">News</a>
+<a class="font-['Manrope'] font-semibold tracking-tight text-[#D0C5AF] hover:text-[#E5E2E1] transition-colors" href="#">Guides</a>
+</div>
+<div class="flex items-center gap-6">
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer hover:text-primary transition-colors">search</span>
+<button class="bg-gradient-to-br from-primary to-primary-container text-on-primary-fixed font-bold px-6 py-2.5 rounded shadow-lg active:scale-95 transition-transform">Join VIP</button>
+</div>
+</div>
+</nav>
+<main class="pt-24 pb-20 max-w-screen-2xl mx-auto px-8">
+<!-- Breadcrumbs -->
+<nav class="flex items-center gap-2 mb-8 text-sm font-medium text-on-surface-variant">
+<a class="hover:text-secondary transition-colors" href="#">Home</a>
+<span class="material-symbols-outlined text-xs">chevron_right</span>
+<a class="hover:text-secondary transition-colors" href="#">Casino Reviews</a>
+<span class="material-symbols-outlined text-xs">chevron_right</span>
+<span class="text-on-surface">Royal Obsidian Casino</span>
+</nav>
+<!-- Hero Header Section -->
+<header class="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-16">
+<div class="lg:col-span-8 flex flex-col justify-center">
+<div class="flex items-center gap-6 mb-6">
+<div class="w-24 h-24 bg-surface-container-high rounded-xl flex items-center justify-center p-4 shadow-xl border border-outline-variant/20 overflow-hidden">
+<img alt="Casino Logo" class="w-full h-full object-contain" data-alt="abstract geometric gold crown logo icon on dark background with premium metallic finish" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDq0dXvhNeTDxbq6PRpOf0RpbJmh5WxkM-1tQwszF1txpp8U5YMepIIk__LDOf5tgecfCToF9ljw5hyOZp7RkM2LoEwU1UkBKcZGDKFYUBZ9t2iUmMNAypE_nQQ10GK51gnUoqDl2Mb-T7Vu0XTXhFOav2P7tF0SHGoXwjJmcaYyMEouDgAH3QCIrCx9szftiyAPw8hhb_TX1cey5HrQgeFRkRTNIZSnVSPnL-HEnwLMSYgHEjbgkWpY1PJpVH3WxwUVMSOl-7epgHu"/>
+</div>
+<div>
+<div class="flex items-center gap-3 mb-2">
+<span class="bg-secondary-container/20 text-secondary text-[10px] font-bold tracking-widest uppercase px-2 py-0.5 rounded-sm flex items-center gap-1">
+<span class="material-symbols-outlined text-[12px]" style="font-variation-settings: 'FILL' 1;">verified</span> Verified Expert Choice
+                            </span>
+</div>
+<h1 class="text-5xl md:text-6xl font-extrabold font-headline tracking-tighter text-on-surface mb-2">Royal Obsidian Casino</h1>
+<div class="flex items-center gap-4 text-on-surface-variant">
+<div class="flex gap-0.5 text-tertiary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">star_half</span>
+</div>
+<span class="font-semibold text-lg">4.8 / 5.0</span>
+<span class="text-outline-variant">|</span>
+<span>Based on 1,240+ player votes</span>
+</div>
+</div>
+</div>
+</div>
+<div class="lg:col-span-4">
+<div class="bg-surface-container-low rounded-xl p-8 relative overflow-hidden flex flex-col items-center text-center shadow-2xl group transition-all duration-500 hover:bg-surface-container">
+<div class="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-50 pointer-events-none"></div>
+<p class="text-on-surface-variant font-label font-bold tracking-widest uppercase text-xs mb-4">Exclusive Welcome Bonus</p>
+<h2 class="text-5xl font-extrabold font-headline tracking-tighter text-primary mb-2">$5,000 + 250 FS</h2>
+<p class="text-on-surface-variant text-sm mb-8 leading-relaxed max-w-[240px]">Available on your first 3 deposits. <br/> T&amp;Cs apply.</p>
+<button class="w-full bg-gradient-to-br from-primary to-primary-container text-on-primary-fixed font-bold py-5 rounded-lg text-xl shadow-[0_10px_30px_rgba(71,235,113,0.2)] hover:shadow-[0_15px_40px_rgba(71,235,113,0.3)] transition-all active:scale-[0.98]">
+                        Claim Bonus Now
+                    </button>
+<p class="mt-4 text-[10px] text-outline opacity-60">18+ | Play Responsibly | New Customers Only</p>
+</div>
+</div>
+</header>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+<!-- Main Content Area -->
+<div class="lg:col-span-8 space-y-16">
+<!-- Quick Summary Stats -->
+<section class="grid grid-cols-2 md:grid-cols-4 gap-4">
+<div class="bg-surface-container-lowest p-6 rounded-lg border-b-2 border-primary/20">
+<span class="material-symbols-outlined text-primary mb-3">speed</span>
+<p class="text-xs text-outline font-bold tracking-wide uppercase mb-1">Payout Speed</p>
+<p class="font-bold text-on-surface">Under 24 Hours</p>
+</div>
+<div class="bg-surface-container-lowest p-6 rounded-lg border-b-2 border-secondary/20">
+<span class="material-symbols-outlined text-secondary mb-3">gavel</span>
+<p class="text-xs text-outline font-bold tracking-wide uppercase mb-1">Licensing</p>
+<p class="font-bold text-on-surface">MGA / UKGC</p>
+</div>
+<div class="bg-surface-container-lowest p-6 rounded-lg border-b-2 border-tertiary/20">
+<span class="material-symbols-outlined text-tertiary mb-3">casino</span>
+<p class="text-xs text-outline font-bold tracking-wide uppercase mb-1">Total Games</p>
+<p class="font-bold text-on-surface">4,500+ Titles</p>
+</div>
+<div class="bg-surface-container-lowest p-6 rounded-lg border-b-2 border-primary/20">
+<span class="material-symbols-outlined text-primary mb-3">savings</span>
+<p class="text-xs text-outline font-bold tracking-wide uppercase mb-1">Min. Deposit</p>
+<p class="font-bold text-on-surface">$10.00 USD</p>
+</div>
+</section>
+<!-- Pros & Cons -->
+<section class="grid grid-cols-1 md:grid-cols-2 gap-8">
+<div class="bg-surface-container-low rounded-xl p-8">
+<h3 class="flex items-center gap-3 text-primary font-bold mb-6">
+<span class="material-symbols-outlined">add_circle</span> What We Like
+                        </h3>
+<ul class="space-y-4">
+<li class="flex items-start gap-3 text-on-surface-variant">
+<span class="material-symbols-outlined text-primary text-sm mt-1">check</span>
+<span>Industry-leading payout speeds for VIP tiers</span>
+</li>
+<li class="flex items-start gap-3 text-on-surface-variant">
+<span class="material-symbols-outlined text-primary text-sm mt-1">check</span>
+<span>Exclusive access to live dealer obsidian tables</span>
+</li>
+<li class="flex items-start gap-3 text-on-surface-variant">
+<span class="material-symbols-outlined text-primary text-sm mt-1">check</span>
+<span>Multi-award winning 24/7 concierge support</span>
+</li>
+</ul>
+</div>
+<div class="bg-surface-container-low rounded-xl p-8">
+<h3 class="flex items-center gap-3 text-error font-bold mb-6">
+<span class="material-symbols-outlined">remove_circle</span> Areas for Improvement
+                        </h3>
+<ul class="space-y-4">
+<li class="flex items-start gap-3 text-on-surface-variant">
+<span class="material-symbols-outlined text-error text-sm mt-1">close</span>
+<span>High wagering requirements on crypto bonuses</span>
+</li>
+<li class="flex items-start gap-3 text-on-surface-variant">
+<span class="material-symbols-outlined text-error text-sm mt-1">close</span>
+<span>Limited availability in certain jurisdictions</span>
+</li>
+</ul>
+</div>
+</section>
+<!-- Detailed Reviews -->
+<div class="space-y-16">
+<section id="software">
+<h2 class="text-3xl font-bold font-headline mb-6 text-on-surface">Premium Software Architecture</h2>
+<div class="prose prose-invert max-w-none text-on-surface-variant leading-relaxed space-y-4">
+<p>Royal Obsidian Casino utilizes a proprietary core engine that integrates seamlessly with major aggregators. The platform is built on a responsive, high-performance architecture that prioritizes zero-latency transitions between game lobbies.</p>
+<p>During our testing, the mobile interface outperformed 85% of competitors in load-times, particularly on the live-dealer integration side.</p>
+</div>
+</section>
+<section id="games">
+<h2 class="text-3xl font-bold font-headline mb-6 text-on-surface">Curated Games Portfolio</h2>
+<p class="text-on-surface-variant mb-8 leading-relaxed">With over 4,500 games, the catalog is split between high-volatility slots, traditional table games, and an expansive "Obsidian Live" section.</p>
+<div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+<div class="aspect-square bg-surface-container-high rounded-lg overflow-hidden group">
+<img alt="Slots" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="close-up of a high-end luxury slot machine with vibrant neon symbols and glowing interface in a dark casino setting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCgQKPcEi8xV5WcG6L4gE_rqQQ80EySWhrsp9jJqzZnPHmZTnG6eB1fIrW6oYso48qA10JibKu_NPgVWqmS9r8fHsa8By29ynczzA8KbdiIrZe2mXBOPwtRdWppw2rk8hPknLn6ScWYtQngPZZOx2leGlJuvJCHBNncde6Knth7VIIH8Hu89r6VB8poMvm9K9UpWNQ6Tz9yvr3OA1Qisr9x44di4XKCYUvHVXHamrLhSa0c3EE2rV6Aj5n2YK3jWZimu1-hDe14e-2w"/>
+</div>
+<div class="aspect-square bg-surface-container-high rounded-lg overflow-hidden group">
+<img alt="Roulette" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="close-up of a spinning wooden roulette wheel with the silver ball landing on a number, cinematic lighting and deep shadows" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC_iYpVH9lkGvw5rpEUXmd7pwhzcpxq6Tms4aIwSikpTvIly5FeuVLCepaZ8B3Jc1ES475v0FBqhpy3dLLRj6zEMiWXCUvm4aniqBBc4wXjtpccxFB97MPbVkaQ8OtADcnBsb805iLpF8mqZMZ3sfE8ue1V09RSzHHPToBsclusN0uL0fdCuCOv52axcIywFyyhyC4GD0vLaAWthzGfQui6Zlaul5nZdQTxr6HxGcm13jMN3cpswjcAGr529bf5xV7vPywb8BCArhSl"/>
+</div>
+<div class="aspect-square bg-surface-container-high rounded-lg overflow-hidden group">
+<img alt="Cards" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="hands of a professional card dealer dealing black playing cards on a dark velvet table, focused lighting on the hands and cards" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCvjVQO9M6AJXsT3pWS1-B0gYptSu3jNeroxJ9lk4x1BC0QW496e7M-Zd5KBm2WNN_wLePddmPILml_oKrwJGjhPmSYJ1fvDhmgo2obWMIApKV3pDSDS-VufMQQW48qrswfL8Wmo92uO3c0iExrwTFK_DQD85a7nuZbIqZyW1dvH_JZT0gavu78dMIKihA9QE_p4GNk_fY9zoQe2ic9WOPq1TyKIJX3SSNq_jHh9T74_SA6OyUhOKZhiXzcXc-iLBNvrzyuEBBshwBn"/>
+</div>
+<div class="aspect-square bg-surface-container-high rounded-lg overflow-hidden group">
+<img alt="Live Casino" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="wide shot of a high-stakes poker table in a private member's club lounge, warm ambient lighting and luxury decor" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCOTnertiXjihYFB-si_CaoARgpSxzbb3WfGTxcqSTQiaUDh_FsYL4rhGOGRTGNzV6lFPE7KLhOiQz-uKpubY6gF-cKwpX9iveUSqe4RHfFlJvaGfoAUNnYB0zIQwttSveS17WYK7rlDlA4C0XdSA9fp60290_q9AFG8G31o7gHDbLQROkyCTErcNKGWRrnABIHLEwbrDiodRPXndjcgd6QFuQ-OQ-vvkUdUjRxspQy4MqNK1jesxWpxBQA2pTBz589sQua8Z8Mqvwc"/>
+</div>
+</div>
+</section>
+<section id="banking">
+<h2 class="text-3xl font-bold font-headline mb-8 text-on-surface">Institutional-Grade Banking</h2>
+<div class="grid grid-cols-3 sm:grid-cols-5 gap-6 opacity-60">
+<div class="h-12 bg-surface-container-highest rounded-lg flex items-center justify-center p-3 grayscale hover:grayscale-0 transition-all">
+<img alt="Visa" class="h-full object-contain" data-alt="clean minimalist logo icon for major credit card provider Visa on transparent background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAL3d9l-3u6MA6vVLMGkVd5fNJZx7Qg6BEZaNh-KzqatYKk9goJ4m1OFinKFrG0FLLmMC6LNq79Zsmjy7MxkHie8wkKuR-145nEHwyChfxWNgvpq6-xioDFFQpPf91YQT6tReZqwXlDjNptPw-V-dE1NRn96TqPzcLb_Q5oOiq4x-Xhdif9Zi0GJaMr2UvMMiDTR6eu3gzrrTkZrvU2OQ3tChyqvDCXEohBjFxlLSYrmq9_mChGrEib5CpIz6tIiW9oEmvSafoCGXg3"/>
+</div>
+<div class="h-12 bg-surface-container-highest rounded-lg flex items-center justify-center p-3 grayscale hover:grayscale-0 transition-all">
+<img alt="Bitcoin" class="h-full object-contain" data-alt="minimalist bitcoin b symbol logo icon on transparent background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDiUxmkgBt2qY4clgrmSTWd_QTqUou8qONUO48zu-GFqcP_dKN55ECr1eixqNa0lYZWYZKb1mXoyViNFl6oED-S5rpd1QekrJ8VR2lRa6XSJ4Ur-dSBzTAsbkMmY0sRy92cWpZGFoxtc2RvkOgNKRGLWKbkBkCaGHSPHQGxlLUDZf4ByK1RAgzJC7GtofgB_b1Sw-MQCi8jDnvjnHIWo8J4ygGmg7qiPBbsiNZtI_4OGu9Tl5Dfcan5_BLLXRLJST0lSUu_GkUh_G3K"/>
+</div>
+<div class="h-12 bg-surface-container-highest rounded-lg flex items-center justify-center p-3 grayscale hover:grayscale-0 transition-all">
+<img alt="Skrill" class="h-full object-contain" data-alt="minimalist skrill logo text icon on transparent background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBwqp200w2Gmq1tc1qTOOYzjsHW96qKHsBoqLsUar3w6_gS1I8ufTL9JvJtDWuRClz-hNT-3PhBCzBtvv2pE1mk-YQHzvYWIwCV0F-_zyp5cF8QhhjwJJOaVqkde3fgNNOLaapx7Ul9xKaq0RpxDUMtoa-lDsUCywBijw0aISVaFqjemuIePguDlZHSw66zJT7yI9ucOEJioU5vg0n_a3j1Z3e5yJEnEWIbRGnV6-8nUITPT_9E5Qu89xpn8CaKykcANu4yqZtyzVfI"/>
+</div>
+<div class="h-12 bg-surface-container-highest rounded-lg flex items-center justify-center p-3 grayscale hover:grayscale-0 transition-all">
+<img alt="Neteller" class="h-full object-contain" data-alt="minimalist neteller logo text icon on transparent background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDE9nLTEd-pTgXEwgEhJKf0WeL0F_rCKgFnRWFH0YluAWrPp4v59HsolGHO7RqbYKJOkRYHht4RmoK8WZJciDV7YpgscVB06ZRPkF1Zc8MMZ7StcmHRk3bc93onb-KhElmFfTny9bPnJCKLeEuPfLebbSD1pSzuu0EMJJn-aWdIh4FaBUBfQCsBhc1smyZGeBYYUwGNLtIWrWTwgY0Q07wK9vEhlN3ZIzDp6vAt5tsYJJcZwxv8xNZZ2LuukQ8iJbDhhcIbrMXk0qA0"/>
+</div>
+<div class="h-12 bg-surface-container-highest rounded-lg flex items-center justify-center p-3 grayscale hover:grayscale-0 transition-all">
+<img alt="Ethereum" class="h-full object-contain" data-alt="minimalist ethereum crystal symbol logo icon on transparent background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDkX3DBNSeVawRYZ3ddL5RJ_MhyYTXkmIHw0hD0WM2y3WGGZSflaW0N-MROkWpr9M6SpT8zQ-v8e93MtgckE_VMNF9Dt8fzvTDqG5HvjCk49nymZ7oiQxte7PfltsuLJAAeIR_aO4PDq3WxTijSWfZE0u642aaKavzP1fKOshsvc2-xXwz0ywuBYMG7fepTdgAH-kJaFVS9Cne-nYGd1VVjRSsZPjngnTCiVHkVHVNXPOyprhZ2FdMZxwScO-wG93lb-lZDfUUE4Bb4"/>
+</div>
+</div>
+</section>
+</div>
+<!-- FAQ Section -->
+<section class="space-y-6">
+<h2 class="text-3xl font-bold font-headline text-on-surface mb-8">Frequently Asked Questions</h2>
+<div class="space-y-4">
+<details class="group bg-surface-container-low rounded-xl overflow-hidden [&amp;_summary::-webkit-details-marker]:hidden">
+<summary class="flex justify-between items-center p-6 cursor-pointer select-none">
+<h4 class="font-bold text-lg">Is Royal Obsidian Casino safe to play?</h4>
+<span class="material-symbols-outlined group-open:rotate-180 transition-transform">expand_more</span>
+</summary>
+<div class="px-6 pb-6 text-on-surface-variant leading-relaxed">
+<p>Yes, Royal Obsidian is fully licensed by both the MGA (Malta Gaming Authority) and the UK Gambling Commission. They utilize 256-bit SSL encryption to ensure all financial transactions and personal data are kept secure.</p>
+</div>
+</details>
+<details class="group bg-surface-container-low rounded-xl overflow-hidden [&amp;_summary::-webkit-details-marker]:hidden">
+<summary class="flex justify-between items-center p-6 cursor-pointer select-none">
+<h4 class="font-bold text-lg">How long do withdrawals take?</h4>
+<span class="material-symbols-outlined group-open:rotate-180 transition-transform">expand_more</span>
+</summary>
+<div class="px-6 pb-6 text-on-surface-variant leading-relaxed">
+<p>Standard withdrawals are processed within 24-48 hours. However, VIP members benefit from expedited "Obsidian Tier" withdrawals which are often finalized in under 4 hours for crypto and e-wallet payments.</p>
+</div>
+</details>
+</div>
+</section>
+</div>
+<!-- Sidebar -->
+<aside class="lg:col-span-4 space-y-8">
+<!-- Trust Signals Widget -->
+<div class="bg-surface-container-high rounded-xl p-8 border-t-4 border-secondary shadow-xl">
+<div class="flex items-center gap-3 mb-6">
+<div class="bg-secondary/10 p-2 rounded-full">
+<span class="material-symbols-outlined text-secondary" style="font-variation-settings: 'FILL' 1;">verified_user</span>
+</div>
+<h3 class="font-bold text-xl">Expert Verified</h3>
+</div>
+<div class="space-y-6">
+<div>
+<div class="flex justify-between text-sm font-bold mb-2">
+<span>Security Rating</span>
+<span class="text-primary">98%</span>
+</div>
+<div class="w-full h-1.5 bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-primary" style="width: 98%"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between text-sm font-bold mb-2">
+<span>Fairness Score</span>
+<span class="text-primary">95%</span>
+</div>
+<div class="w-full h-1.5 bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-primary" style="width: 95%"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between text-sm font-bold mb-2">
+<span>Bonus Value</span>
+<span class="text-secondary">90%</span>
+</div>
+<div class="w-full h-1.5 bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-secondary" style="width: 90%"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Top Rated Sidebar Widget -->
+<div class="bg-surface-container-low rounded-xl p-8 shadow-lg">
+<h3 class="text-xl font-bold font-headline mb-8 flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary">workspace_premium</span> Top Rated Alternatives
+                    </h3>
+<div class="space-y-6">
+<!-- Alternative Card 1 -->
+<div class="flex items-center gap-4 group cursor-pointer">
+<div class="w-16 h-16 flex-shrink-0 bg-surface-container-highest rounded overflow-hidden">
+<img alt="Casino" class="w-full h-full object-contain" data-alt="minimalist emerald green geometric casino icon on dark background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAxmrkVFw3ZD0M4Z19nv9EwKq7xF7gJHS6hpPnjX0XjyXd9kL1im0yknyWAZtC3BRIQbR36f0niKLwJJ5TL_tzjdx9jft2TwpbMiKyFmAv_H8tB6v9lpkifyYLo68YQdesavIrxlEt1oDB_hZ76JB874-P7Tqf8a57Z09EtzHeZ8SrNGw3rDCLymMugoPlYtZX1IaparjHSBkhuCti-1isS2CpYve98Mz3SuNgGXvDNWDvQxdpNazeeDSGR_KXXKdsmdDWmkCVYGar0"/>
+</div>
+<div class="flex-grow">
+<h4 class="font-bold text-on-surface group-hover:text-primary transition-colors">Emerald Palace</h4>
+<div class="flex items-center text-tertiary text-sm">
+<span class="material-symbols-outlined text-xs" style="font-variation-settings: 'FILL' 1;">star</span> 4.9
+                                </div>
+<p class="text-[10px] text-outline uppercase tracking-wider font-bold">100% Up to $1,000</p>
+</div>
+<span class="material-symbols-outlined text-outline-variant group-hover:text-primary transition-colors">arrow_forward_ios</span>
+</div>
+<!-- Alternative Card 2 -->
+<div class="flex items-center gap-4 group cursor-pointer">
+<div class="w-16 h-16 flex-shrink-0 bg-surface-container-highest rounded overflow-hidden">
+<img alt="Casino" class="w-full h-full object-contain" data-alt="minimalist neon pink and cyan geometric casino icon on dark background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBhSGM2EDAXpGFF2IeoM3aRO237Akj_79DXRBNRTrxqQ6pP3C3fT4EtDFqpN05meu3DIZhr0nZ9j_YDG0i_-dIguOuvIhZHJz-YwE66NMfMXvSQlC6KpCLQvYsjTH6x5BWvs_fo75xztKOjzA-rBRzKREyMvQWrnPWSaWBQFJICenQ3luM2KyWUt0ol8HCbMqWRIOQsIM9J49xW0fkOJna61JeFGA0-Vz6_OVlCzBk7ZBO0emLXCiPl7lFgg91ovY-J1KT7iKgXMKt-"/>
+</div>
+<div class="flex-grow">
+<h4 class="font-bold text-on-surface group-hover:text-primary transition-colors">Neon Velocity</h4>
+<div class="flex items-center text-tertiary text-sm">
+<span class="material-symbols-outlined text-xs" style="font-variation-settings: 'FILL' 1;">star</span> 4.7
+                                </div>
+<p class="text-[10px] text-outline uppercase tracking-wider font-bold">500 Free Spins</p>
+</div>
+<span class="material-symbols-outlined text-outline-variant group-hover:text-primary transition-colors">arrow_forward_ios</span>
+</div>
+<!-- Alternative Card 3 -->
+<div class="flex items-center gap-4 group cursor-pointer">
+<div class="w-16 h-16 flex-shrink-0 bg-surface-container-highest rounded overflow-hidden">
+<img alt="Casino" class="w-full h-full object-contain" data-alt="minimalist gold and black geometric casino icon on dark background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCG_tl7oa3TnMacMSnJkLOFjySGUCed1jfLfQ5lqtHrgkeMs_GUra5L6j74hBuRl5EgJVqiqi7MDAWjXQ99matq5zNLN3D6Kr4heBNTHomFlTtg5fPaWMzgXCGHUw0XwY2hgAb8nd-cOvtRxx_XHSnNrLvNEqdaIR3mY8eRmcveaayJgHRgewstaL-1taZ17R0vS7cekhVP9Gda1J2Zuwiz4rqXe51K1mb1_RuB8cv5IvhZiocWulFA55KFJuwfCufocf3iXttOZXa2"/>
+</div>
+<div class="flex-grow">
+<h4 class="font-bold text-on-surface group-hover:text-primary transition-colors">Golden Vault</h4>
+<div class="flex items-center text-tertiary text-sm">
+<span class="material-symbols-outlined text-xs" style="font-variation-settings: 'FILL' 1;">star</span> 4.5
+                                </div>
+<p class="text-[10px] text-outline uppercase tracking-wider font-bold">$2,500 Bonus</p>
+</div>
+<span class="material-symbols-outlined text-outline-variant group-hover:text-primary transition-colors">arrow_forward_ios</span>
+</div>
+</div>
+</div>
+<!-- Reviewer Signature -->
+<div class="bg-surface-container-highest rounded-xl p-8 flex items-center gap-4 border border-outline-variant/10">
+<div class="w-16 h-16 rounded-full overflow-hidden flex-shrink-0 border-2 border-secondary">
+<img alt="Author" class="w-full h-full object-cover" data-alt="portrait illustration of a professional gaming industry expert with glasses and sharp editorial style" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB3-R5Ejy2CUfc5ADCNutEwrVKCPY7K5zJjS0nB0iRTQ3KNzI9dKUoGfL3k09Gmf2qN5mcUOE4y3aMgZj8A8lI2GNkhcmaVf3W_lAyDOqUXFtpyByCpxG1ZNjEXLnudHn5UkQvrU0GyRs-ywi2CgYQ4Kr1FrCtMDfDvURJTj1Kv5Wck7fGAKKiqVRzvnsu8DQF9JO1hZ0fxdhueCP1g_wAGOXxr4n7lwQ51oPrMJE7VJYb_2nawwprt-UIbZQPtoPsB-d7BP1qps-JU"/>
+</div>
+<div>
+<p class="text-xs text-secondary font-bold tracking-widest uppercase mb-1">Reviewed By</p>
+<h4 class="font-bold text-lg">Marcus Sterling</h4>
+<p class="text-xs text-outline">Lead Editor &amp; RNG Specialist</p>
+</div>
+</div>
+</aside>
+</div>
+</main>
+<!-- Footer -->
+<footer class="bg-[#131313] w-full border-t border-[#4D4635]/20">
+<div class="flex flex-col items-center py-12 px-8 gap-6 w-full max-w-screen-2xl mx-auto">
+<div class="text-lg font-bold text-[#D4AF37] font-['Inter']">ELITE CURATOR</div>
+<div class="flex flex-wrap justify-center gap-x-8 gap-y-4 font-['Inter'] text-sm text-[#D0C5AF]">
+<a class="hover:text-[#D4AF37] transition-colors" href="#">GambleAware</a>
+<a class="hover:text-[#D4AF37] transition-colors" href="#">Affiliate Disclosure</a>
+<a class="hover:text-[#D4AF37] transition-colors" href="#">Privacy Policy</a>
+<a class="hover:text-[#D4AF37] transition-colors" href="#">Terms of Service</a>
+<a class="hover:text-[#D4AF37] transition-colors" href="#">Contact</a>
+</div>
+<p class="text-[#D0C5AF] text-sm text-center max-w-2xl opacity-60">© 2024 High-Stakes Editorial. 18+ Please Play Responsibly. Gambling can be addictive. If you or someone you know has a gambling problem, please seek help from authorized support organizations.</p>
+</div>
+</footer>
+</body></html>

@@ -1,0 +1,180 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Breadcrumbs from "../components/Breadcrumbs.astro";
+import FAQSection from "../components/FAQSection.astro";
+import { generateFAQSchema } from "../lib/seo";
+
+const faqs = [
+  {
+    question: "How often are reviews updated?",
+    answer: "We update reviews whenever a casino changes its terms, adds payment methods, or receives significant player complaints. Most reviews are refreshed at least quarterly.",
+  },
+  {
+    question: "Do affiliate partnerships influence your ratings?",
+    answer: "Never. Our editorial and commercial operations are completely separate. We earn commissions when you visit a casino through our links, but this never affects our scores.",
+  },
+  {
+    question: "Can a casino pay to improve its rating?",
+    answer: "No. Ratings are based solely on our testing methodology. No payment, partnership, or sponsorship can influence a casino's score.",
+  },
+  {
+    question: "What happens if a casino's standards drop?",
+    answer: "We demote or remove it. If a casino receives serious player complaints, changes its terms unfairly, or loses its license, we update the review immediately.",
+  },
+];
+
+const criteria = [
+  {
+    icon: "shield",
+    title: "Security & Licensing",
+    description: "We verify every casino holds an active license from a recognized jurisdiction (Malta MGA, Curacao, UKGC, etc.). We check license numbers, confirm validity with the issuing authority, and review the operator's corporate structure.",
+  },
+  {
+    icon: "redeem",
+    title: "Bonus Transparency",
+    description: "We read every word of the bonus T&Cs. We flag unfair wagering requirements, hidden max cashout limits, restricted games, and misleading promotional language. If a bonus looks good on the surface but has predatory terms, we call it out.",
+  },
+  {
+    icon: "account_balance_wallet",
+    title: "Payment Testing",
+    description: "We use our own actual cash for these tests — not 'fun money' accounts provided by the casino. We make real deposits, time crypto payouts, test fiat methods, and document every step of the withdrawal process. If a site makes us jump through hoops to get $50 back, we tell you.",
+  },
+  {
+    icon: "casino",
+    title: "Game Library Audit",
+    description: "We evaluate the breadth and quality of the game selection. We check for top-tier providers (Evolution, Pragmatic Play, NetEnt), provably fair options, and the total game count. We also verify that games load correctly on mobile.",
+  },
+  {
+    icon: "support_agent",
+    title: "Customer Support",
+    description: "We contact support via live chat, email, and any other available channels. We specifically look for 'Bot Loops' — if we can't reach a human within 3 minutes, the score drops. No one likes talking to a scripted FAQ. 24/7 multilingual support scores highest.",
+  },
+  {
+    icon: "report",
+    title: "Player Complaints",
+    description: "We research player complaints across forums, review sites, and dispute platforms. A casino with unresolved complaints or blacklist appearances gets penalized. Clean records earn trust.",
+  },
+  {
+    icon: "smartphone",
+    title: "Mobile Experience",
+    description: "We test every casino on multiple devices and browsers. We check responsive design, game loading times, navigation, and whether all features (deposits, withdrawals, support) work on mobile.",
+  },
+  {
+    icon: "gavel",
+    title: "Terms & Fairness",
+    description: "We read the full T&Cs so you don't have to. Zero-tolerance policy: if a casino reserves the right to cancel winnings for 'suspicious play' without defining what that means, they get an automatic 0 in this category. Vague terms are a dealbreaker, full stop.",
+  },
+];
+---
+
+<BaseLayout
+  title="How We Review Online Casinos | CashSpins"
+  description="Learn about CashSpins' rigorous review methodology. We test deposits, verify licenses, audit bonus terms, and rate casinos on 8 key criteria."
+>
+  <div class="max-w-4xl mx-auto px-4 md:px-8 pt-8 pb-20">
+    {/* Breadcrumbs */}
+    <Breadcrumbs
+      items={[
+        { label: "Home", href: "/" },
+        { label: "How We Review" },
+      ]}
+    />
+
+    {/* Hero */}
+    <header class="mt-8 mb-16">
+      <div class="flex items-center gap-3 mb-4">
+        <span class="h-px w-12 bg-secondary/40"></span>
+        <span class="font-label text-xs font-bold uppercase tracking-[0.2em] text-secondary">Our Methodology</span>
+      </div>
+      <h1 class="text-4xl md:text-6xl font-headline font-extrabold tracking-tighter mb-6 leading-none text-on-surface">
+        How We Review Online Casinos
+      </h1>
+      <p class="max-w-2xl text-lg text-on-surface-variant leading-relaxed">
+        Our methodology is built on transparency, real testing, and expert analysis. Here's exactly how we evaluate every casino on CashSpins.
+      </p>
+    </header>
+
+    {/* Our Review Process */}
+    <section class="mb-20">
+      <h2 class="font-headline font-bold text-3xl text-on-surface mb-10">Our Review Process</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {criteria.map((item, i) => (
+          <div class="bg-surface-container-low rounded-xl p-8">
+            <div class="flex items-start gap-4 mb-4">
+              <span class="text-4xl font-headline font-extrabold text-primary/30 leading-none">{String(i + 1).padStart(2, "0")}</span>
+              <div>
+                <span class="material-symbols-outlined text-2xl text-primary mb-2 block">{item.icon}</span>
+                <h3 class="font-headline font-bold text-lg text-on-surface">{item.title}</h3>
+              </div>
+            </div>
+            <p class="text-on-surface-variant leading-relaxed">{item.description}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    {/* Rating Scale */}
+    <section class="mb-20">
+      <h2 class="font-headline font-bold text-3xl text-on-surface mb-6">Our Rating Scale</h2>
+      <p class="text-on-surface-variant leading-relaxed mb-8">
+        Every casino receives a score from 0 to 10 based on the eight criteria above. The final rating is a weighted average that reflects the overall quality and trustworthiness of the casino.
+      </p>
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div class="bg-surface-container-low rounded-xl p-6 border-l-4 border-green-500">
+          <div class="flex items-center gap-3 mb-2">
+            <span class="material-symbols-outlined text-green-500">verified</span>
+            <span class="font-headline font-bold text-on-surface text-lg">8 &ndash; 10</span>
+          </div>
+          <p class="font-label font-bold text-green-500 mb-1">Excellent</p>
+          <p class="text-sm text-on-surface-variant">Top-tier casinos that excel across all criteria. Highly recommended.</p>
+        </div>
+        <div class="bg-surface-container-low rounded-xl p-6 border-l-4 border-yellow-500">
+          <div class="flex items-center gap-3 mb-2">
+            <span class="material-symbols-outlined text-yellow-500">thumb_up</span>
+            <span class="font-headline font-bold text-on-surface text-lg">6 &ndash; 8</span>
+          </div>
+          <p class="font-label font-bold text-yellow-500 mb-1">Good</p>
+          <p class="text-sm text-on-surface-variant">Solid casinos with minor areas for improvement. Worth considering.</p>
+        </div>
+        <div class="bg-surface-container-low rounded-xl p-6 border-l-4 border-red-500">
+          <div class="flex items-center gap-3 mb-2">
+            <span class="material-symbols-outlined text-red-500">warning</span>
+            <span class="font-headline font-bold text-on-surface text-lg">Below 6</span>
+          </div>
+          <p class="font-label font-bold text-red-500 mb-1">Below Average</p>
+          <p class="text-sm text-on-surface-variant">Casinos with significant issues. Proceed with caution or avoid.</p>
+        </div>
+      </div>
+    </section>
+
+    {/* Editorial Independence */}
+    <section class="mb-20">
+      <h2 class="font-headline font-bold text-3xl text-on-surface mb-6">Editorial Independence</h2>
+      <div class="bg-surface-container-low rounded-xl p-8 space-y-4 text-on-surface-variant leading-relaxed">
+        <p>
+          CashSpins earns revenue through affiliate partnerships with the casinos we review. When you click a link and sign up, we may receive a commission. However, this commercial relationship has zero influence on our ratings, rankings, or editorial content.
+        </p>
+        <p>
+          Our editorial team operates independently from our commercial partnerships. Reviewers do not know the commission structure of any casino, and no casino can pay to improve its position or score. If a highly profitable partner underperforms, it gets rated accordingly.
+        </p>
+        <p>
+          Reviews are updated on an ongoing basis. When a casino changes its bonus terms, payment options, licensing status, or receives notable player complaints, we revisit and adjust the review. Most reviews are refreshed at least once per quarter.
+        </p>
+        <p>
+          We aren't perfect. If a casino changes their terms overnight and we haven't caught it yet, we rely on our community to flag it — we update our reviews the moment a discrepancy is verified. Transparency means admitting when we're behind, not pretending we never are.
+        </p>
+        <p>
+          Browse our full <a href="/casinos/" class="text-primary hover:underline font-semibold">casino directory</a> or see our picks for <a href="/best-online-casinos/" class="text-primary hover:underline font-semibold">best online casinos</a>.
+        </p>
+      </div>
+    </section>
+
+    {/* FAQ */}
+    <section class="mb-12">
+      <FAQSection faqs={faqs} />
+    </section>
+  </div>
+
+  {/* FAQ Schema */}
+  <script type="application/ld+json" set:html={generateFAQSchema(faqs)} />
+</BaseLayout>

@@ -1,0 +1,290 @@
+@import "tailwindcss";
+
+@theme {
+  /* Royal Verity Design System — Surface Architecture */
+  --color-surface: #131313;
+  --color-surface-dim: #131313;
+  --color-surface-bright: #393939;
+  --color-surface-container-lowest: #0e0e0e;
+  --color-surface-container-low: #1c1b1b;
+  --color-surface-container: #201f1f;
+  --color-surface-container-high: #2a2a2a;
+  --color-surface-container-highest: #353534;
+  --color-surface-variant: #353534;
+
+  /* Primary — Liquid Green */
+  --color-primary: #47eb71;
+  --color-primary-container: #17ce58;
+  --color-primary-fixed: #69ff87;
+  --color-primary-fixed-dim: #3ce36a;
+  --color-on-primary: #003912;
+  --color-on-primary-container: #00511d;
+  --color-on-primary-fixed: #002108;
+  --color-on-primary-fixed-variant: #00531e;
+  --color-inverse-primary: #006e2a;
+
+  /* Secondary — Gold */
+  --color-secondary: #e9c349;
+  --color-secondary-container: #af8d11;
+  --color-secondary-fixed: #ffe088;
+  --color-secondary-fixed-dim: #e9c349;
+  --color-on-secondary: #3c2f00;
+  --color-on-secondary-container: #342800;
+  --color-on-secondary-fixed: #241a00;
+  --color-on-secondary-fixed-variant: #574500;
+
+  /* Tertiary — Bright Gold */
+  --color-tertiary: #f2cc00;
+  --color-tertiary-container: #d2b100;
+  --color-tertiary-fixed: #ffe16d;
+  --color-tertiary-fixed-dim: #e9c400;
+  --color-on-tertiary: #3a3000;
+  --color-on-tertiary-container: #534400;
+  --color-on-tertiary-fixed: #221b00;
+  --color-on-tertiary-fixed-variant: #544600;
+
+  /* Text / On-Surface */
+  --color-on-surface: #e5e2e1;
+  --color-on-surface-variant: #d0c5af;
+  --color-on-background: #e5e2e1;
+  --color-inverse-surface: #e5e2e1;
+  --color-inverse-on-surface: #313030;
+
+  /* Outline */
+  --color-outline: #99907c;
+  --color-outline-variant: #4d4635;
+
+  /* Error */
+  --color-error: #ffb4ab;
+  --color-error-container: #93000a;
+  --color-on-error: #690005;
+  --color-on-error-container: #ffdad6;
+
+  /* Surface tint */
+  --color-surface-tint: #3ce36a;
+
+  /* Typography */
+  --font-headline: "Manrope", system-ui, sans-serif;
+  --font-body: "Inter", system-ui, sans-serif;
+  --font-label: "Inter", system-ui, sans-serif;
+
+  /* Border Radius — Minimal, premium */
+  --radius-sm: 0.125rem;
+  --radius-md: 0.25rem;
+  --radius-lg: 0.5rem;
+  --radius-xl: 0.75rem;
+}
+
+/* Base styles */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--color-surface);
+  color: var(--color-on-surface);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+::selection {
+  background-color: var(--color-primary);
+  color: var(--color-on-primary);
+}
+
+/* Prose styling for markdown content */
+.prose {
+  max-width: 65ch;
+  line-height: 1.75;
+}
+
+.prose h2 {
+  font-family: var(--font-headline);
+  font-weight: 700;
+  font-size: 1.5rem;
+  color: var(--color-on-surface);
+  margin-top: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+.prose h3 {
+  font-family: var(--font-headline);
+  font-weight: 600;
+  font-size: 1.25rem;
+  color: var(--color-on-surface);
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+}
+
+.prose p {
+  color: var(--color-on-surface-variant);
+  margin-bottom: 1.25rem;
+}
+
+.prose a {
+  color: var(--color-primary);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.prose a:hover {
+  text-decoration: underline;
+}
+
+.prose strong {
+  color: var(--color-on-surface);
+  font-weight: 600;
+}
+
+.prose ul, .prose ol {
+  color: var(--color-on-surface-variant);
+  padding-left: 1.5rem;
+  margin-bottom: 1.25rem;
+}
+
+.prose li {
+  margin-bottom: 0.5rem;
+}
+
+.prose blockquote {
+  border-left: 3px solid var(--color-outline-variant);
+  padding-left: 1rem;
+  color: var(--color-on-surface-variant);
+  font-style: italic;
+  margin-bottom: 1.25rem;
+}
+
+.prose table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 1.5rem;
+}
+
+.prose th {
+  text-align: left;
+  padding: 0.75rem 1rem;
+  font-family: var(--font-label);
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-on-surface-variant);
+  background: var(--color-surface-container-low);
+}
+
+.prose td {
+  padding: 0.75rem 1rem;
+  color: var(--color-on-surface-variant);
+  border-bottom: 1px solid var(--color-outline-variant)/20;
+}
+
+.prose tr:nth-child(even) {
+  background: var(--color-surface-container-lowest);
+}
+
+/* Material Symbols */
+.material-symbols-outlined {
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  vertical-align: middle;
+}
+
+/* Glassmorphism utility */
+.glass {
+  background: rgba(19, 19, 19, 0.6);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+/* Liquid gradient for primary CTAs */
+.liquid-gradient {
+  background: linear-gradient(135deg, #47eb71 0%, #17ce58 100%);
+}
+
+/* Ambient shadow */
+.ambient-shadow {
+  box-shadow: 0 20px 40px rgba(229, 226, 225, 0.04);
+}
+
+/* Ghost border on hover */
+.ghost-border {
+  border: 1px solid transparent;
+  transition: border-color 0.3s ease;
+}
+
+.ghost-border:hover {
+  border-color: rgba(77, 70, 53, 0.2);
+}
+
+/* Line clamp utilities */
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.line-clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Focus states — accessibility critical */
+:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* Cursor pointer for all interactive elements */
+a, button, [role="button"], input[type="submit"], input[type="button"], summary {
+  cursor: pointer;
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Skip to content link */
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: 16px;
+  z-index: 9999;
+  padding: 8px 16px;
+  background: var(--color-primary);
+  color: var(--color-on-primary);
+  font-weight: 700;
+  border-radius: 0 0 0.5rem 0.5rem;
+  text-decoration: none;
+  transition: top 0.2s;
+}
+
+.skip-link:focus {
+  top: 0;
+}
+
+/* Smooth scrollbar for dark theme */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-surface);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-surface-container-highest);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-outline);
+}

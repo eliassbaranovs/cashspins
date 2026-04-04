@@ -1,0 +1,93 @@
+---
+import RatingBadge from "./RatingBadge.astro";
+
+interface Props {
+  title?: string;
+  items: Array<{
+    slug: string;
+    collection: string;
+    data: {
+      title: string;
+      image?: string;
+      ourRating?: number;
+      excerpt?: string;
+      bonus_title?: string;
+      logo?: string;
+    };
+  }>;
+  type?: "casino" | "article";
+}
+
+const { title = "Related Content", items = [], type = "article" } = Astro.props;
+---
+
+{items.length > 0 && (
+  <section>
+    <h2 class="font-headline font-bold text-2xl text-on-surface mb-6">{title}</h2>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      {type === "casino"
+        ? items.map((item) => {
+            const d = item.data;
+            return (
+              <a
+                href={`/${item.collection}/${item.slug}/`}
+                class="group block bg-surface-container-low rounded-xl p-5 hover:bg-surface-container-high ghost-border transition-all"
+              >
+                <div class="flex items-center gap-3 mb-3">
+                  {d.logo ? (
+                    <img
+                      src={d.logo}
+                      alt={`${d.title} logo`}
+                      class="w-12 h-12 rounded-lg bg-surface-container-lowest object-contain p-1"
+                      loading="lazy"
+                    />
+                  ) : (
+                    <div class="w-12 h-12 rounded-lg bg-surface-container-lowest flex items-center justify-center">
+                      <span class="material-symbols-outlined text-outline">casino</span>
+                    </div>
+                  )}
+                  <div class="min-w-0">
+                    <h3 class="font-headline font-bold text-on-surface group-hover:text-primary transition-colors truncate">
+                      {d.title}
+                    </h3>
+                    {d.ourRating != null && <RatingBadge rating={d.ourRating} size="sm" />}
+                  </div>
+                </div>
+                {d.bonus_title && (
+                  <p class="text-primary font-headline font-bold text-sm mb-3">{d.bonus_title}</p>
+                )}
+                <span class="liquid-gradient text-on-primary-fixed-variant font-headline font-bold rounded-md px-4 py-2 text-sm text-center block hover:scale-105 transition-transform">
+                  Claim Bonus
+                </span>
+              </a>
+            );
+          })
+        : items.map((item) => {
+            const d = item.data;
+            return (
+              <a
+                href={`/${item.collection}/${item.slug}/`}
+                class="group block bg-surface-container-low rounded-xl p-5 hover:bg-surface-container-high ghost-border transition-all"
+              >
+                {d.image && (
+                  <div class="aspect-video rounded-lg overflow-hidden mb-3">
+                    <img
+                      src={d.image}
+                      alt={d.title}
+                      class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      loading="lazy"
+                    />
+                  </div>
+                )}
+                <h3 class="font-headline font-bold text-on-surface group-hover:text-primary transition-colors mb-2 leading-snug">
+                  {d.title}
+                </h3>
+                {d.excerpt && (
+                  <p class="text-on-surface-variant text-sm line-clamp-2">{d.excerpt}</p>
+                )}
+              </a>
+            );
+          })}
+    </div>
+  </section>
+)}

@@ -1,0 +1,95 @@
+---
+import RatingBadge from "./RatingBadge.astro";
+
+interface Props {
+  casino: {
+    data: {
+      casinoName?: string;
+      slug: string;
+      ourRating?: number;
+      best_for?: string;
+      bonus_title?: string;
+      logo?: string;
+      excerpt?: string;
+      pros?: string[];
+      claim_url?: string;
+      categories?: string[];
+    };
+  };
+}
+
+const { casino } = Astro.props;
+const d = casino.data;
+const name = d.casinoName || d.slug;
+const topPros = d.pros?.slice(0, 2) || [];
+---
+
+<div class="group relative bg-surface-container-low rounded-xl p-6 hover:bg-surface-container-high ghost-border transition-all overflow-hidden">
+  {/* Green accent bar on hover */}
+  <div class="absolute left-0 top-1/2 -translate-y-1/2 w-1.5 h-16 bg-primary rounded-r-full opacity-0 group-hover:opacity-100 transition-opacity duration-300" aria-hidden="true"></div>
+
+  <div class="flex flex-col lg:flex-row gap-6 items-start lg:items-center">
+    {/* Logo */}
+    <div class="shrink-0">
+      {d.logo ? (
+        <img
+          src={d.logo}
+          alt={`${name} logo`}
+          class="w-28 h-28 rounded-xl bg-surface-container-lowest object-contain p-3 grayscale group-hover:grayscale-0 transition-all duration-300"
+          loading="lazy"
+        />
+      ) : (
+        <div class="w-28 h-28 rounded-xl bg-surface-container-lowest flex items-center justify-center">
+          <span class="material-symbols-outlined text-outline text-4xl">casino</span>
+        </div>
+      )}
+    </div>
+
+    {/* Center info */}
+    <div class="flex-1 min-w-0">
+      <div class="flex items-center gap-3 flex-wrap mb-1">
+        <h3 class="text-2xl font-headline font-bold text-on-surface">{name}</h3>
+        {d.ourRating != null && <RatingBadge rating={d.ourRating} size="sm" />}
+      </div>
+      {d.best_for && (
+        <p class="text-on-surface-variant text-sm mb-3">{d.best_for}</p>
+      )}
+      {topPros.length > 0 && (
+        <ul class="space-y-1">
+          {topPros.map((pro) => (
+            <li class="flex items-center gap-2 text-sm text-on-surface-variant">
+              <span class="material-symbols-outlined text-primary text-base">check</span>
+              <span>{pro}</span>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+
+    {/* Bonus column */}
+    {d.bonus_title && (
+      <div class="shrink-0 text-center lg:text-right">
+        <span class="text-xs font-label text-on-surface-variant uppercase tracking-wider block mb-1">Welcome Package</span>
+        <span class="text-primary font-headline font-extrabold text-lg leading-tight block">{d.bonus_title}</span>
+      </div>
+    )}
+
+    {/* CTA buttons */}
+    <div class="flex flex-row lg:flex-col gap-3 shrink-0">
+      <a
+        href={`/go/${d.slug}/`}
+        rel="nofollow sponsored"
+        target="_blank"
+        class="liquid-gradient text-on-primary-fixed-variant font-headline font-bold rounded-md px-6 py-3 text-center shadow-lg shadow-primary/20 hover:scale-105 active:scale-95 transition-transform whitespace-nowrap"
+      >
+        Claim Bonus
+      </a>
+      <a
+        href={`/casinos/${d.slug}/`}
+        class="border border-outline-variant/30 text-on-surface-variant rounded-md px-6 py-3 text-center hover:bg-surface-container-highest transition-all whitespace-nowrap"
+      >
+        Read Review
+      </a>
+    </div>
+  </div>
+</div>

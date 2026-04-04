@@ -1,0 +1,63 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Breadcrumbs from "../components/Breadcrumbs.astro";
+---
+
+<BaseLayout
+  title="Affiliate Disclosure | CashSpins"
+  description="Learn how CashSpins.online earns revenue through affiliate partnerships and how this relates to our editorial independence."
+>
+  <div class="max-w-4xl mx-auto px-8 py-12">
+    <Breadcrumbs items={[
+      { label: "Home", href: "/" },
+      { label: "Affiliate Disclosure" },
+    ]} />
+
+    <h1 class="font-headline font-extrabold text-4xl md:text-5xl text-on-surface mt-8 mb-4">
+      Affiliate Disclosure
+    </h1>
+    <p class="text-on-surface-variant text-sm mb-10">Last updated: April 4, 2026</p>
+
+    <div class="prose">
+      <h2>How We Earn Revenue</h2>
+      <p>
+        CashSpins.online is a free resource for players looking to find the best online casinos,
+        bonuses, and gambling guides. To keep this site running and free to use, we participate in
+        affiliate partnerships with online casino operators. This means that when you click on certain
+        links on our Website and sign up or make a deposit at a casino, we may receive a commission
+        from that casino at no additional cost to you.
+      </p>
+
+      <h2>How Affiliate Links Work</h2>
+      <p>
+        Throughout our Website, you will find links marked with buttons such as "Claim Bonus" or
+        "Visit Casino." These are affiliate links. When you click on one of these links, a tracking
+        cookie is placed on your device so the casino operator can attribute your registration or
+        deposit to our referral. This process is standard across the affiliate marketing industry
+        and does not affect the price, bonus, or terms you receive from the casino.
+      </p>
+
+      <h2>Editorial Independence</h2>
+      <p>
+        Our editorial team operates independently from our commercial partnerships. Affiliate
+        relationships do not influence our ratings, rankings, or reviews. Every casino review on
+        CashSpins is based on objective criteria including licensing, game selection, payout speed,
+        bonus terms, player complaints, and security measures. We apply the same evaluation framework
+        to every casino we review, regardless of whether we have an affiliate relationship with them.
+      </p>
+      <p>
+        If a casino that pays us commissions has poor terms, slow withdrawals, or unresolved player
+        complaints, we will say so in our review. Our credibility depends on honest reporting, and
+        we take that responsibility seriously.
+      </p>
+
+      <h2>Your Trust Matters</h2>
+      <p>
+        We understand that trust is the foundation of our relationship with our readers. We are
+        committed to full transparency about how we earn revenue. If you have any questions about
+        our affiliate relationships or editorial process, please contact us at
+        <strong>info@cashspins.online</strong>.
+      </p>
+    </div>
+  </div>
+</BaseLayout>

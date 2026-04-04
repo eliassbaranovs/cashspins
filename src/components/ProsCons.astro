@@ -1,0 +1,46 @@
+---
+interface Props {
+  pros?: string[];
+  cons?: string[];
+}
+const { pros, cons } = Astro.props;
+const hasPros = pros && pros.length > 0;
+const hasCons = cons && cons.length > 0;
+---
+
+{(hasPros || hasCons) && (
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+    {hasPros && (
+      <div class="bg-surface-container-low rounded-xl p-8">
+        <div class="flex items-center gap-2 mb-6">
+          <span class="material-symbols-outlined text-primary text-2xl">add_circle</span>
+          <h3 class="font-headline font-bold text-lg text-on-surface">What We Like</h3>
+        </div>
+        <ul class="space-y-3">
+          {pros.map((pro) => (
+            <li class="flex items-start gap-3">
+              <span class="material-symbols-outlined text-primary text-lg mt-0.5 shrink-0">check</span>
+              <span class="text-on-surface-variant">{pro}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+    )}
+    {hasCons && (
+      <div class="bg-surface-container-low rounded-xl p-8">
+        <div class="flex items-center gap-2 mb-6">
+          <span class="material-symbols-outlined text-error text-2xl">remove_circle</span>
+          <h3 class="font-headline font-bold text-lg text-on-surface">What We Don't</h3>
+        </div>
+        <ul class="space-y-3">
+          {cons.map((con) => (
+            <li class="flex items-start gap-3">
+              <span class="material-symbols-outlined text-error text-lg mt-0.5 shrink-0">close</span>
+              <span class="text-on-surface-variant">{con}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+    )}
+  </div>
+)}

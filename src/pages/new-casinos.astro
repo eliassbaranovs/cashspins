@@ -1,0 +1,164 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Breadcrumbs from "../components/Breadcrumbs.astro";
+import CasinoCard from "../components/CasinoCard.astro";
+import FAQSection from "../components/FAQSection.astro";
+
+const allCasinos = await getCollection("casinos");
+const filtered = allCasinos
+  .filter(
+    (c) =>
+      !c.data.draft &&
+      (c.data.categories?.includes("new-casino") || c.data.isNewCasino === true)
+  )
+  .sort((a, b) => (b.data.ourRating ?? 0) - (a.data.ourRating ?? 0));
+
+const hasFiltered = filtered.length > 0;
+const casinos = hasFiltered
+  ? filtered
+  : allCasinos.filter((c) => !c.data.draft).sort((a, b) => (b.data.ourRating ?? 0) - (a.data.ourRating ?? 0));
+
+const itemListSchema = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "ItemList",
+  "name": "New Casinos 2026",
+  "numberOfItems": casinos.length,
+  "itemListElement": casinos.slice(0, 10).map((c: any, i: number) => ({
+    "@type": "ListItem",
+    "position": i + 1,
+    "name": c.data.casinoName ?? c.data.title,
+    "url": `https://cashspins.online/casinos/${c.data.slug}/`,
+  })),
+});
+
+const faqs = [
+  {
+    question: "Why should I try a new online casino?",
+    answer: "New casinos often launch with generous welcome bonuses, modern website designs, larger game libraries from day one, and innovative features like crypto payments or gamification elements. They also tend to offer better promotions in their early months to attract players."
+  },
+  {
+    question: "Are new casinos safe to play at?",
+    answer: "A new casino is safe as long as it holds a valid gambling licence, uses SSL encryption, and has fair terms and conditions. We review every new casino against the same strict criteria as established platforms before adding it to our list."
+  },
+  {
+    question: "How often do you add new casinos to this list?",
+    answer: "Our editorial team continuously monitors the market for new casino launches. We evaluate and add qualified new casinos as they appear, typically reviewing several new platforms each month."
+  },
+  {
+    question: "Do new casinos have better bonuses?",
+    answer: "Frequently, yes. New casinos use competitive welcome packages to establish their player base. You may find higher match percentages, more free spins, or lower wagering requirements compared to long-established operators. Always read the full terms before claiming."
+  },
+  {
+    question: "What should I check before signing up at a new casino?",
+    answer: "Verify the gambling licence, read the terms and conditions (especially withdrawal limits and wagering requirements), check available payment methods, look for player reviews or complaints, and test the customer support response time before depositing significant amounts."
+  },
+];
+---
+
+<BaseLayout
+  title="New Online Casinos 2026 | CashSpins"
+  description="Discover the newest online casinos of 2026. Fresh platforms with generous bonuses, modern features, and full expert reviews."
+  schemaJsonLd={itemListSchema}
+>
+  <div class="max-w-7xl mx-auto px-8 py-12">
+    <Breadcrumbs items={[
+      { label: "Home", href: "/" },
+      { label: "New Casinos 2026" },
+    ]} />
+
+    <header class="mt-8 mb-12">
+      <h1 class="font-headline font-extrabold text-4xl md:text-5xl text-on-surface mb-6">
+        New Casinos 2026
+      </h1>
+      <div class="max-w-3xl space-y-4 text-on-surface-variant leading-relaxed">
+        <p>
+          The online casino market moves fast. New operators launch every month with fresh game
+          libraries, modern interfaces, and aggressive welcome bonuses designed to win players from
+          established competitors. But not every new casino is worth your time or money.
+        </p>
+        <p>
+          We review every new casino using the same rigorous framework we apply to industry veterans:
+          licensing verification, bonus term analysis, payout testing, and complaint monitoring. Only
+          platforms that meet our standards make it onto this page.
+        </p>
+        <p>
+          Bookmark this page — we update it regularly as new casinos launch and pass our review process.
+        </p>
+      </div>
+    </header>
+
+    {!hasFiltered && (
+      <div class="bg-surface-container-low rounded-xl p-6 mb-8 flex items-start gap-3">
+        <span class="material-symbols-outlined text-secondary shrink-0">info</span>
+        <p class="text-on-surface-variant text-sm leading-relaxed">
+          Our new casino listings are being expanded. Below you will find our current top-rated
+          casinos while we continue reviewing the latest platforms.
+        </p>
+      </div>
+    )}
+
+    {/* Casino List */}
+    <section class="space-y-6 mb-16">
+      {casinos.map((casino) => (
+        <CasinoCard casino={casino} />
+      ))}
+    </section>
+
+    {/* Trust Section */}
+    <section class="bg-surface-container-low rounded-xl p-8 md:p-10 mb-16">
+      <h2 class="font-headline font-bold text-2xl text-on-surface mb-6">
+        <span class="material-symbols-outlined text-primary align-middle mr-2">new_releases</span>
+        What Makes a New Casino Worth Trying
+      </h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+          <h3 class="font-headline font-semibold text-on-surface mb-2">Valid Licensing</h3>
+          <p class="text-on-surface-variant text-sm leading-relaxed">
+            A licence from a recognised authority (MGA, UKGC, Curacao, etc.) is non-negotiable. We verify every claim against the regulator's public register.
+          </p>
+        </div>
+        <div>
+          <h3 class="font-headline font-semibold text-on-surface mb-2">Modern Tech Stack</h3>
+          <p class="text-on-surface-variant text-sm leading-relaxed">
+            New casinos should deliver fast load times, mobile-first design, and a seamless experience across devices. We test on both desktop and mobile.
+          </p>
+        </div>
+        <div>
+          <h3 class="font-headline font-semibold text-on-surface mb-2">Launch Promotions</h3>
+          <p class="text-on-surface-variant text-sm leading-relaxed">
+            We analyse welcome bonuses for real value, not headline numbers. Fair wagering, reasonable time limits, and honest max cashouts matter more than a big match percentage.
+          </p>
+        </div>
+        <div>
+          <h3 class="font-headline font-semibold text-on-surface mb-2">Operator Track Record</h3>
+          <p class="text-on-surface-variant text-sm leading-relaxed">
+            Many "new" casinos are launched by experienced operators with existing brands. We research the parent company to assess trustworthiness.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    {/* Internal Links */}
+    <section class="mb-16">
+      <h2 class="font-headline font-bold text-2xl text-on-surface mb-6">Explore More</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <a href="/best-online-casinos/" class="flex items-center gap-3 bg-surface-container-low rounded-lg px-5 py-4 ghost-border hover:border-primary/30 transition-all">
+          <span class="material-symbols-outlined text-primary">star</span>
+          <span class="text-on-surface font-medium">Best Online Casinos</span>
+        </a>
+        <a href="/crypto-casinos/" class="flex items-center gap-3 bg-surface-container-low rounded-lg px-5 py-4 ghost-border hover:border-primary/30 transition-all">
+          <span class="material-symbols-outlined text-primary">currency_bitcoin</span>
+          <span class="text-on-surface font-medium">Crypto Casinos</span>
+        </a>
+        <a href="/no-deposit-bonus/" class="flex items-center gap-3 bg-surface-container-low rounded-lg px-5 py-4 ghost-border hover:border-primary/30 transition-all">
+          <span class="material-symbols-outlined text-primary">redeem</span>
+          <span class="text-on-surface font-medium">No Deposit Bonuses</span>
+        </a>
+      </div>
+    </section>
+
+    {/* FAQ */}
+    <FAQSection faqs={faqs} />
+  </div>
+</BaseLayout>

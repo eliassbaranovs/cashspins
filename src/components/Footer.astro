@@ -1,0 +1,145 @@
+---
+const currentYear = new Date().getFullYear();
+
+const casinoCategories = [
+  { href: "/best-online-casinos/", label: "Best Online Casinos", icon: "trophy" },
+  { href: "/crypto-casinos/", label: "Crypto Casinos", icon: "currency_bitcoin" },
+  { href: "/no-deposit-bonus/", label: "No Deposit Bonus", icon: "redeem" },
+  { href: "/new-casinos/", label: "New Casinos", icon: "new_releases" },
+  { href: "/fast-withdrawal-casinos/", label: "Fast Withdrawals", icon: "bolt" },
+  { href: "/mobile-casinos/", label: "Mobile Casinos", icon: "smartphone" },
+];
+
+const resources = [
+  { href: "/casinos/", label: "Casino Reviews", icon: "star" },
+  { href: "/bonus/", label: "Bonus Offers", icon: "redeem" },
+  { href: "/news/", label: "News", icon: "newspaper" },
+  { href: "/guides/", label: "Guides", icon: "menu_book" },
+  { href: "/team/", label: "Our Team", icon: "group" },
+];
+
+const legal = [
+  { href: "/terms/", label: "Terms of Service", icon: "description" },
+  { href: "/privacy/", label: "Privacy Policy", icon: "policy" },
+  { href: "/affiliate-disclosure/", label: "Affiliate Disclosure", icon: "handshake" },
+];
+---
+
+<footer class="bg-surface-container-low mt-auto">
+  <!-- Top Section: 4-Column Grid -->
+  <div class="max-w-screen-2xl mx-auto px-8 py-16">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+
+      <!-- Column 1: Brand -->
+      <div>
+        <a href="/" class="no-underline inline-block mb-3" aria-label="CashSpins Home">
+          <span class="font-headline text-2xl font-bold tracking-tighter text-[#D4AF37]">CASHSPINS</span>
+        </a>
+        <p class="text-on-surface-variant text-sm mb-5 leading-relaxed">
+          Expert casino reviews, exclusive bonuses, and transparent ratings.
+        </p>
+        <div class="flex items-center gap-4 flex-wrap">
+          <div class="flex items-center gap-1.5">
+            <span class="w-6 h-6 rounded-full border border-on-surface-variant/40 flex items-center justify-center">
+              <span class="text-[10px] font-bold text-on-surface-variant/60">18+</span>
+            </span>
+          </div>
+          <div class="flex items-center gap-1">
+            <span class="material-symbols-outlined text-on-surface-variant/60" style="font-size: 14px;">lock</span>
+            <span class="text-xs text-on-surface-variant/60">SSL Encrypted</span>
+          </div>
+          <div class="flex items-center gap-1">
+            <span class="material-symbols-outlined text-on-surface-variant/60" style="font-size: 14px;">verified</span>
+            <span class="text-xs text-on-surface-variant/60">Licensed Reviews</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Column 2: Casino Categories -->
+      <div>
+        <h3 class="font-headline font-bold text-on-surface mb-4">Casino Categories</h3>
+        <ul class="space-y-2.5 list-none p-0 m-0">
+          {casinoCategories.map((link) => (
+            <li>
+              <a href={link.href} class="flex items-center gap-2 text-sm text-on-surface-variant hover:text-primary transition-colors no-underline">
+                <span class="material-symbols-outlined" style="font-size: 16px;">{link.icon}</span>
+                {link.label}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <!-- Column 3: Resources -->
+      <div>
+        <h3 class="font-headline font-bold text-on-surface mb-4">Resources</h3>
+        <ul class="space-y-2.5 list-none p-0 m-0">
+          {resources.map((link) => (
+            <li>
+              <a href={link.href} class="flex items-center gap-2 text-sm text-on-surface-variant hover:text-primary transition-colors no-underline">
+                <span class="material-symbols-outlined" style="font-size: 16px;">{link.icon}</span>
+                {link.label}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <!-- Column 4: Legal & Support -->
+      <div>
+        <h3 class="font-headline font-bold text-on-surface mb-4">Legal</h3>
+        <ul class="space-y-2.5 list-none p-0 m-0">
+          {legal.map((link) => (
+            <li>
+              <a href={link.href} class="flex items-center gap-2 text-sm text-on-surface-variant hover:text-primary transition-colors no-underline">
+                <span class="material-symbols-outlined" style="font-size: 16px;">{link.icon}</span>
+                {link.label}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Gradient Divider -->
+  <div class="h-px bg-gradient-to-r from-transparent via-outline-variant/20 to-transparent"></div>
+
+  <!-- Middle Section: Responsible Gambling Organizations -->
+  <div class="max-w-screen-2xl mx-auto px-8 py-8">
+    <div class="group flex items-center justify-center gap-6 md:gap-10 flex-wrap opacity-50 grayscale hover:opacity-100 hover:grayscale-0 transition-all duration-500">
+      <a href="https://www.begambleaware.org" target="_blank" rel="noopener noreferrer" class="block h-7 md:h-8">
+        <img src="/images/trust/gamble-aware.webp" alt="GambleAware" class="h-full w-auto object-contain" loading="lazy" />
+      </a>
+      <a href="https://www.gamcare.org.uk" target="_blank" rel="noopener noreferrer" class="block h-7 md:h-8">
+        <img src="/images/trust/gamcare.webp" alt="GamCare" class="h-full w-auto object-contain" loading="lazy" />
+      </a>
+      <a href="https://www.gamblersanonymous.org" target="_blank" rel="noopener noreferrer" class="block h-7 md:h-8">
+        <img src="/images/trust/gamblers-anonymous.webp" alt="Gamblers Anonymous" class="h-full w-auto object-contain" loading="lazy" />
+      </a>
+      <a href="https://www.ncpgambling.org" target="_blank" rel="noopener noreferrer" class="block h-7 md:h-8">
+        <img src="/images/trust/ncpg.webp" alt="National Council on Problem Gambling" class="h-full w-auto object-contain" loading="lazy" />
+      </a>
+      <div class="w-7 h-7 md:w-8 md:h-8 rounded-full border border-on-surface-variant/40 flex items-center justify-center">
+        <span class="text-[10px] md:text-xs font-bold text-on-surface-variant">18+</span>
+      </div>
+      <div class="flex items-center gap-1">
+        <span class="material-symbols-outlined text-on-surface-variant" style="font-size: 16px;">lock</span>
+        <span class="text-xs text-on-surface-variant">SSL Secured</span>
+      </div>
+    </div>
+    <p class="text-center text-xs text-on-surface-variant/50 mt-4">Play Responsibly</p>
+  </div>
+
+  <!-- Gradient Divider -->
+  <div class="h-px bg-gradient-to-r from-transparent via-outline-variant/20 to-transparent"></div>
+
+  <!-- Bottom Section: Copyright Bar -->
+  <div class="max-w-screen-2xl mx-auto px-8 py-6">
+    <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+      <span class="text-xs text-on-surface-variant/40">&copy; {currentYear} CashSpins.Online</span>
+      <span class="text-xs text-on-surface-variant/40">18+ Gamble Responsibly. CashSpins is an independent directory.</span>
+    </div>
+  </div>
+</footer>

@@ -1,0 +1,403 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Breadcrumbs from "../../components/Breadcrumbs.astro";
+import RatingBadge from "../../components/RatingBadge.astro";
+
+const allCasinos = (await getCollection("casinos"))
+  .filter((c: any) => !c.data.draft)
+  .sort((a: any, b: any) => (b.data.ourRating ?? 0) - (a.data.ourRating ?? 0));
+
+// Also check for editorial comparisons
+let editorialComparisons: any[] = [];
+try {
+  editorialComparisons = (await getCollection("comparisons"))
+    .filter((c: any) => !c.data.draft)
+    .sort((a: any, b: any) => new Date(b.data.publishedAt).getTime() - new Date(a.data.publishedAt).getTime());
+} catch {}
+
+// Pre-build casino data for client-side comparison
+// Uses riobet-casino.md as the reference data model
+const casinoData = allCasinos.map((c: any) => ({
+  slug: c.data.slug,
+  name: c.data.casinoName ?? c.data.title,
+  rating: c.data.ourRating ?? null,
+  logo: c.data.logo ?? null,
+  bonus_title: c.data.bonus_title ?? null,
+  wagering: c.data.wagering ?? null,
+  wageringMultiplier: c.data.wageringMultiplier ?? null,
+  min_deposit: c.data.bonus_min_deposit ?? c.data.min_deposit ?? null,
+  free_spins: c.data.free_spins ?? null,
+  bonus_percentage: c.data.bonus_percentage ?? null,
+  max_bonus: c.data.max_bonus ?? null,
+  game_count: c.data.game_count ?? null,
+  gameProviders: c.data.gameProviders ?? null,
+  licences: c.data.licences ?? null,
+  established: c.data.established ?? null,
+  company: c.data.company ?? null,
+  casino_type: c.data.casino_type ?? null,
+  cryptoWithdrawalSpeedMinutes: c.data.cryptoWithdrawalSpeedMinutes ?? null,
+  acceptedCryptos: c.data.acceptedCryptos ?? [],
+  currencies: c.data.currencies ?? null,
+  depositMethods: c.data.depositMethods ?? null,
+  withdrawalMethods: c.data.withdrawalMethods ?? null,
+  vip_program: c.data.vip_program ?? null,
+  kycRequired: c.data.kycRequired ?? null,
+  isNewCasino: c.data.isNewCasino ?? null,
+  lastVerified: c.data.lastVerified ?? null,
+  categories: c.data.categories ?? [],
+  bonusCount: c.data.bonuses?.length ?? 0,
+  pros: c.data.pros ?? [],
+  cons: c.data.cons ?? [],
+  faqCount: c.data.faqs?.length ?? 0,
+  screenshotCount: c.data.screenshots?.length ?? 0,
+}));
+
+// Featured matchups from top casinos
+const featured = [];
+for (let i = 0; i < Math.min(allCasinos.length - 1, 3); i++) {
+  if (allCasinos[i] && allCasinos[i + 1]) {
+    featured.push({
+      a: casinoData[i],
+      b: casinoData[i + 1],
+    });
+  }
+}
+---
+
+<BaseLayout
+  title="Compare Online Casinos Side by Side | CashSpins"
+  seoTitle="Compare Casinos 2026 — Side-by-Side Analysis | CashSpins"
+  description="Compare any two online casinos head-to-head. See ratings, bonuses, game counts, payout speeds, and more — all from our verified review data."
+>
+  <div class="max-w-screen-2xl mx-auto px-4 md:px-8 pt-8 pb-20">
+    <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Compare Casinos" }]} />
+
+    <!-- Header -->
+    <header class="mt-8 mb-12">
+      <h1 class="font-headline text-4xl md:text-6xl font-extrabold tracking-tighter text-on-surface mb-4">
+        Compare <span class="text-primary">Casinos</span>
+      </h1>
+      <p class="text-on-surface-variant text-lg max-w-2xl leading-relaxed">
+        Pick any two casinos and see how they stack up. All data comes from our verified reviews — ratings, bonuses, games, payouts, and more.
+      </p>
+    </header>
+
+    <!-- Casino Selector -->
+    <section class="bg-surface-container-low rounded-xl p-6 md:p-10 mb-12" id="compare-tool">
+      <div class="grid grid-cols-1 md:grid-cols-[1fr_auto_1fr] gap-6 md:gap-4 items-end">
+        <!-- Casino A selector -->
+        <div>
+          <label for="casino-a" class="block text-xs font-label font-bold text-on-surface-variant uppercase tracking-wider mb-2">
+            <span class="material-symbols-outlined text-sm align-middle mr-1">casino</span>
+            First Casino
+          </label>
+          <select
+            id="casino-a"
+            class="w-full bg-surface-container-lowest text-on-surface px-4 py-3.5 rounded-xl border border-outline-variant/20 focus:border-primary/50 focus:outline-none font-body"
+          >
+            <option value="">Select a casino...</option>
+            {casinoData.map((c: any) => (
+              <option value={c.slug}>{c.name}{c.rating ? ` (${c.rating}/10)` : ''}</option>
+            ))}
+          </select>
+        </div>
+
+        <!-- VS badge -->
+        <div class="flex items-center justify-center">
+          <span class="inline-flex items-center justify-center w-14 h-14 rounded-full bg-secondary/10 text-secondary font-black text-lg font-headline">
+            VS
+          </span>
+        </div>
+
+        <!-- Casino B selector -->
+        <div>
+          <label for="casino-b" class="block text-xs font-label font-bold text-on-surface-variant uppercase tracking-wider mb-2">
+            <span class="material-symbols-outlined text-sm align-middle mr-1">casino</span>
+            Second Casino
+          </label>
+          <select
+            id="casino-b"
+            class="w-full bg-surface-container-lowest text-on-surface px-4 py-3.5 rounded-xl border border-outline-variant/20 focus:border-primary/50 focus:outline-none font-body"
+          >
+            <option value="">Select a casino...</option>
+            {casinoData.map((c: any) => (
+              <option value={c.slug}>{c.name}{c.rating ? ` (${c.rating}/10)` : ''}</option>
+            ))}
+          </select>
+        </div>
+      </div>
+
+      <div class="flex justify-center mt-6">
+        <button
+          id="compare-btn"
+          type="button"
+          class="liquid-gradient text-on-primary-fixed-variant font-headline font-bold rounded-md px-8 py-3 shadow-lg shadow-primary/20 hover:scale-105 active:scale-95 transition-transform disabled:opacity-40 disabled:pointer-events-none"
+          disabled
+        >
+          <span class="material-symbols-outlined text-sm align-middle mr-1">compare_arrows</span>
+          Compare Now
+        </button>
+      </div>
+    </section>
+
+    <!-- Comparison Results (hidden until selection) -->
+    <section id="compare-results" class="hidden mb-16">
+      <!-- Header with logos -->
+      <div class="grid grid-cols-[1fr_auto_1fr] gap-4 items-center mb-8">
+        <div class="text-center" id="result-a-header"></div>
+        <span class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-secondary/10 text-secondary font-bold text-sm font-headline">VS</span>
+        <div class="text-center" id="result-b-header"></div>
+      </div>
+
+      <!-- Comparison table -->
+      <div class="bg-surface-container-low rounded-xl overflow-hidden" id="compare-table"></div>
+
+      <!-- Pros & Cons side by side -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8" id="compare-proscons"></div>
+
+      <!-- CTA buttons -->
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mt-8" id="compare-ctas"></div>
+    </section>
+
+    <!-- Featured Matchups -->
+    {featured.length > 0 && (
+      <section class="mb-16">
+        <h2 class="font-headline font-bold text-2xl text-on-surface mb-6 flex items-center gap-2">
+          <span class="material-symbols-outlined text-secondary">local_fire_department</span>
+          Featured Matchups
+        </h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {featured.map(({ a, b }: any) => (
+            <button
+              type="button"
+              class="featured-matchup group bg-surface-container-low rounded-xl p-6 ghost-border hover:bg-surface-container-high transition-all text-left"
+              data-a={a.slug}
+              data-b={b.slug}
+            >
+              <div class="flex items-center justify-between gap-3 mb-4">
+                <div class="flex-1 text-center min-w-0">
+                  {a.logo && <img src={a.logo} alt="" class="w-12 h-12 mx-auto rounded-lg bg-surface-container-lowest object-contain p-1 mb-2" loading="lazy" />}
+                  <p class="font-headline font-bold text-sm text-on-surface truncate">{a.name}</p>
+                  {a.rating && <p class="text-primary text-xs font-bold mt-1">{a.rating}/10</p>}
+                </div>
+                <span class="text-secondary font-bold text-xs font-headline shrink-0">VS</span>
+                <div class="flex-1 text-center min-w-0">
+                  {b.logo && <img src={b.logo} alt="" class="w-12 h-12 mx-auto rounded-lg bg-surface-container-lowest object-contain p-1 mb-2" loading="lazy" />}
+                  <p class="font-headline font-bold text-sm text-on-surface truncate">{b.name}</p>
+                  {b.rating && <p class="text-primary text-xs font-bold mt-1">{b.rating}/10</p>}
+                </div>
+              </div>
+              <div class="text-center text-primary text-xs font-bold group-hover:underline">
+                Compare Now
+                <span class="material-symbols-outlined text-xs align-middle ml-1">arrow_forward</span>
+              </div>
+            </button>
+          ))}
+        </div>
+      </section>
+    )}
+
+    <!-- Editorial Comparisons (from content collection) -->
+    {editorialComparisons.length > 0 && (
+      <section class="mb-16">
+        <h2 class="font-headline font-bold text-2xl text-on-surface mb-6 flex items-center gap-2">
+          <span class="material-symbols-outlined text-secondary">article</span>
+          In-Depth Comparisons
+        </h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {editorialComparisons.map((comp: any) => {
+            const d = comp.data;
+            return (
+              <a href={`/compare/${d.slug}/`} class="group block bg-surface-container-low rounded-xl p-6 hover:bg-surface-container-high ghost-border transition-all">
+                <div class="flex items-center justify-between gap-3 mb-4">
+                  <p class="font-headline font-bold text-sm text-on-surface truncate">{d.casino_a_name}</p>
+                  <span class="text-secondary font-bold text-xs shrink-0">VS</span>
+                  <p class="font-headline font-bold text-sm text-on-surface truncate">{d.casino_b_name}</p>
+                </div>
+                {d.winner && (
+                  <div class="flex justify-center mb-3">
+                    <span class="inline-flex items-center gap-1 bg-primary/10 text-primary text-xs font-bold px-2 py-0.5 rounded-full">
+                      <span class="material-symbols-outlined text-xs" style="font-variation-settings: 'FILL' 1;">emoji_events</span>
+                      {d.winner}
+                    </span>
+                  </div>
+                )}
+                <div class="text-center text-primary text-xs font-bold group-hover:underline">Read Full Comparison</div>
+              </a>
+            );
+          })}
+        </div>
+      </section>
+    )}
+
+    <!-- SEO text -->
+    <section class="max-w-3xl mt-12">
+      <h2 class="font-headline font-bold text-2xl text-on-surface mb-4">Why Compare Casinos?</h2>
+      <div class="text-on-surface-variant leading-relaxed space-y-4">
+        <p>
+          Not all casinos are created equal. Bonuses, payout speeds, game selections, and licensing vary dramatically between platforms. Our comparison tool pulls real data from our verified reviews so you can see exactly how two casinos differ — no marketing spin, just facts.
+        </p>
+        <p>
+          Whether you're choosing between two crypto casinos or deciding if a new platform beats your current favorite, a side-by-side comparison cuts through the noise.
+        </p>
+      </div>
+      <a href="/how-we-review/" class="inline-flex items-center gap-2 mt-6 text-primary font-headline font-bold hover:gap-3 transition-all">
+        How we rate casinos
+        <span class="material-symbols-outlined text-sm">arrow_forward</span>
+      </a>
+    </section>
+  </div>
+
+  <!-- Casino data for client-side comparison -->
+  <script define:vars={{ casinoData }}>
+    const casinos = casinoData;
+
+    function getCasino(slug) {
+      return casinos.find(c => c.slug === slug);
+    }
+
+    function ratingColor(r) {
+      if (r >= 8) return { bg: "rgba(71,235,113,0.1)", text: "#47eb71" };
+      if (r >= 6) return { bg: "rgba(242,204,0,0.1)", text: "#f2cc00" };
+      return { bg: "rgba(255,180,171,0.2)", text: "#ffb4ab" };
+    }
+
+    function buildHeader(c) {
+      const logo = c.logo ? `<img src="${c.logo}" alt="${c.name}" class="w-16 h-16 mx-auto rounded-xl bg-[#0e0e0e] object-contain p-2 mb-3" />` : '';
+      const rc = c.rating ? ratingColor(c.rating) : null;
+      const badge = c.rating ? `<span style="background:${rc.bg};color:${rc.text}" class="inline-flex items-center font-bold rounded-full text-sm px-3 py-1 gap-1"><span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>${c.rating}/10</span>` : '';
+      return `${logo}<h3 class="font-headline font-bold text-xl text-[#e5e2e1] mb-2">${c.name}</h3>${badge}`;
+    }
+
+    function row(label, icon, valA, valB) {
+      if (!valA && !valB) return '';
+      const better = (a, b) => {
+        if (!a || !b) return '';
+        const na = parseFloat(a), nb = parseFloat(b);
+        if (isNaN(na) || isNaN(nb)) return '';
+        return na > nb ? 'a' : nb > na ? 'b' : '';
+      };
+      const win = better(valA, valB);
+      const cellA = `<div class="p-4 text-center text-sm ${win === 'a' ? 'text-[#47eb71] font-bold' : 'text-[#d0c5af]'}">${valA || '—'}</div>`;
+      const cellB = `<div class="p-4 text-center text-sm ${win === 'b' ? 'text-[#47eb71] font-bold' : 'text-[#d0c5af]'}">${valB || '—'}</div>`;
+      return `<div class="grid grid-cols-3 border-t border-[#4d4635]/20">
+        ${cellA}
+        <div class="p-4 text-center text-[#d0c5af] text-xs font-bold flex items-center justify-center gap-1.5"><span class="material-symbols-outlined text-sm">${icon}</span>${label}</div>
+        ${cellB}
+      </div>`;
+    }
+
+    function buildTable(a, b) {
+      const provCount = (p) => p ? p.split('|').length : null;
+      const currCount = (c) => c ? c.split('|').map(s => s.trim()).filter(Boolean) : [];
+      return `
+        <div class="grid grid-cols-3 text-sm font-bold text-[#d0c5af] bg-[#2a2a2a]">
+          <div class="p-4 text-center">${a.name}</div>
+          <div class="p-4 text-center">Category</div>
+          <div class="p-4 text-center">${b.name}</div>
+        </div>
+        ${row('Our Rating', 'star', a.rating ? a.rating + '/10' : null, b.rating ? b.rating + '/10' : null)}
+        ${row('Welcome Bonus', 'redeem', a.bonus_title, b.bonus_title)}
+        ${row('Bonus Count', 'card_giftcard', a.bonusCount ? a.bonusCount + ' offers' : null, b.bonusCount ? b.bonusCount + ' offers' : null)}
+        ${row('Wagering', 'calculate', a.wagering, b.wagering)}
+        ${row('Min Deposit', 'savings', a.min_deposit, b.min_deposit)}
+        ${row('Game Providers', 'sports_esports', provCount(a.gameProviders) ? provCount(a.gameProviders) + ' providers' : null, provCount(b.gameProviders) ? provCount(b.gameProviders) + ' providers' : null)}
+        ${row('Payout Speed', 'speed', a.cryptoWithdrawalSpeedMinutes ? '~' + a.cryptoWithdrawalSpeedMinutes + ' min' : null, b.cryptoWithdrawalSpeedMinutes ? '~' + b.cryptoWithdrawalSpeedMinutes + ' min' : null)}
+        ${row('License', 'gavel', a.licences, b.licences)}
+        ${row('Operator', 'apartment', a.company, b.company)}
+        ${row('Established', 'history', a.established, b.established)}
+        ${row('Type', 'category', a.casino_type, b.casino_type)}
+        ${row('VIP Program', 'workspace_premium', a.vip_program != null ? (a.vip_program ? 'Yes' : 'No') : null, b.vip_program != null ? (b.vip_program ? 'Yes' : 'No') : null)}
+        ${row('KYC Required', 'badge', a.kycRequired != null ? (a.kycRequired ? 'Yes' : 'No') : null, b.kycRequired != null ? (b.kycRequired ? 'Yes' : 'No') : null)}
+        ${row('Accepted Crypto', 'currency_bitcoin', a.acceptedCryptos.length ? a.acceptedCryptos.join(', ') : null, b.acceptedCryptos.length ? b.acceptedCryptos.join(', ') : null)}
+        ${row('Currencies', 'payments', currCount(a.currencies).length ? currCount(a.currencies).length + ' currencies' : null, currCount(b.currencies).length ? currCount(b.currencies).length + ' currencies' : null)}
+        ${row('Last Verified', 'verified', a.lastVerified, b.lastVerified)}
+      `;
+    }
+
+    function buildProsCons(a, b) {
+      const list = (items, icon, color) => items.length ? items.map(i =>
+        `<li class="flex items-start gap-2 text-sm text-[#d0c5af]"><span class="material-symbols-outlined ${color} text-base mt-0.5">${icon}</span>${i}</li>`
+      ).join('') : '<li class="text-sm text-[#99907c]">No data available</li>';
+
+      return `
+        <div class="bg-[#1c1b1b] rounded-xl p-6">
+          <h3 class="font-headline font-bold text-lg text-[#e5e2e1] mb-4">${a.name}</h3>
+          <div class="mb-4">
+            <p class="text-xs font-bold text-[#47eb71] uppercase tracking-wider mb-2 flex items-center gap-1"><span class="material-symbols-outlined text-sm">add_circle</span>Pros</p>
+            <ul class="space-y-2">${list(a.pros, 'check', 'text-[#47eb71]')}</ul>
+          </div>
+          <div>
+            <p class="text-xs font-bold text-[#ffb4ab] uppercase tracking-wider mb-2 flex items-center gap-1"><span class="material-symbols-outlined text-sm">remove_circle</span>Cons</p>
+            <ul class="space-y-2">${list(a.cons, 'close', 'text-[#ffb4ab]')}</ul>
+          </div>
+        </div>
+        <div class="bg-[#1c1b1b] rounded-xl p-6">
+          <h3 class="font-headline font-bold text-lg text-[#e5e2e1] mb-4">${b.name}</h3>
+          <div class="mb-4">
+            <p class="text-xs font-bold text-[#47eb71] uppercase tracking-wider mb-2 flex items-center gap-1"><span class="material-symbols-outlined text-sm">add_circle</span>Pros</p>
+            <ul class="space-y-2">${list(b.pros, 'check', 'text-[#47eb71]')}</ul>
+          </div>
+          <div>
+            <p class="text-xs font-bold text-[#ffb4ab] uppercase tracking-wider mb-2 flex items-center gap-1"><span class="material-symbols-outlined text-sm">remove_circle</span>Cons</p>
+            <ul class="space-y-2">${list(b.cons, 'close', 'text-[#ffb4ab]')}</ul>
+          </div>
+        </div>
+      `;
+    }
+
+    function buildCTAs(a, b) {
+      return `
+        <a href="/casinos/${a.slug}/" class="border border-[#4d4635]/30 text-[#d0c5af] rounded-md px-6 py-3 text-center hover:bg-[#353534] transition-all font-headline font-bold text-sm">${a.name} Review</a>
+        <a href="/casinos/${b.slug}/" class="border border-[#4d4635]/30 text-[#d0c5af] rounded-md px-6 py-3 text-center hover:bg-[#353534] transition-all font-headline font-bold text-sm">${b.name} Review</a>
+      `;
+    }
+
+    function runComparison(slugA, slugB) {
+      const a = getCasino(slugA);
+      const b = getCasino(slugB);
+      if (!a || !b) return;
+
+      document.getElementById('result-a-header').innerHTML = buildHeader(a);
+      document.getElementById('result-b-header').innerHTML = buildHeader(b);
+      document.getElementById('compare-table').innerHTML = buildTable(a, b);
+      document.getElementById('compare-proscons').innerHTML = buildProsCons(a, b);
+      document.getElementById('compare-ctas').innerHTML = buildCTAs(a, b);
+      document.getElementById('compare-results').classList.remove('hidden');
+      document.getElementById('compare-results').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    // Wire up selectors
+    document.addEventListener('DOMContentLoaded', () => {
+      const selA = document.getElementById('casino-a');
+      const selB = document.getElementById('casino-b');
+      const btn = document.getElementById('compare-btn');
+
+      function updateBtn() {
+        btn.disabled = !selA.value || !selB.value || selA.value === selB.value;
+      }
+
+      selA.addEventListener('change', updateBtn);
+      selB.addEventListener('change', updateBtn);
+
+      btn.addEventListener('click', () => {
+        if (selA.value && selB.value && selA.value !== selB.value) {
+          runComparison(selA.value, selB.value);
+        }
+      });
+
+      // Featured matchup buttons
+      document.querySelectorAll('.featured-matchup').forEach(el => {
+        el.addEventListener('click', () => {
+          const a = el.dataset.a;
+          const b = el.dataset.b;
+          selA.value = a;
+          selB.value = b;
+          updateBtn();
+          runComparison(a, b);
+        });
+      });
+    });
+  </script>
+</BaseLayout>

@@ -1,145 +1,150 @@
 ---
 const navLinks = [
-  { href: "/", label: "Home" },
-  { href: "/casinos/", label: "Casino Reviews" },
+  { href: "/casinos/", label: "Casinos" },
   { href: "/bonus/", label: "Bonuses" },
+  { href: "/compare/", label: "Compare" },
   { href: "/news/", label: "News" },
   { href: "/guides/", label: "Guides" },
+  { href: "/how-we-review/", label: "How We Review" },
 ];
 
 const currentPath = Astro.url.pathname;
+
+function isActive(href: string): boolean {
+  if (href === "/") return currentPath === "/";
+  return currentPath === href || currentPath.startsWith(href);
+}
 ---
 
-<header class="navbar">
-  <div class="navbar__inner">
-    <a href="/" class="navbar__logo" aria-label="Home">
-      <span class="navbar__logo-text">CasinoRank</span>
+<header
+  class="fixed top-0 left-0 right-0 z-50 h-20"
+  id="site-header"
+>
+  <div class="absolute inset-0 bg-[#131313]/60 backdrop-blur-md"></div>
+  <div class="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-outline-variant/20 to-transparent"></div>
+  <div class="absolute inset-0 shadow-[0_20px_40px_rgba(229,226,225,0.04)] pointer-events-none"></div>
+
+  <div class="relative max-w-screen-2xl mx-auto px-8 h-full flex items-center justify-between">
+
+    <!-- Logo -->
+    <a href="/" class="flex items-center no-underline shrink-0" aria-label="CashSpins Home">
+      <svg width="188" height="36" viewBox="0 0 188 36" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <defs>
+          <marker id="cs-arr" markerWidth="5" markerHeight="5" refX="4" refY="2.5" orient="auto">
+            <path d="M 0 0 L 5 2.5 L 0 5 Z" fill="#47eb71"/>
+          </marker>
+        </defs>
+        <!-- Spin arc: 270° clockwise around coin -->
+        <path d="M 18 2 A 16 16 0 1 1 2 18" stroke="#47eb71" stroke-width="1.75" stroke-linecap="round" marker-end="url(#cs-arr)" opacity="0.9"/>
+        <!-- Coin outer ring -->
+        <circle cx="18" cy="18" r="11" stroke="#D4AF37" stroke-width="1.5" fill="#0e0e0e"/>
+        <!-- Coin inner detail -->
+        <circle cx="18" cy="18" r="6.5" stroke="#D4AF37" stroke-width="0.75" fill="none" opacity="0.4"/>
+        <!-- Dollar sign -->
+        <text x="18" y="23" text-anchor="middle" font-family="Manrope, sans-serif" font-weight="800" font-size="11" fill="#D4AF37">$</text>
+        <!-- Wordmark -->
+        <text x="46" y="25" font-family="Manrope, sans-serif" font-weight="800" font-size="20" letter-spacing="-0.6">
+          <tspan fill="#e5e2e1">CASH</tspan><tspan fill="#47eb71">SPINS</tspan>
+        </text>
+      </svg>
     </a>
 
-    <button class="navbar__toggle" id="nav-toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="nav-menu">
-      <span></span>
-      <span></span>
-      <span></span>
-    </button>
+    <!-- Desktop Nav -->
+    <nav class="hidden md:flex items-center gap-1" aria-label="Main navigation">
+      {navLinks.map((link) => (
+        <a
+          href={link.href}
+          class:list={[
+            "relative font-label font-semibold text-sm px-4 py-2 rounded-full transition-all duration-200",
+            isActive(link.href)
+              ? "text-primary bg-primary/10"
+              : "text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high",
+          ]}
+        >
+          {link.label}
+          {isActive(link.href) && (
+            <span class="absolute bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-primary" aria-hidden="true"></span>
+          )}
+        </a>
+      ))}
+    </nav>
 
-    <nav class="navbar__menu" id="nav-menu" role="navigation" aria-label="Main navigation">
-      <ul class="navbar__list">
-        {navLinks.map((link) => (
-          <li class="navbar__item">
-            <a
-              href={link.href}
-              class={`navbar__link${currentPath === link.href || (link.href !== "/" && currentPath.startsWith(link.href)) ? " navbar__link--active" : ""}`}
-            >
-              {link.label}
-            </a>
-          </li>
-        ))}
-      </ul>
+    <!-- Mobile hamburger -->
+    <button
+      class="md:hidden flex flex-col justify-center items-center gap-[5px] p-1"
+      id="mobile-toggle"
+      aria-label="Toggle navigation menu"
+      aria-expanded="false"
+      aria-controls="mobile-menu"
+      type="button"
+    >
+      <span class="block w-5 h-[2px] bg-on-surface-variant rounded-full transition-all duration-300" id="bar-1"></span>
+      <span class="block w-5 h-[2px] bg-on-surface-variant rounded-full transition-all duration-300" id="bar-2"></span>
+      <span class="block w-5 h-[2px] bg-on-surface-variant rounded-full transition-all duration-300" id="bar-3"></span>
+    </button>
+  </div>
+
+  <!-- Mobile menu -->
+  <div
+    class="md:hidden absolute top-20 left-0 right-0 bg-surface-container-low overflow-hidden transition-all duration-300 ease-out"
+    id="mobile-menu"
+    style="max-height: 0; opacity: 0;"
+  >
+    <nav class="px-8 py-6 flex flex-col gap-2" aria-label="Mobile navigation">
+      {navLinks.map((link) => (
+        <a
+          href={link.href}
+          class:list={[
+            "font-label font-semibold text-base px-4 py-2.5 rounded-xl transition-colors duration-200",
+            isActive(link.href)
+              ? "text-primary bg-primary/10"
+              : "text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high",
+          ]}
+        >
+          {link.label}
+        </a>
+      ))}
     </nav>
   </div>
 </header>
 
+<!-- Spacer to offset fixed header -->
+<div class="h-20"></div>
+
 <script>
-  const toggle = document.getElementById("nav-toggle");
-  const menu = document.getElementById("nav-menu");
+  const toggle = document.getElementById("mobile-toggle");
+  const menu = document.getElementById("mobile-menu");
+  const bar1 = document.getElementById("bar-1");
+  const bar2 = document.getElementById("bar-2");
+  const bar3 = document.getElementById("bar-3");
+
+  let isOpen = false;
+
   toggle?.addEventListener("click", () => {
-    const isOpen = menu?.classList.toggle("navbar__menu--open");
+    isOpen = !isOpen;
     toggle.setAttribute("aria-expanded", String(isOpen));
+
+    if (menu) {
+      if (isOpen) {
+        menu.style.maxHeight = menu.scrollHeight + "px";
+        menu.style.opacity = "1";
+      } else {
+        menu.style.maxHeight = "0";
+        menu.style.opacity = "0";
+      }
+    }
+
+    // Animate hamburger to X
+    if (bar1 && bar2 && bar3) {
+      if (isOpen) {
+        bar1.style.transform = "translateY(7px) rotate(45deg)";
+        bar2.style.opacity = "0";
+        bar3.style.transform = "translateY(-7px) rotate(-45deg)";
+      } else {
+        bar1.style.transform = "";
+        bar2.style.opacity = "1";
+        bar3.style.transform = "";
+      }
+    }
   });
 </script>
-
-<style>
-  .navbar {
-    background: #0f0f1a;
-    border-bottom: 1px solid rgba(255 255 255 / 0.08);
-    position: sticky;
-    top: 0;
-    z-index: 100;
-  }
-  .navbar__inner {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 1.25rem;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    height: 3.5rem;
-  }
-  .navbar__logo {
-    text-decoration: none;
-  }
-  .navbar__logo-text {
-    font-size: 1.25rem;
-    font-weight: 800;
-    background: linear-gradient(135deg, #f0c040, #e07b20);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    letter-spacing: -0.02em;
-  }
-  .navbar__list {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    gap: 0.25rem;
-  }
-  .navbar__link {
-    display: block;
-    padding: 0.4rem 0.8rem;
-    color: #c9cde0;
-    text-decoration: none;
-    font-size: 0.9rem;
-    font-weight: 500;
-    border-radius: 6px;
-    transition: color 0.15s, background 0.15s;
-  }
-  .navbar__link:hover {
-    color: #fff;
-    background: rgba(255 255 255 / 0.06);
-  }
-  .navbar__link--active {
-    color: #f0c040;
-    background: rgba(240 192 64 / 0.1);
-  }
-  /* Hamburger */
-  .navbar__toggle {
-    display: none;
-    flex-direction: column;
-    gap: 5px;
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 4px;
-  }
-  .navbar__toggle span {
-    display: block;
-    width: 22px;
-    height: 2px;
-    background: #c9cde0;
-    border-radius: 2px;
-    transition: background 0.15s;
-  }
-  @media (max-width: 680px) {
-    .navbar__toggle {
-      display: flex;
-    }
-    .navbar__menu {
-      display: none;
-      position: absolute;
-      top: 3.5rem;
-      left: 0;
-      right: 0;
-      background: #0f0f1a;
-      border-bottom: 1px solid rgba(255 255 255 / 0.08);
-      padding: 0.75rem 1.25rem 1rem;
-    }
-    .navbar__menu--open {
-      display: block;
-    }
-    .navbar__list {
-      flex-direction: column;
-      gap: 0.1rem;
-    }
-  }
-</style>

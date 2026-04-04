@@ -3,56 +3,67 @@ import { defineCollection, z } from "astro:content";
 
 // ─── Shared sub-schemas ───────────────────────────────────────────────────────
 
-const bonusSchema = z.object({
-  name: z.string(),
-  type: z.string().optional(),
-  wagering: z.string().optional(),
-  min_deposit: z.string().optional(),
-  max_cashout: z.string().optional(),
-  free_spins: z.union([z.string(), z.number()]).optional(),
-  expiry: z.string().optional(),
-});
+const bonusSchema = z
+  .object({
+    name: z.string(),
+    type: z.string().optional(),
+    wagering: z.string().optional(),
+    min_deposit: z.string().optional(),
+    max_cashout: z.string().optional(),
+    free_spins: z.union([z.string(), z.number()]).optional(),
+    expiry: z.string().optional(),
+  })
+  .passthrough();
 
-const screenshotSchema = z.object({
-  url: z.string(),
-  alt: z.string(),
-});
+const screenshotSchema = z
+  .object({
+    url: z.string().optional(),
+    alt: z.string().optional(),
+  })
+  .passthrough();
 
-const sectionImageSchema = z.object({
-  section: z.string(),
-  path: z.string(),
-});
+const sectionImageSchema = z
+  .object({
+    section: z.string().optional(),
+    path: z.string().optional(),
+  })
+  .passthrough();
 
-const faqSchema = z.object({
-  question: z.string(),
-  answer: z.string(),
-});
+const faqSchema = z
+  .object({
+    question: z.string(),
+    answer: z.string(),
+  })
+  .passthrough();
 
 // ─── Universal fields shared across all article content types ─────────────────
 
 const universalFields = {
+  // Required
   title: z.string(),
   slug: z.string(),
   description: z.string(),
   seoTitle: z.string(),
-  excerpt: z.string().optional(),
   publishedAt: z.string(),
-  updatedAt: z.string().optional(),
-  publishDate: z.string().optional(),
   author: z.string(),
   authorSlug: z.string(),
-  contentType: z.enum(["review", "bonus", "news", "comparison", "guide"]),
+  contentType: z.string(),
+  image: z.string(),
+  imageAlt: z.string(),
+
+  // Optional
+  excerpt: z.string().optional(),
+  updatedAt: z.string().optional(),
+  publishDate: z.string().optional(),
   category: z.string().optional(),
   draft: z.boolean().default(false),
   noIndex: z.boolean().default(false),
   robots: z.string().default("index, follow"),
   canonical: z.string().optional(),
-  image: z.string(),
-  imageAlt: z.string(),
   imageWidth: z.number().optional(),
   imageHeight: z.number().optional(),
   tags: z.array(z.string()).optional(),
-  schemaJsonLd: z.string().optional(),
+  schemaJsonLd: z.any().optional(),
 };
 
 // ─── Casino-specific fields (shared by casinos + bonuses collections) ─────────
@@ -60,113 +71,154 @@ const universalFields = {
 const casinoFields = {
   casino: z.string().optional(),
   casinoName: z.string().optional(),
-  ourRating: z.number().optional(),
-  player_rating: z.number().optional(),
+  ourRating: z.number().min(0).max(10).optional(),
+  player_rating: z.union([z.number(), z.string()]).optional(),
   best_for: z.string().optional(),
   website: z.string().optional(),
   established: z.string().optional(),
   company: z.string().optional(),
   licences: z.string().optional(),
   casino_type: z.string().optional(),
+
+  // Bonus headline fields
   bonus_title: z.string().optional(),
-  bonus_percentage: z.number().optional(),
+  bonus_percentage: z.union([z.number(), z.string()]).optional(),
   max_bonus: z.string().optional(),
   min_deposit: z.string().optional(),
+  bonus_min_deposit: z.string().optional(),
   wagering: z.string().optional(),
+  wageringMultiplier: z.number().optional(),
   free_spins: z.union([z.string(), z.number()]).optional(),
   bonus_code: z.string().optional(),
   vip_program: z.boolean().optional(),
+
+  // Structured bonuses
   bonuses: z.array(bonusSchema).optional(),
+
+  // Pros & cons
   pros: z.array(z.string()).optional(),
   cons: z.array(z.string()).optional(),
+
+  // Payment & crypto
   acceptedCryptos: z.array(z.string()).optional(),
   depositMethods: z.string().optional(),
   withdrawalMethods: z.string().optional(),
   currencies: z.string().optional(),
   cryptoWithdrawalSpeedMinutes: z.number().optional(),
+
+  // Games
   gameProviders: z.string().optional(),
   game_count: z.number().optional(),
+
+  // Compliance / meta
   kycRequired: z.boolean().optional(),
   isNewCasino: z.boolean().optional(),
   lastVerified: z.string().optional(),
+
+  // Media
   logo: z.string().optional(),
-  screenshots: z.array(screenshotSchema).optional(),
+  screenshots: z.array(screenshotSchema).optional().nullable(),
   sectionImages: z.array(sectionImageSchema).optional(),
+
+  // FAQs
   faqs: z.array(faqSchema).optional(),
+
+  // Links
   claim_url: z.string().optional(),
+
+  // Taxonomy
   categories: z.array(z.string()).optional(),
 };
 
 // ─── Collections ─────────────────────────────────────────────────────────────
 
-/** Casino reviews — contentType: "review" */
+/** Casino reviews */
 const casinos = defineCollection({
   loader: glob({ pattern: "**/*.md", base: "./src/content/casinos" }),
-  schema: z.object({ ...universalFields, ...casinoFields }),
+  schema: z.object({ ...universalFields, ...casinoFields }).passthrough(),
 });
 
-/** Bonus-focused pages — contentType: "bonus" */
+/** Bonus-focused pages */
 const bonuses = defineCollection({
   loader: glob({ pattern: "**/*.md", base: "./src/content/bonuses" }),
-  schema: z.object({ ...universalFields, ...casinoFields }),
+  schema: z.object({ ...universalFields, ...casinoFields }).passthrough(),
 });
 
-/** News articles — contentType: "news" */
+/** News articles */
 const news = defineCollection({
   loader: glob({ pattern: "**/*.md", base: "./src/content/news" }),
-  schema: z.object({
-    ...universalFields,
-    source_url: z.string().optional(),
-    source_name: z.string().optional(),
-  }),
+  schema: z
+    .object({
+      ...universalFields,
+      source_url: z.string().optional(),
+      source_name: z.string().optional(),
+    })
+    .passthrough(),
 });
 
-/** Head-to-head comparisons — contentType: "comparison" */
-const comparisons = defineCollection({
-  loader: glob({ pattern: "**/*.md", base: "./src/content/comparisons" }),
-  schema: z.object({
-    ...universalFields,
-    casino_a: z.string().optional(),
-    casino_b: z.string().optional(),
-    casino_a_name: z.string().optional(),
-    casino_b_name: z.string().optional(),
-    casino_a_rating: z.number().optional(),
-    casino_b_rating: z.number().optional(),
-    winner: z.string().optional(),
-  }),
-});
-
-/** Long-form guides — contentType: "guide" */
+/** Long-form guides */
 const guides = defineCollection({
   loader: glob({ pattern: "**/*.md", base: "./src/content/guides" }),
-  schema: z.object({ ...universalFields }),
+  schema: z.object({ ...universalFields }).passthrough(),
 });
 
-/** Author profiles — manually written, not pipeline-generated */
+/** Head-to-head comparisons */
+const comparisons = defineCollection({
+  loader: glob({ pattern: "**/*.md", base: "./src/content/comparisons" }),
+  schema: z
+    .object({
+      ...universalFields,
+      casino_a: z.string().optional(),
+      casino_b: z.string().optional(),
+      casino_a_name: z.string().optional(),
+      casino_b_name: z.string().optional(),
+      casino_a_slug: z.string().optional(),
+      casino_b_slug: z.string().optional(),
+      casino_a_rating: z.number().optional(),
+      casino_b_rating: z.number().optional(),
+      casino_a_logo: z.string().optional(),
+      casino_b_logo: z.string().optional(),
+      casino_a_bonus: z.string().optional(),
+      casino_b_bonus: z.string().optional(),
+      casino_a_games: z.string().optional(),
+      casino_b_games: z.string().optional(),
+      casino_a_payout_speed: z.string().optional(),
+      casino_b_payout_speed: z.string().optional(),
+      casino_a_license: z.string().optional(),
+      casino_b_license: z.string().optional(),
+      winner: z.string().optional(),
+      faqs: z.array(faqSchema).optional(),
+    })
+    .passthrough(),
+});
+
+/** Author profiles */
 const authors = defineCollection({
   loader: glob({ pattern: "**/*.md", base: "./src/content/authors" }),
-  schema: z.object({
-    name: z.string(),
-    slug: z.string(),
-    bio: z.string(), // required
-    avatar: z.string(), // required — /images/authors/{slug}.png
-    role: z.string().optional(),
-    expertise: z.array(z.string()).optional(),
-    credentials: z.array(z.string()).optional(),
-    socialLinks: z
-      .object({
-        twitter: z.string().optional(),
-        linkedin: z.string().optional(),
-      })
-      .optional(),
-  }),
+  schema: z
+    .object({
+      name: z.string(),
+      slug: z.string(),
+      bio: z.string(),
+      avatar: z.string(),
+      role: z.string().optional(),
+      expertise: z.array(z.string()).optional(),
+      credentials: z.array(z.string()).optional(),
+      socialLinks: z
+        .object({
+          twitter: z.string().optional(),
+          linkedin: z.string().optional(),
+        })
+        .optional(),
+    })
+    .passthrough(),
 });
 
 export const collections = {
   casinos,
   bonuses,
   news,
-  comparisons,
   guides,
+  comparisons,
   authors,
 };

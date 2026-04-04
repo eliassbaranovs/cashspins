@@ -2,4 +2,4 @@ User-agent: *
 Allow: /
 Disallow: /go/
 
-Sitemap: https://casinorank.com/sitemap-index.xml
+Sitemap: https://cashspins.online/sitemap-index.xml

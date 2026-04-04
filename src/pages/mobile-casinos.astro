@@ -1,0 +1,186 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Breadcrumbs from "../components/Breadcrumbs.astro";
+import CasinoCard from "../components/CasinoCard.astro";
+import FAQSection from "../components/FAQSection.astro";
+
+const allCasinos = await getCollection("casinos");
+const casinos = allCasinos
+  .filter((c) => !c.data.draft)
+  .sort((a, b) => (b.data.ourRating ?? 0) - (a.data.ourRating ?? 0));
+
+const itemListSchema = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "ItemList",
+  "name": "Best Mobile Casinos 2026",
+  "numberOfItems": casinos.length,
+  "itemListElement": casinos.slice(0, 10).map((c: any, i: number) => ({
+    "@type": "ListItem",
+    "position": i + 1,
+    "name": c.data.casinoName ?? c.data.title,
+    "url": `https://cashspins.online/casinos/${c.data.slug}/`,
+  })),
+});
+
+const faqs = [
+  {
+    question: "Do I need to download an app to play at a mobile casino?",
+    answer: "In most cases, no. The vast majority of modern online casinos are built with responsive web design that works seamlessly in your mobile browser (Safari, Chrome, Firefox). Some casinos offer optional native apps, but the browser experience is typically identical in terms of games and features."
+  },
+  {
+    question: "Are mobile casino games the same as desktop?",
+    answer: "Yes. Top game providers like Pragmatic Play, NetEnt, and Evolution Gaming develop all new titles with a mobile-first approach. You get the same RTP, features, and gameplay on mobile. The only difference is that some older legacy titles may not be available on mobile."
+  },
+  {
+    question: "Is it safe to gamble on my phone?",
+    answer: "As long as you play at a licensed casino over a secure connection (look for HTTPS), mobile gambling is as safe as desktop gambling. Avoid using public Wi-Fi for financial transactions, keep your device's operating system updated, and enable two-factor authentication on your casino account when available."
+  },
+  {
+    question: "Can I claim bonuses on mobile?",
+    answer: "Yes. All bonuses and promotions available on desktop are also available on mobile. Some casinos even offer exclusive mobile-only bonuses. You can register, deposit, claim bonuses, play, and withdraw entirely from your phone."
+  },
+  {
+    question: "Which phones work best for mobile casinos?",
+    answer: "Any modern smartphone running iOS 15+ or Android 10+ with a decent screen size will provide a good experience. Tablets offer an even better experience for live dealer games thanks to the larger screen. No special hardware is required."
+  },
+];
+---
+
+<BaseLayout
+  title="Best Mobile Casinos 2026 | CashSpins"
+  description="Find the best mobile casinos of 2026. Play slots, live dealers, and table games on your phone with top-rated, mobile-optimised casinos."
+  schemaJsonLd={itemListSchema}
+>
+  <div class="max-w-7xl mx-auto px-8 py-12">
+    <Breadcrumbs items={[
+      { label: "Home", href: "/" },
+      { label: "Mobile Casinos" },
+    ]} />
+
+    <header class="mt-8 mb-12">
+      <h1 class="font-headline font-extrabold text-4xl md:text-5xl text-on-surface mb-6">
+        Best Mobile Casinos 2026
+      </h1>
+      <div class="max-w-3xl space-y-4 text-on-surface-variant leading-relaxed">
+        <p>
+          Mobile gambling now accounts for over 70% of all online casino traffic. The best mobile
+          casinos deliver the full desktop experience on your phone: thousands of games, instant
+          deposits, fast withdrawals, and live dealer tables that stream in HD — all from your pocket.
+        </p>
+        <p>
+          We test every casino on this page across multiple devices and screen sizes. We evaluate load
+          times, touch responsiveness, game compatibility, and whether the full range of banking methods
+          works on mobile. Only casinos that deliver a seamless mobile experience earn a spot here.
+        </p>
+        <p>
+          Every top-rated casino in 2026 is mobile-compatible, so we have listed our highest-rated
+          platforms below, sorted by overall rating. Check each review for device-specific details.
+        </p>
+      </div>
+
+      {/* Mobile Feature Badges */}
+      <div class="flex flex-wrap gap-4 mt-8">
+        <div class="flex items-center gap-2 bg-surface-container-low rounded-lg px-4 py-2.5">
+          <span class="material-symbols-outlined text-primary">smartphone</span>
+          <span class="text-on-surface text-sm font-medium">iOS & Android</span>
+        </div>
+        <div class="flex items-center gap-2 bg-surface-container-low rounded-lg px-4 py-2.5">
+          <span class="material-symbols-outlined text-primary">touch_app</span>
+          <span class="text-on-surface text-sm font-medium">Touch Optimised</span>
+        </div>
+        <div class="flex items-center gap-2 bg-surface-container-low rounded-lg px-4 py-2.5">
+          <span class="material-symbols-outlined text-primary">download</span>
+          <span class="text-on-surface text-sm font-medium">No App Required</span>
+        </div>
+        <div class="flex items-center gap-2 bg-surface-container-low rounded-lg px-4 py-2.5">
+          <span class="material-symbols-outlined text-primary">hd</span>
+          <span class="text-on-surface text-sm font-medium">HD Live Streaming</span>
+        </div>
+      </div>
+    </header>
+
+    {/* Casino List */}
+    <section class="space-y-6 mb-16">
+      {casinos.map((casino) => (
+        <CasinoCard casino={casino} />
+      ))}
+    </section>
+
+    {/* Trust Section */}
+    <section class="bg-surface-container-low rounded-xl p-8 md:p-10 mb-16">
+      <h2 class="font-headline font-bold text-2xl text-on-surface mb-6">
+        <span class="material-symbols-outlined text-primary align-middle mr-2">phone_android</span>
+        What We Test on Mobile
+      </h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div>
+          <h3 class="font-headline font-semibold text-on-surface mb-2">Load Speed</h3>
+          <p class="text-on-surface-variant text-sm leading-relaxed">
+            We measure page load times on both Wi-Fi and 4G connections. Casinos that take more than 3 seconds to load on mobile get penalised.
+          </p>
+        </div>
+        <div>
+          <h3 class="font-headline font-semibold text-on-surface mb-2">Game Compatibility</h3>
+          <p class="text-on-surface-variant text-sm leading-relaxed">
+            We check what percentage of the desktop game library is available on mobile and test popular titles for smooth performance.
+          </p>
+        </div>
+        <div>
+          <h3 class="font-headline font-semibold text-on-surface mb-2">Touch Navigation</h3>
+          <p class="text-on-surface-variant text-sm leading-relaxed">
+            Menus, filters, account management, and banking must be fully usable with touch. We test registration-to-withdrawal flows on mobile.
+          </p>
+        </div>
+        <div>
+          <h3 class="font-headline font-semibold text-on-surface mb-2">Live Dealer Quality</h3>
+          <p class="text-on-surface-variant text-sm leading-relaxed">
+            Live streams need to be smooth on mobile with clear audio and responsive betting interfaces. We test across different connection speeds.
+          </p>
+        </div>
+        <div>
+          <h3 class="font-headline font-semibold text-on-surface mb-2">Banking on Mobile</h3>
+          <p class="text-on-surface-variant text-sm leading-relaxed">
+            All deposit and withdrawal methods should work on mobile. We verify crypto wallets, e-wallets, and card payments work seamlessly.
+          </p>
+        </div>
+        <div>
+          <h3 class="font-headline font-semibold text-on-surface mb-2">Cross-Device Sync</h3>
+          <p class="text-on-surface-variant text-sm leading-relaxed">
+            Your balance, bonuses, and game history should sync instantly between mobile and desktop. We test switching between devices mid-session.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    {/* Internal Links */}
+    <section class="mb-16">
+      <h2 class="font-headline font-bold text-2xl text-on-surface mb-6">Browse by Category</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <a href="/best-online-casinos/" class="flex items-center gap-3 bg-surface-container-low rounded-lg px-5 py-4 ghost-border hover:border-primary/30 transition-all">
+          <span class="material-symbols-outlined text-primary">star</span>
+          <span class="text-on-surface font-medium">Best Online Casinos</span>
+        </a>
+        <a href="/crypto-casinos/" class="flex items-center gap-3 bg-surface-container-low rounded-lg px-5 py-4 ghost-border hover:border-primary/30 transition-all">
+          <span class="material-symbols-outlined text-primary">currency_bitcoin</span>
+          <span class="text-on-surface font-medium">Crypto Casinos</span>
+        </a>
+        <a href="/fast-withdrawal-casinos/" class="flex items-center gap-3 bg-surface-container-low rounded-lg px-5 py-4 ghost-border hover:border-primary/30 transition-all">
+          <span class="material-symbols-outlined text-primary">bolt</span>
+          <span class="text-on-surface font-medium">Fast Withdrawal Casinos</span>
+        </a>
+        <a href="/new-casinos/" class="flex items-center gap-3 bg-surface-container-low rounded-lg px-5 py-4 ghost-border hover:border-primary/30 transition-all">
+          <span class="material-symbols-outlined text-primary">new_releases</span>
+          <span class="text-on-surface font-medium">New Casinos 2026</span>
+        </a>
+        <a href="/no-deposit-bonus/" class="flex items-center gap-3 bg-surface-container-low rounded-lg px-5 py-4 ghost-border hover:border-primary/30 transition-all">
+          <span class="material-symbols-outlined text-primary">redeem</span>
+          <span class="text-on-surface font-medium">No Deposit Bonuses</span>
+        </a>
+      </div>
+    </section>
+
+    {/* FAQ */}
+    <FAQSection faqs={faqs} />
+  </div>
+</BaseLayout>

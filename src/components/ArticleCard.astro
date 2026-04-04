@@ -1,0 +1,70 @@
+---
+interface Props {
+  article: {
+    data: {
+      title: string;
+      slug: string;
+      excerpt?: string;
+      image?: string;
+      imageAlt?: string;
+      publishedAt?: string;
+      author?: string;
+      contentType?: string;
+      category?: string;
+      tags?: string[];
+    };
+    collection: string;
+  };
+}
+
+const { article } = Astro.props;
+const d = article.data;
+const linkHref = `/${article.collection}/${d.slug}/`;
+
+const formattedDate = d.publishedAt
+  ? new Date(d.publishedAt).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+    })
+  : null;
+---
+
+<a href={linkHref} class="group block bg-surface-container-low rounded-xl overflow-hidden hover:bg-surface-container-high ghost-border transition-all">
+  {/* Image */}
+  {d.image && (
+    <div class="aspect-video overflow-hidden relative">
+      <img
+        src={d.image}
+        alt={d.imageAlt || d.title}
+        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+        loading="lazy"
+      />
+      {d.category && (
+        <span class="absolute top-3 left-3 bg-surface/80 backdrop-blur-sm text-on-surface text-xs font-label font-semibold px-2.5 py-1 rounded-full">
+          {d.category}
+        </span>
+      )}
+    </div>
+  )}
+
+  {/* Content */}
+  <div class="p-5">
+    {/* Meta line */}
+    {(formattedDate || d.author) && (
+      <div class="flex items-center gap-2 text-xs font-label text-on-surface-variant mb-2">
+        {formattedDate && <time>{formattedDate}</time>}
+        {formattedDate && d.author && <span class="text-outline">·</span>}
+        {d.author && <span>{d.author}</span>}
+      </div>
+    )}
+
+    <h3 class="font-headline font-bold text-on-surface group-hover:text-primary transition-colors mb-2 leading-snug">
+      {d.title}
+    </h3>
+
+    {d.excerpt && (
+      <p class="text-on-surface-variant text-sm line-clamp-2">{d.excerpt}</p>
+    )}
+  </div>
+</a>

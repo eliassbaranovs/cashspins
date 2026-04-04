@@ -1,8 +1,13 @@
 ---
-import { getCollection, getEntry, render } from "astro:content";
-import AuthorCard from "../../components/AuthorCard.astro";
+import { getCollection, render } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Breadcrumbs from "../../components/Breadcrumbs.astro";
 import CTAButton from "../../components/CTAButton.astro";
-import Layout from "../../layouts/Layout.astro";
+import ProsCons from "../../components/ProsCons.astro";
+import FAQSection from "../../components/FAQSection.astro";
+import RelatedContent from "../../components/RelatedContent.astro";
+import { buildCanonical, generateArticleSchema, generateFAQSchema } from "../../lib/seo";
+import { getRelatedByTags } from "../../lib/collections";
 
 export async function getStaticPaths() {
   const posts = await getCollection("bonuses");
@@ -15,270 +20,392 @@ const { post } = Astro.props;
 const d = post.data;
 const { Content } = await render(post);
 
-const authorEntry = d.authorSlug
-  ? await getEntry("authors", d.authorSlug)
-  : undefined;
+// Related bonuses
+const allBonuses = await getCollection("bonuses");
+const related = getRelatedByTags(d.tags ?? [], allBonuses, d.slug, 3);
+
+// Author
+let authorEntry: any = undefined;
+try {
+  if (d.authorSlug) {
+    const authors = await getCollection("authors");
+    authorEntry = authors.find((a) => a.data.slug === d.authorSlug);
+  }
+} catch {}
+
+// Schema
+const articleSchema = generateArticleSchema({
+  title: d.title,
+  description: d.description,
+  image: d.image,
+  author: d.author,
+  publishedAt: d.publishedAt,
+  updatedAt: d.updatedAt,
+});
+
+const faqSchema =
+  d.faqs?.length ? generateFAQSchema(d.faqs) : undefined;
+
+const combinedSchema = faqSchema
+  ? `[${articleSchema},${faqSchema}]`
+  : articleSchema;
+
+const breadcrumbs = [
+  { label: "Home", href: "/" },
+  { label: "Bonuses", href: "/bonus/" },
+  { label: d.title },
+];
+
+const formattedDate = d.publishedAt
+  ? new Date(d.publishedAt).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    })
+  : null;
+
+// Payment methods
+const depositArr = d.depositMethods?.split("|").map((s: string) => s.trim()) ?? [];
+const withdrawalArr = d.withdrawalMethods?.split("|").map((s: string) => s.trim()) ?? [];
 ---
 
-<Layout
+<BaseLayout
   title={d.title}
   seoTitle={d.seoTitle}
   description={d.description}
   image={d.image}
   imageAlt={d.imageAlt}
-  canonical={d.canonical}
+  canonical={d.canonical || buildCanonical(`bonus/${d.slug}`)}
   robots={d.robots}
-  schemaJsonLd={d.schemaJsonLd}
+  schemaJsonLd={combinedSchema}
   noIndex={d.noIndex}
   ogType="article"
 >
-  <!-- Breadcrumbs -->
-  <nav class="breadcrumbs container" aria-label="Breadcrumb">
-    <ol>
-      <li><a href="/">Home</a></li>
-      <li><a href="/bonus/">Bonuses</a></li>
-      <li aria-current="page">{d.title}</li>
-    </ol>
-  </nav>
-
-  <!-- Cover Image -->
-  {d.image && (
-    <div class="cover-image-wrap">
-      <img
-        src={d.image}
-        alt={d.imageAlt ?? `${d.casinoName} cover`}
-        width={d.imageWidth ?? 1792}
-        height={d.imageHeight ?? 1024}
-        class="cover-image"
-        loading="eager"
-        decoding="async"
-      />
+  <div class="max-w-screen-2xl mx-auto px-8 pt-8">
+    <!-- Breadcrumbs -->
+    <div class="mb-6">
+      <Breadcrumbs items={breadcrumbs} />
     </div>
-  )}
 
-  <!-- Bonus Hero Banner -->
-  <div class="bonus-hero">
-    <div class="bonus-hero__inner container">
-      <div class="bonus-hero__brand">
-        {d.logo
-          ? <img src={d.logo} alt={`${d.casinoName} logo`} width="72" height="72" class="bonus-hero__logo" />
-          : <div class="bonus-hero__logo-placeholder">{(d.casinoName ?? "?")[0]}</div>
-        }
-        {d.casinoName && <span class="bonus-hero__casino">{d.casinoName}</span>}
-      </div>
-
-      <div class="bonus-hero__details">
-        <h1 class="bonus-hero__title">{d.bonus_title ?? d.title}</h1>
-        <div class="bonus-hero__stats">
-          {d.bonus_percentage && (
-            <div class="hero-stat">
-              <span class="hero-stat__val">{d.bonus_percentage}%</span>
-              <span class="hero-stat__label">Match</span>
+    <!-- Hero Section -->
+    <div class="bg-surface-container-low rounded-xl p-6 md:p-10 mb-10">
+      <div class="flex flex-col md:flex-row gap-6 md:gap-10 items-start">
+        <!-- Casino Brand -->
+        <div class="flex flex-col items-center gap-3 shrink-0">
+          {d.logo ? (
+            <img
+              src={d.logo}
+              alt={`${d.casinoName} logo`}
+              width="80"
+              height="80"
+              class="w-20 h-20 rounded-xl bg-surface-container-lowest object-contain p-2"
+            />
+          ) : (
+            <div class="w-20 h-20 rounded-xl bg-surface-container-lowest flex items-center justify-center">
+              <span class="material-symbols-outlined text-outline text-3xl">redeem</span>
             </div>
           )}
-          {d.max_bonus && (
-            <div class="hero-stat">
-              <span class="hero-stat__val">{d.max_bonus}</span>
-              <span class="hero-stat__label">Max Bonus</span>
-            </div>
-          )}
-          {d.free_spins && (
-            <div class="hero-stat">
-              <span class="hero-stat__val">{d.free_spins}</span>
-              <span class="hero-stat__label">Free Spins</span>
-            </div>
-          )}
-          {d.wagering && (
-            <div class="hero-stat">
-              <span class="hero-stat__val">{d.wagering}</span>
-              <span class="hero-stat__label">Wagering</span>
-            </div>
-          )}
-          {d.min_deposit && (
-            <div class="hero-stat">
-              <span class="hero-stat__val">{d.min_deposit}</span>
-              <span class="hero-stat__label">Min Deposit</span>
-            </div>
+          {d.casinoName && (
+            <span class="text-on-surface-variant text-sm font-label text-center">{d.casinoName}</span>
           )}
         </div>
-      </div>
 
-      <div class="bonus-hero__cta">
-        {d.casino && <CTAButton href={`/go/${d.casino}/`} label="Claim Bonus" />}
-        {d.casino && (
-          <a href={`/casinos/${d.casino}/`} class="bonus-hero__review-link">Full Casino Review →</a>
-        )}
-      </div>
-    </div>
-  </div>
+        <!-- Bonus Details -->
+        <div class="flex-1 min-w-0">
+          <h1 class="font-headline text-2xl md:text-4xl font-extrabold text-primary mb-4 tracking-tight leading-tight">
+            {d.bonus_title ?? d.title}
+          </h1>
 
-  <!-- All bonus offers from this casino -->
-  {d.bonuses?.length && (
-    <div class="container bonus-offers">
-      <h2 class="bonus-offers__heading">All Current Offers</h2>
-      <div class="offers-grid">
-        {d.bonuses.map((bonus) => (
-          <div class="offer-card">
-            <strong class="offer-card__name">{bonus.name}</strong>
-            {bonus.free_spins && (
-              <span class="offer-card__spins">{bonus.free_spins} Free Spins</span>
+          <!-- Key Terms -->
+          <div class="flex flex-wrap gap-4 md:gap-6 mb-6">
+            {d.bonus_percentage && (
+              <div class="text-center">
+                <span class="material-symbols-outlined text-primary text-lg mb-1 block">percent</span>
+                <span class="block text-xs font-label text-on-surface-variant uppercase tracking-wider">Match</span>
+                <span class="block text-lg font-bold text-on-surface">{d.bonus_percentage}%</span>
+              </div>
             )}
-            {d.casino && (
-              <div class="offer-card__cta">
-                <CTAButton href={`/go/${d.casino}/`} label="Claim" variant="outline" />
+            {d.max_bonus && (
+              <div class="text-center">
+                <span class="material-symbols-outlined text-primary text-lg mb-1 block">savings</span>
+                <span class="block text-xs font-label text-on-surface-variant uppercase tracking-wider">Max Bonus</span>
+                <span class="block text-lg font-bold text-on-surface">{d.max_bonus}</span>
+              </div>
+            )}
+            {d.wagering && (
+              <div class="text-center">
+                <span class="material-symbols-outlined text-primary text-lg mb-1 block">calculate</span>
+                <span class="block text-xs font-label text-on-surface-variant uppercase tracking-wider">Wagering</span>
+                <span class="block text-lg font-bold text-on-surface">{d.wagering}</span>
+              </div>
+            )}
+            {(d.min_deposit || d.bonus_min_deposit) && (
+              <div class="text-center">
+                <span class="material-symbols-outlined text-primary text-lg mb-1 block">account_balance_wallet</span>
+                <span class="block text-xs font-label text-on-surface-variant uppercase tracking-wider">Min Deposit</span>
+                <span class="block text-lg font-bold text-on-surface">{d.bonus_min_deposit ?? d.min_deposit}</span>
+              </div>
+            )}
+            {d.free_spins && (
+              <div class="text-center">
+                <span class="material-symbols-outlined text-primary text-lg mb-1 block">confirmation_number</span>
+                <span class="block text-xs font-label text-on-surface-variant uppercase tracking-wider">Free Spins</span>
+                <span class="block text-lg font-bold text-on-surface">{d.free_spins}</span>
               </div>
             )}
           </div>
-        ))}
+
+          {/* Meta */}
+          {(formattedDate || d.author) && (
+            <div class="flex flex-wrap items-center gap-2 text-xs font-label text-on-surface-variant">
+              {formattedDate && (
+                <div class="flex items-center gap-1">
+                  <span class="material-symbols-outlined text-sm">calendar_today</span>
+                  <time datetime={d.publishedAt}>{formattedDate}</time>
+                </div>
+              )}
+              {d.updatedAt && d.updatedAt !== d.publishedAt && (
+                <div class="flex items-center gap-1">
+                  <span class="material-symbols-outlined text-sm">update</span>
+                  <span>Updated: {new Date(d.updatedAt).toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" })}</span>
+                </div>
+              )}
+              {d.author && (
+                <div class="flex items-center gap-1">
+                  <span class="material-symbols-outlined text-sm">person</span>
+                  <span>{d.author}</span>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+
+        <!-- CTA -->
+        <div class="flex flex-col gap-3 shrink-0 w-full md:w-auto">
+          {d.casino && (
+            <CTAButton href={`/go/${d.casino}/`} label="Claim Bonus" size="lg" sponsored />
+          )}
+          {d.casino && (
+            <a
+              href={`/casinos/${d.casino}/`}
+              class="text-on-surface-variant text-sm text-center hover:text-primary transition-colors"
+            >
+              Full Casino Review
+              <span class="material-symbols-outlined text-sm align-middle">arrow_forward</span>
+            </a>
+          )}
+        </div>
       </div>
     </div>
-  )}
 
-  <!-- Pros & Cons -->
-  {(d.pros?.length || d.cons?.length) && (
-    <div class="container">
-      <div class="pros-cons" aria-label="Pros and Cons">
-        {d.pros?.length && (
-          <div class="pros-cons__col pros-cons__col--pros">
-            <h3>Pros</h3>
-            <ul>{d.pros.map((item) => <li>{item}</li>)}</ul>
+    {d.excerpt && (
+      <div class="bg-surface-container-lowest rounded-xl p-6 mb-10 border-l-4 border-primary/30">
+        <p class="text-on-surface-variant leading-relaxed italic">{d.excerpt}</p>
+      </div>
+    )}
+
+    <!-- Two Column Layout -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 pb-20">
+      <!-- Main Content -->
+      <div class="lg:col-span-8 space-y-12">
+        {/* Cover Image */}
+        {d.image && (
+          <div class="rounded-xl overflow-hidden">
+            <img
+              src={d.image}
+              alt={d.imageAlt ?? `${d.casinoName} bonus`}
+              width={d.imageWidth ?? 1792}
+              height={d.imageHeight ?? 1024}
+              class="w-full h-auto object-cover"
+              loading="eager"
+            />
           </div>
         )}
-        {d.cons?.length && (
-          <div class="pros-cons__col pros-cons__col--cons">
-            <h3>Cons</h3>
-            <ul>{d.cons.map((item) => <li>{item}</li>)}</ul>
+
+        {/* Pros & Cons */}
+        <ProsCons pros={d.pros} cons={d.cons} />
+
+        {/* Article Body */}
+        <div class="prose prose-invert max-w-none
+          [&_h2]:font-headline [&_h2]:font-bold [&_h2]:text-2xl [&_h2]:text-on-surface [&_h2]:border-b [&_h2]:border-outline-variant/20 [&_h2]:pb-3 [&_h2]:mb-6
+          [&_h3]:font-headline [&_h3]:font-bold [&_h3]:text-xl [&_h3]:text-on-surface
+          [&_a]:text-primary [&_a]:hover:underline
+          [&_strong]:text-on-surface
+          [&_p]:text-on-surface-variant [&_p]:leading-relaxed
+          [&_li]:text-on-surface-variant
+          [&_table]:text-sm [&_th]:text-on-surface [&_td]:text-on-surface-variant
+        ">
+          <Content />
+        </div>
+
+        {/* FAQs */}
+        <FAQSection faqs={d.faqs} />
+
+        {/* Author Card — E-E-A-T signal */}
+        {(d.author || authorEntry) && (
+          <section class="bg-surface-container-low rounded-xl p-6 flex flex-col sm:flex-row gap-5 items-start">
+            {authorEntry?.data?.avatar && (
+              <img
+                src={authorEntry.data.avatar}
+                alt={authorEntry.data.name ?? d.author}
+                class="w-16 h-16 rounded-full object-cover shrink-0"
+                loading="lazy"
+                width="64"
+                height="64"
+              />
+            )}
+            <div>
+              <p class="text-xs font-label text-on-surface-variant uppercase tracking-wider mb-1">Reviewed by</p>
+              <p class="font-headline font-bold text-on-surface text-lg">
+                {authorEntry ? (
+                  <a href={`/team/${authorEntry.data.slug}/`} class="hover:text-primary transition-colors">{authorEntry.data.name}</a>
+                ) : d.author}
+              </p>
+              {authorEntry?.data?.role && (
+                <p class="text-secondary text-xs font-bold mt-0.5">{authorEntry.data.role}</p>
+              )}
+              {authorEntry?.data?.bio && (
+                <p class="text-on-surface-variant text-sm mt-2 line-clamp-2">{authorEntry.data.bio}</p>
+              )}
+            </div>
+          </section>
+        )}
+
+        {/* Tags — internal linking */}
+        {d.tags && d.tags.length > 0 && (
+          <div class="flex flex-wrap gap-2">
+            {d.tags.map((tag: string) => (
+              <span class="bg-surface-container-high text-on-surface-variant text-xs font-label px-3 py-1.5 rounded-full flex items-center gap-1">
+                <span class="material-symbols-outlined text-xs">sell</span>
+                {tag}
+              </span>
+            ))}
           </div>
+        )}
+
+        {/* Related Content */}
+        {related.length > 0 && (
+          <RelatedContent
+            title="Related Bonus Offers"
+            items={related.map((r) => ({
+              slug: r.data.slug,
+              collection: "bonus",
+              data: r.data,
+            }))}
+            type="casino"
+          />
         )}
       </div>
-    </div>
-  )}
 
-  <!-- Article body -->
-  <div class="container bonus-body prose">
-    <Content />
+      <!-- Sidebar -->
+      <aside class="lg:col-span-4 space-y-8">
+        {/* All Bonus Offers */}
+        {d.bonuses?.length && (
+          <div class="bg-surface-container-low rounded-xl p-6">
+            <h3 class="font-headline font-bold text-lg text-on-surface mb-5 flex items-center gap-2">
+              <span class="material-symbols-outlined text-primary">redeem</span>
+              All Current Offers
+            </h3>
+            <div class="space-y-4">
+              {d.bonuses.map((bonus: { name: string; type?: string; free_spins?: string | number }) => (
+                <div class="bg-surface-container-lowest rounded-lg p-4">
+                  <p class="font-headline font-bold text-sm text-on-surface mb-1">{bonus.name}</p>
+                  {bonus.type && (
+                    <span class="inline-block bg-primary/10 text-primary text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-sm mb-2">
+                      {bonus.type}
+                    </span>
+                  )}
+                  {bonus.free_spins && (
+                    <p class="text-secondary text-xs font-semibold">{bonus.free_spins}</p>
+                  )}
+                  {d.casino && (
+                    <div class="mt-3">
+                      <CTAButton href={`/go/${d.casino}/`} label="Claim" size="sm" sponsored />
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Payment Methods */}
+        {(depositArr.length > 0 || withdrawalArr.length > 0) && (
+          <div class="bg-surface-container-low rounded-xl p-6">
+            <h3 class="font-headline font-bold text-lg text-on-surface mb-5 flex items-center gap-2">
+              <span class="material-symbols-outlined text-primary">account_balance_wallet</span>
+              Payment Methods
+            </h3>
+            {depositArr.length > 0 && (
+              <div class="mb-4">
+                <p class="text-xs font-label text-on-surface-variant uppercase tracking-wider mb-2">Deposit</p>
+                <div class="flex flex-wrap gap-2">
+                  {depositArr.map((method: string) => (
+                    <span class="bg-surface-container-lowest text-on-surface-variant text-xs px-2.5 py-1 rounded-md">{method}</span>
+                  ))}
+                </div>
+              </div>
+            )}
+            {withdrawalArr.length > 0 && (
+              <div>
+                <p class="text-xs font-label text-on-surface-variant uppercase tracking-wider mb-2">Withdrawal</p>
+                <div class="flex flex-wrap gap-2">
+                  {withdrawalArr.map((method: string) => (
+                    <span class="bg-surface-container-lowest text-on-surface-variant text-xs px-2.5 py-1 rounded-md">{method}</span>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Quick Info */}
+        <div class="bg-surface-container-low rounded-xl p-6">
+          <h3 class="font-headline font-bold text-lg text-on-surface mb-5 flex items-center gap-2">
+            <span class="material-symbols-outlined text-primary">info</span>
+            Quick Info
+          </h3>
+          <dl class="space-y-3 text-sm">
+            {d.casinoName && (
+              <div class="flex justify-between">
+                <dt class="text-on-surface-variant">Casino</dt>
+                <dd class="text-on-surface font-semibold">{d.casinoName}</dd>
+              </div>
+            )}
+            {d.bonus_code && (
+              <div class="flex justify-between">
+                <dt class="text-on-surface-variant">Bonus Code</dt>
+                <dd class="text-primary font-bold">{d.bonus_code}</dd>
+              </div>
+            )}
+            {d.wagering && (
+              <div class="flex justify-between">
+                <dt class="text-on-surface-variant">Wagering</dt>
+                <dd class="text-on-surface font-semibold">{d.wagering}</dd>
+              </div>
+            )}
+            {d.ourRating != null && (
+              <div class="flex justify-between">
+                <dt class="text-on-surface-variant">Our Rating</dt>
+                <dd class="text-primary font-bold">{d.ourRating}/10</dd>
+              </div>
+            )}
+          </dl>
+        </div>
+
+        {/* Responsible Gambling */}
+        <div class="bg-surface-container-low rounded-xl p-6 border-t-2 border-error/30">
+          <div class="flex items-center gap-2 mb-3">
+            <span class="material-symbols-outlined text-error text-xl">warning</span>
+            <h3 class="font-headline font-bold text-sm text-on-surface">Responsible Gambling</h3>
+          </div>
+          <p class="text-on-surface-variant text-xs leading-relaxed">
+            18+ only. Bonus terms and conditions apply. Gambling can be addictive — please play responsibly.
+            <a href="https://www.begambleaware.org" rel="noopener noreferrer" target="_blank" class="text-primary hover:underline">GambleAware</a> ·
+            <a href="https://www.gamblingtherapy.org" rel="noopener noreferrer" target="_blank" class="text-primary hover:underline">Gambling Therapy</a>
+          </p>
+        </div>
+      </aside>
+    </div>
   </div>
-
-  <!-- FAQs -->
-  {d.faqs?.length && (
-    <div class="container faqs">
-      <h2>Frequently Asked Questions</h2>
-      {d.faqs.map((faq) => (
-        <details class="faq-item">
-          <summary class="faq-item__q">{faq.question}</summary>
-          <p class="faq-item__a">{faq.answer}</p>
-        </details>
-      ))}
-    </div>
-  )}
-
-  <!-- Author -->
-  {authorEntry && (
-    <div class="container">
-      <AuthorCard
-        name={authorEntry.data.name}
-        slug={authorEntry.data.slug}
-        bio={authorEntry.data.bio}
-        avatar={authorEntry.data.avatar}
-        role={authorEntry.data.role}
-        credentials={authorEntry.data.credentials}
-      />
-    </div>
-  )}
-</Layout>
-
-<style>
-  /* Breadcrumbs */
-  .breadcrumbs { padding: 0.75rem 0; }
-  .breadcrumbs ol { list-style: none; padding: 0; margin: 0; display: flex; gap: 0.5rem; font-size: 0.82rem; color: #585d7a; flex-wrap: wrap; }
-  .breadcrumbs li + li::before { content: "/"; margin-right: 0.5rem; }
-  .breadcrumbs a { color: #7a80a0; text-decoration: none; }
-  .breadcrumbs a:hover { color: #f0c040; }
-
-  /* Cover image */
-  .cover-image-wrap { width: 100%; max-height: 420px; overflow: hidden; }
-  .cover-image { width: 100%; height: 420px; object-fit: cover; object-position: center; display: block; }
-
-  /* Hero */
-  .bonus-hero {
-    background: linear-gradient(160deg, #1a1028 0%, #0f1824 100%);
-    border-bottom: 1px solid rgba(255 255 255 / 0.06);
-    padding: 2rem 0;
-    margin-bottom: 2.5rem;
-  }
-  .bonus-hero__inner {
-    display: grid;
-    grid-template-columns: auto 1fr auto;
-    gap: 1.75rem;
-    align-items: center;
-  }
-  .bonus-hero__brand { display: flex; flex-direction: column; align-items: center; gap: 0.5rem; }
-  .bonus-hero__logo { width: 72px; height: 72px; object-fit: contain; border-radius: 10px; }
-  .bonus-hero__logo-placeholder {
-    width: 72px; height: 72px; border-radius: 10px;
-    background: rgba(255 255 255 / 0.06);
-    display: grid; place-items: center;
-    font-size: 2rem; font-weight: 800; color: #f0c040;
-  }
-  .bonus-hero__casino { font-size: 0.78rem; color: #7a80a0; }
-
-  .bonus-hero__title { margin: 0 0 1rem; font-size: clamp(1.1rem, 3vw, 1.5rem); color: #eef0fa; }
-  .bonus-hero__stats { display: flex; flex-wrap: wrap; gap: 0.75rem 1.5rem; }
-  .hero-stat { display: flex; flex-direction: column; }
-  .hero-stat__val {
-    font-size: 1.35rem; font-weight: 800; line-height: 1;
-    background: linear-gradient(135deg, #f0c040, #e07b20);
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-  }
-  .hero-stat__label { font-size: 0.7rem; color: #585d7a; text-transform: uppercase; letter-spacing: 0.06em; margin-top: 0.15rem; }
-
-  .bonus-hero__cta { display: flex; flex-direction: column; align-items: flex-end; gap: 0.6rem; }
-  .bonus-hero__review-link { font-size: 0.82rem; color: #7a80a0; text-decoration: none; white-space: nowrap; }
-  .bonus-hero__review-link:hover { color: #f0c040; }
-
-  /* Offers grid */
-  .bonus-offers { margin-bottom: 2.5rem; }
-  .bonus-offers__heading { margin-bottom: 1rem; }
-  .offers-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 1rem; }
-  .offer-card {
-    background: #14141f; border: 1px solid rgba(255 255 255 / 0.07);
-    border-radius: 10px; padding: 1rem 1.15rem;
-    display: flex; flex-direction: column; gap: 0.5rem;
-  }
-  .offer-card__name { font-size: 0.9rem; color: #eef0fa; }
-  .offer-card__spins { font-size: 0.8rem; color: #f0c040; font-weight: 600; }
-  .offer-card__cta { margin-top: auto; }
-
-  /* Pros & Cons */
-  .pros-cons { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 2.5rem; }
-  .pros-cons__col { background: #14141f; border-radius: 10px; padding: 1rem 1.25rem; border: 1px solid rgba(255 255 255 / 0.07); }
-  .pros-cons__col--pros { border-top: 3px solid #4cda7a; }
-  .pros-cons__col--cons { border-top: 3px solid #e05050; }
-  .pros-cons__col h3 { margin: 0 0 0.65rem; font-size: 0.95rem; }
-  .pros-cons__col ul { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.4rem; font-size: 0.88rem; }
-  .pros-cons__col--pros ul li::before { content: "✓ "; color: #4cda7a; }
-  .pros-cons__col--cons ul li::before { content: "✗ "; color: #e05050; }
-
-  /* Body prose */
-  .bonus-body { padding-bottom: 2.5rem; }
-  .prose :global(h2) { font-size: 1.45rem; border-bottom: 1px solid rgba(255 255 255 / 0.07); padding-bottom: 0.4rem; }
-  .prose :global(a) { color: #f0c040; }
-  .prose :global(strong) { color: #eef0fa; }
-  .prose :global(table) { margin: 1.25rem 0; font-size: 0.88rem; }
-
-  /* FAQs */
-  .faqs { padding-bottom: 3rem; }
-  .faq-item { border: 1px solid rgba(255 255 255 / 0.07); border-radius: 8px; margin-bottom: 0.6rem; overflow: hidden; }
-  .faq-item__q { padding: 0.9rem 1rem; cursor: pointer; font-weight: 600; color: #eef0fa; list-style: none; }
-  .faq-item__q::-webkit-details-marker { display: none; }
-  .faq-item__q::after { content: " +"; color: #f0c040; }
-  .faq-item[open] .faq-item__q::after { content: " −"; }
-  .faq-item__a { padding: 0 1rem 0.9rem; margin: 0; color: #8a90b0; }
-
-  @media (max-width: 760px) {
-    .bonus-hero__inner { grid-template-columns: 1fr; grid-template-rows: auto; }
-    .bonus-hero__brand { flex-direction: row; }
-    .bonus-hero__cta { flex-direction: row; align-items: center; }
-    .pros-cons { grid-template-columns: 1fr; }
-  }
-</style>
+</BaseLayout>

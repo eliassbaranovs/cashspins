@@ -1,0 +1,181 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Breadcrumbs from "../components/Breadcrumbs.astro";
+import CasinoCard from "../components/CasinoCard.astro";
+import FAQSection from "../components/FAQSection.astro";
+
+const allCasinos = await getCollection("casinos");
+const filtered = allCasinos
+  .filter(
+    (c) =>
+      !c.data.draft &&
+      (c.data.categories?.includes("fast-withdrawal-casino") ||
+        c.data.categories?.includes("instant-withdrawal-casino"))
+  )
+  .sort((a, b) => (b.data.ourRating ?? 0) - (a.data.ourRating ?? 0));
+
+const hasFiltered = filtered.length > 0;
+const casinos = hasFiltered
+  ? filtered
+  : allCasinos.filter((c) => !c.data.draft).sort((a, b) => (b.data.ourRating ?? 0) - (a.data.ourRating ?? 0));
+
+const itemListSchema = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "ItemList",
+  "name": "Fast Withdrawal Casinos 2026",
+  "numberOfItems": casinos.length,
+  "itemListElement": casinos.slice(0, 10).map((c: any, i: number) => ({
+    "@type": "ListItem",
+    "position": i + 1,
+    "name": c.data.casinoName ?? c.data.title,
+    "url": `https://cashspins.online/casinos/${c.data.slug}/`,
+  })),
+});
+
+const faqs = [
+  {
+    question: "What counts as a fast withdrawal casino?",
+    answer: "We consider a casino 'fast withdrawal' if it consistently processes payouts within 24 hours for at least one payment method. The best fast-payout casinos process crypto withdrawals in under an hour and e-wallet withdrawals same-day."
+  },
+  {
+    question: "Which payment method gives the fastest withdrawals?",
+    answer: "Cryptocurrencies (Bitcoin, Ethereum, USDT) typically offer the fastest withdrawals, often processed within minutes to a few hours. E-wallets like Skrill and Neteller are the next fastest, usually same-day. Bank transfers and card withdrawals are the slowest, typically taking 1-5 business days."
+  },
+  {
+    question: "Why do some casinos have slow withdrawals?",
+    answer: "Common causes include manual processing queues, extended pending/review periods, limited processing windows (e.g., only on weekdays), KYC verification delays for new players, and withdrawal limits that force payouts to be split across multiple transactions."
+  },
+  {
+    question: "Do fast withdrawal casinos have withdrawal limits?",
+    answer: "Most casinos have some form of withdrawal limits (daily, weekly, or monthly). However, the best fast-payout casinos tend to have higher limits and fewer restrictions. We document withdrawal limits in every review so you can compare."
+  },
+  {
+    question: "Will I need to verify my identity before withdrawing?",
+    answer: "Most licensed casinos require KYC (Know Your Customer) verification before your first withdrawal. This typically involves submitting ID documents, proof of address, and sometimes proof of payment method. Complete verification early to avoid delays when you want to cash out."
+  },
+];
+---
+
+<BaseLayout
+  title="Fast Withdrawal Casinos 2026 | CashSpins"
+  description="Find casinos with the fastest payouts in 2026. Crypto withdrawals in minutes, e-wallets same-day. Independently tested and reviewed."
+  schemaJsonLd={itemListSchema}
+>
+  <div class="max-w-7xl mx-auto px-8 py-12">
+    <Breadcrumbs items={[
+      { label: "Home", href: "/" },
+      { label: "Fast Withdrawal Casinos" },
+    ]} />
+
+    <header class="mt-8 mb-12">
+      <h1 class="font-headline font-extrabold text-4xl md:text-5xl text-on-surface mb-6">
+        Fast Withdrawal Casinos
+      </h1>
+      <div class="max-w-3xl space-y-4 text-on-surface-variant leading-relaxed">
+        <p>
+          Nothing frustrates a player more than waiting days for a withdrawal. The casinos on this
+          page have been tested for payout speed across multiple payment methods — we deposit, play,
+          request withdrawals, and time the results.
+        </p>
+        <p>
+          Whether you use Bitcoin for near-instant payouts or prefer e-wallets for same-day processing,
+          every casino listed here meets our fast withdrawal standard: payouts processed within 24 hours
+          for at least one supported method.
+        </p>
+      </div>
+
+      {/* Payout Speed Stats */}
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-8">
+        <div class="bg-surface-container-low rounded-xl p-5 text-center">
+          <span class="material-symbols-outlined text-primary text-3xl mb-2">currency_bitcoin</span>
+          <p class="text-primary font-headline font-extrabold text-2xl">< 1 hour</p>
+          <p class="text-on-surface-variant text-xs mt-1">Average crypto withdrawal</p>
+        </div>
+        <div class="bg-surface-container-low rounded-xl p-5 text-center">
+          <span class="material-symbols-outlined text-primary text-3xl mb-2">account_balance_wallet</span>
+          <p class="text-primary font-headline font-extrabold text-2xl">Same day</p>
+          <p class="text-on-surface-variant text-xs mt-1">Average e-wallet withdrawal</p>
+        </div>
+        <div class="bg-surface-container-low rounded-xl p-5 text-center">
+          <span class="material-symbols-outlined text-primary text-3xl mb-2">credit_card</span>
+          <p class="text-primary font-headline font-extrabold text-2xl">1-3 days</p>
+          <p class="text-on-surface-variant text-xs mt-1">Average card withdrawal</p>
+        </div>
+      </div>
+    </header>
+
+    {!hasFiltered && (
+      <div class="bg-surface-container-low rounded-xl p-6 mb-8 flex items-start gap-3">
+        <span class="material-symbols-outlined text-secondary shrink-0">info</span>
+        <p class="text-on-surface-variant text-sm leading-relaxed">
+          We are expanding our fast withdrawal casino listings. Below are our top-rated casinos,
+          many of which offer competitive payout speeds. Check individual reviews for withdrawal time details.
+        </p>
+      </div>
+    )}
+
+    {/* Casino List */}
+    <section class="space-y-6 mb-16">
+      {casinos.map((casino) => (
+        <CasinoCard casino={casino} />
+      ))}
+    </section>
+
+    {/* Trust Section */}
+    <section class="bg-surface-container-low rounded-xl p-8 md:p-10 mb-16">
+      <h2 class="font-headline font-bold text-2xl text-on-surface mb-6">
+        <span class="material-symbols-outlined text-primary align-middle mr-2">speed</span>
+        How We Test Withdrawal Speed
+      </h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+          <h3 class="font-headline font-semibold text-on-surface mb-2">Real Withdrawal Tests</h3>
+          <p class="text-on-surface-variant text-sm leading-relaxed">
+            We create accounts, deposit, meet wagering requirements, and request real withdrawals. We record timestamps from request to receipt for each payment method.
+          </p>
+        </div>
+        <div>
+          <h3 class="font-headline font-semibold text-on-surface mb-2">Pending Period Analysis</h3>
+          <p class="text-on-surface-variant text-sm leading-relaxed">
+            Some casinos impose a "pending" or "review" period before processing withdrawals. We track this separately from actual processing time.
+          </p>
+        </div>
+        <div>
+          <h3 class="font-headline font-semibold text-on-surface mb-2">Withdrawal Limits</h3>
+          <p class="text-on-surface-variant text-sm leading-relaxed">
+            Daily, weekly, and monthly withdrawal caps are documented. Low limits force large wins to be paid in installments, which effectively slows payouts.
+          </p>
+        </div>
+        <div>
+          <h3 class="font-headline font-semibold text-on-surface mb-2">KYC Processing Time</h3>
+          <p class="text-on-surface-variant text-sm leading-relaxed">
+            First-time withdrawals often require KYC verification. We test how long the verification process takes and whether it can be completed proactively.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    {/* Internal Links */}
+    <section class="mb-16">
+      <h2 class="font-headline font-bold text-2xl text-on-surface mb-6">Related Pages</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <a href="/best-online-casinos/" class="flex items-center gap-3 bg-surface-container-low rounded-lg px-5 py-4 ghost-border hover:border-primary/30 transition-all">
+          <span class="material-symbols-outlined text-primary">star</span>
+          <span class="text-on-surface font-medium">Best Online Casinos</span>
+        </a>
+        <a href="/crypto-casinos/" class="flex items-center gap-3 bg-surface-container-low rounded-lg px-5 py-4 ghost-border hover:border-primary/30 transition-all">
+          <span class="material-symbols-outlined text-primary">currency_bitcoin</span>
+          <span class="text-on-surface font-medium">Crypto Casinos</span>
+        </a>
+        <a href="/mobile-casinos/" class="flex items-center gap-3 bg-surface-container-low rounded-lg px-5 py-4 ghost-border hover:border-primary/30 transition-all">
+          <span class="material-symbols-outlined text-primary">smartphone</span>
+          <span class="text-on-surface font-medium">Mobile Casinos</span>
+        </a>
+      </div>
+    </section>
+
+    {/* FAQ */}
+    <FAQSection faqs={faqs} />
+  </div>
+</BaseLayout>

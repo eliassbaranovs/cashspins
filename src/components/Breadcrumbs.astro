@@ -1,0 +1,46 @@
+---
+interface Props {
+  items: Array<{ label: string; href?: string }>;
+}
+const { items = [] } = Astro.props;
+
+const siteBase = "https://cashspins.online";
+const breadcrumbSchema = items.length > 0
+  ? JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": items.map((item, i) => ({
+        "@type": "ListItem",
+        "position": i + 1,
+        "name": item.label,
+        ...(item.href ? { "item": `${siteBase}${item.href}` } : {}),
+      })),
+    })
+  : null;
+---
+
+{breadcrumbSchema && <script type="application/ld+json" set:html={breadcrumbSchema} />}
+
+{items.length > 0 && (
+  <nav aria-label="Breadcrumb" class="font-label text-xs">
+    <ol class="flex items-center gap-1 flex-wrap">
+      {items.map((item, i) => {
+        const isLast = i === items.length - 1;
+        return (
+          <li class="flex items-center gap-1">
+            {i > 0 && (
+              <span class="material-symbols-outlined text-outline text-sm" aria-hidden="true">chevron_right</span>
+            )}
+            {isLast || !item.href ? (
+              <span class="text-on-surface">{item.label}</span>
+            ) : (
+              <a href={item.href} class="text-on-surface-variant hover:text-primary transition-colors">
+                {item.label}
+              </a>
+            )}
+          </li>
+        );
+      })}
+    </ol>
+  </nav>
+)}

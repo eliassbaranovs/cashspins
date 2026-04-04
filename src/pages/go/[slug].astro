@@ -1,57 +1,52 @@
 ---
 import { getCollection } from "astro:content";
-import Layout from "../../layouts/Layout.astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
 
 export async function getStaticPaths() {
-  const [casinoEntries, bonusEntries] = await Promise.all([
-    getCollection("casinos"),
-    getCollection("bonuses"),
-  ]);
-  const seen = new Map<string, { casinoName: string; claimUrl: string }>();
-  for (const post of [...casinoEntries, ...bonusEntries]) {
-    const { casino, casinoName, claim_url } = post.data;
-    if (casino && claim_url && !seen.has(casino)) {
-      seen.set(casino, { casinoName: casinoName ?? casino, claimUrl: claim_url });
-    }
-  }
-  return Array.from(seen.entries()).map(([slug, props]) => ({
-    params: { slug },
-    props,
-  }));
+  const casinos = await getCollection("casinos");
+  const bonuses = await getCollection("bonuses");
+  const all = [...casinos, ...bonuses];
+  return all
+    .filter((i) => !i.data.draft && (i.data.claim_url || i.data.website))
+    .map((item) => ({
+      params: { slug: item.data.slug },
+      props: { item },
+    }));
 }
 
-interface Props {
-  casinoName: string;
-  claimUrl: string;
-}
-const { casinoName, claimUrl } = Astro.props;
+const { item } = Astro.props;
+const d = item.data;
+const casinoName = d.casinoName || d.casino || d.slug;
+const redirectUrl = d.claim_url || d.website;
 ---
 
-<Layout
-  title={`Redirecting to ${casinoName}…`}
-  robots="noindex, nofollow"
+<BaseLayout
+  title={`Redirecting to ${casinoName}...`}
   noIndex={true}
+  robots="noindex, nofollow"
+  description={`You are being redirected to ${casinoName}. If you are not redirected automatically, click the link on the page.`}
 >
-  <div class="redirect-page">
-    <p class="redirect-page__message">Redirecting you to <strong>{casinoName}</strong>…</p>
-    <p class="redirect-page__sub">If you are not redirected automatically, <a href={claimUrl} rel="nofollow sponsored" target="_blank">click here</a>.</p>
+  <div class="flex flex-col items-center justify-center min-h-[60vh] text-center px-8">
+    <span class="material-symbols-outlined text-primary text-5xl mb-6 animate-spin">sync</span>
+    <p class="text-2xl font-headline font-bold text-on-surface mb-2">
+      Redirecting you to <strong class="text-primary">{casinoName}</strong>...
+    </p>
+    <p class="text-on-surface-variant text-sm">
+      If you are not redirected automatically,
+      <a
+        href={redirectUrl}
+        rel="nofollow sponsored"
+        target="_blank"
+        class="text-primary hover:underline"
+      >
+        click here
+      </a>.
+    </p>
   </div>
-  <script define:vars={{ claimUrl }}>
-    setTimeout(() => { window.location.href = claimUrl; }, 1500);
-  </script>
-</Layout>
 
-<style>
-  .redirect-page {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    min-height: 60vh;
-    text-align: center;
-    gap: 0.75rem;
-    padding: 2rem;
-  }
-  .redirect-page__message { font-size: 1.4rem; font-weight: 600; color: #eef0fa; }
-  .redirect-page__sub { color: #7a7fa0; font-size: 0.95rem; }
-</style>
+  <script define:vars={{ redirectUrl }}>
+    setTimeout(() => {
+      window.location.href = redirectUrl;
+    }, 1500);
+  </script>
+</BaseLayout>

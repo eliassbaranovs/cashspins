@@ -1,0 +1,138 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import ArticleCard from "../../components/ArticleCard.astro";
+import Breadcrumbs from "../../components/Breadcrumbs.astro";
+
+let allNews: Awaited<ReturnType<typeof getCollection>> = [];
+try {
+  allNews = await getCollection("news");
+} catch {
+  allNews = [];
+}
+
+const news = allNews
+  .filter((n: any) => !n.data.draft)
+  .sort(
+    (a: any, b: any) =>
+      new Date(b.data.publishedAt).getTime() -
+      new Date(a.data.publishedAt).getTime()
+  );
+
+// Derive category tags from all articles
+const allTags = [...new Set(news.flatMap((n: any) => n.data.tags ?? []))];
+
+const featured = news[0];
+const rest = news.slice(1);
+
+const breadcrumbs = [
+  { label: "Home", href: "/" },
+  { label: "News" },
+];
+---
+
+<BaseLayout
+  title="Casino News & Industry Updates | CashSpins"
+  seoTitle="Casino News & Industry Updates 2026 | CashSpins"
+  description="Stay informed with the latest casino industry news, regulatory updates, game releases, and market insights from the CashSpins editorial team."
+>
+  <div class="max-w-screen-2xl mx-auto px-8 pt-8 pb-20">
+    <!-- Breadcrumbs -->
+    <div class="mb-8">
+      <Breadcrumbs items={breadcrumbs} />
+    </div>
+
+    <!-- Header -->
+    <header class="mb-12">
+      <h1 class="font-headline text-4xl md:text-6xl font-extrabold tracking-tighter text-on-surface mb-4">
+        Industry <span class="text-primary">Intelligence</span>
+      </h1>
+      <p class="text-on-surface-variant text-lg md:text-xl max-w-2xl leading-relaxed">
+        Expert analysis, regulatory shifts, and market intelligence curated by our editorial desk.
+      </p>
+    </header>
+
+    {news.length > 0 ? (
+      <>
+        {/* Category Filter Pills */}
+        {allTags.length > 0 && (
+          <div class="flex flex-wrap gap-3 mb-10">
+            <span class="px-5 py-2 rounded-full text-sm font-bold bg-primary text-on-primary shadow-md cursor-pointer">
+              All Articles
+            </span>
+            {allTags.slice(0, 8).map((tag: string) => (
+              <span class="px-5 py-2 rounded-full text-sm font-bold bg-surface-container-high text-on-surface-variant hover:text-on-surface transition-all cursor-pointer">
+                {tag}
+              </span>
+            ))}
+          </div>
+        )}
+
+        {/* Featured Article */}
+        {featured && (
+          <a href={`/news/${featured.data.slug}/`} class="group block bg-surface-container-low rounded-xl overflow-hidden hover:bg-surface-container-high ghost-border transition-all mb-10">
+            <div class="grid grid-cols-1 md:grid-cols-2">
+              {featured.data.image && (
+                <div class="aspect-video md:aspect-auto md:min-h-[360px] overflow-hidden relative">
+                  <img
+                    src={featured.data.image}
+                    alt={featured.data.imageAlt || featured.data.title}
+                    class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                    loading="eager"
+                  />
+                  <div class="absolute top-4 left-4 flex gap-2">
+                    <span class="bg-primary/90 text-on-primary text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-sm backdrop-blur-md">Featured</span>
+                    {featured.data.category && (
+                      <span class="bg-surface/80 text-on-surface text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-sm backdrop-blur-md">{featured.data.category}</span>
+                    )}
+                  </div>
+                </div>
+              )}
+              <div class="p-8 md:p-10 flex flex-col justify-center">
+                <div class="flex items-center gap-3 text-xs font-label text-on-surface-variant mb-4">
+                  {featured.data.publishedAt && (
+                    <time>{new Date(featured.data.publishedAt).toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" })}</time>
+                  )}
+                  {featured.data.author && (
+                    <>
+                      <span class="w-1 h-1 rounded-full bg-outline-variant"></span>
+                      <span>By {featured.data.author}</span>
+                    </>
+                  )}
+                </div>
+                <h2 class="font-headline text-2xl md:text-3xl font-bold mb-4 group-hover:text-primary transition-colors leading-tight">
+                  {featured.data.title}
+                </h2>
+                {featured.data.excerpt && (
+                  <p class="text-on-surface-variant leading-relaxed mb-6 line-clamp-3">{featured.data.excerpt}</p>
+                )}
+                <div class="flex items-center gap-2 text-primary font-bold text-sm group-hover:gap-3 transition-all">
+                  <span>Read Article</span>
+                  <span class="material-symbols-outlined text-sm">trending_flat</span>
+                </div>
+              </div>
+            </div>
+          </a>
+        )}
+
+        {/* Article Grid */}
+        {rest.length > 0 && (
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {rest.map((article: any) => (
+              <ArticleCard article={{ ...article, collection: "news" }} />
+            ))}
+          </div>
+        )}
+      </>
+    ) : (
+      /* Empty State */
+      <div class="bg-surface-container-low rounded-xl p-12 md:p-16 text-center">
+        <span class="material-symbols-outlined text-outline text-5xl mb-6 block">newspaper</span>
+        <h2 class="font-headline font-bold text-xl text-on-surface mb-3">Coming Soon</h2>
+        <p class="text-on-surface-variant text-lg max-w-md mx-auto leading-relaxed">
+          Stay tuned — our editorial team is preparing the latest industry insights.
+        </p>
+      </div>
+    )}
+  </div>
+</BaseLayout>

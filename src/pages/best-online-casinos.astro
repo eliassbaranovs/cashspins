@@ -1,0 +1,168 @@
+---
+import { getCollection } from "astro:content";
+import Breadcrumbs from "../components/Breadcrumbs.astro";
+import CasinoCard from "../components/CasinoCard.astro";
+import FAQSection from "../components/FAQSection.astro";
+import BaseLayout from "../layouts/BaseLayout.astro";
+
+const allCasinos = await getCollection("casinos");
+const casinos = allCasinos
+  .filter((c) => !c.data.draft)
+  .sort((a, b) => (b.data.ourRating ?? 0) - (a.data.ourRating ?? 0));
+
+const itemListSchema = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "ItemList",
+  "name": "Best Online Casinos 2026",
+  "numberOfItems": casinos.length,
+  "itemListElement": casinos.slice(0, 10).map((c: any, i: number) => ({
+    "@type": "ListItem",
+    "position": i + 1,
+    "name": c.data.casinoName ?? c.data.title,
+    "url": `https://cashspins.online/casinos/${c.data.slug}/`,
+  })),
+});
+
+const faqs = [
+  {
+    question: "How do you decide which online casinos are the best?",
+    answer: "We evaluate every casino on a standardised framework that covers licensing and regulation, game selection, bonus fairness (including wagering requirements), payout speed, customer support quality, player complaint history, and security measures. Each factor is weighted and combined into an overall rating out of 10."
+  },
+  {
+    question: "Are these online casinos safe to play at?",
+    answer: "Every casino listed on this page holds at least one active gambling licence and has been reviewed for fair terms, secure encryption, and a clean complaint record. We continuously monitor listed casinos and update or remove entries if standards slip."
+  },
+  {
+    question: "Can I play at these casinos on my phone?",
+    answer: "Yes. All casinos featured here are fully optimised for mobile browsers on both iOS and Android. Some also offer dedicated apps, which we note in individual reviews."
+  },
+  {
+    question: "Do I need to use cryptocurrency to play?",
+    answer: "No. While many of our top-rated casinos accept crypto, the majority also support traditional payment methods including credit cards, e-wallets, and bank transfers. Check each review for the full list of accepted payment methods."
+  },
+  {
+    question: "How often is this list updated?",
+    answer: "Our editorial team reviews and updates this page regularly. Casino ratings, bonus offers, and terms are re-verified at least once per month to ensure accuracy."
+  },
+];
+---
+
+<BaseLayout
+  title="Best Online Casinos 2026 — Top Rated & Reviewed | CashSpins"
+  description="Discover the best online casinos of 2026, independently rated and reviewed by our expert team. Compare bonuses, payout speeds, and game selection."
+  canonical="https://cashspins.online/best-online-casinos/"
+  schemaJsonLd={itemListSchema}
+>
+  <div class="max-w-7xl mx-auto px-8 py-12">
+    <Breadcrumbs items={[
+      { label: "Home", href: "/" },
+      { label: "Best Online Casinos" },
+    ]} />
+
+    <header class="mt-8 mb-12">
+      <h1 class="font-headline font-extrabold text-4xl md:text-5xl text-on-surface mb-6">
+        Best Online Casinos 2026
+      </h1>
+      <div class="max-w-3xl space-y-4 text-on-surface-variant leading-relaxed">
+        <p>
+          Finding a trustworthy online casino in 2026 means navigating thousands of operators, each
+          promising the biggest bonuses and fastest payouts. Our editorial team cuts through the noise
+          with independent, data-driven reviews that put player safety first.
+        </p>
+        <p>
+          Every casino on this page has been evaluated against our rigorous criteria: valid licensing,
+          fair bonus terms, responsive customer support, and a clean track record with real players.
+          We re-verify each listing monthly so you can trust that what you see here is current.
+        </p>
+        <p>
+          Whether you prefer slots, live dealer tables, crypto payments, or classic banking methods,
+          our top-rated casinos cover every play style. Browse the list below, read our full reviews,
+          and find the perfect casino for how you play.
+        </p>
+      </div>
+    </header>
+
+    {/* Casino List */}
+    <section class="space-y-6 mb-16">
+      {casinos.map((casino) => (
+        <CasinoCard casino={casino} />
+      ))}
+    </section>
+
+    {/* How We Rate */}
+    <section class="bg-surface-container-low rounded-xl p-8 md:p-10 mb-16">
+      <h2 class="font-headline font-bold text-2xl text-on-surface mb-6">
+        <span class="material-symbols-outlined text-primary align-middle mr-2">verified</span>
+        How We Rate Online Casinos
+      </h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div>
+          <h3 class="font-headline font-semibold text-on-surface mb-2">Licensing & Security</h3>
+          <p class="text-on-surface-variant text-sm leading-relaxed">
+            We verify every licence claim against the issuing authority's public register and check for SSL encryption, responsible gambling tools, and KYC procedures.
+          </p>
+        </div>
+        <div>
+          <h3 class="font-headline font-semibold text-on-surface mb-2">Bonus Fairness</h3>
+          <p class="text-on-surface-variant text-sm leading-relaxed">
+            Welcome offers are analysed for wagering requirements, game weighting, time limits, max bet rules, and cashout caps. Unfair clauses lower the rating.
+          </p>
+        </div>
+        <div>
+          <h3 class="font-headline font-semibold text-on-surface mb-2">Payout Speed</h3>
+          <p class="text-on-surface-variant text-sm leading-relaxed">
+            We test withdrawal times across multiple payment methods and flag casinos with excessive pending periods or withdrawal limits.
+          </p>
+        </div>
+        <div>
+          <h3 class="font-headline font-semibold text-on-surface mb-2">Game Selection</h3>
+          <p class="text-on-surface-variant text-sm leading-relaxed">
+            Provider diversity, game count, RTP transparency, and the availability of live dealer, slots, and table games all factor into our score.
+          </p>
+        </div>
+        <div>
+          <h3 class="font-headline font-semibold text-on-surface mb-2">Player Complaints</h3>
+          <p class="text-on-surface-variant text-sm leading-relaxed">
+            We monitor major complaint databases and forums. Unresolved disputes, blacklist appearances, or patterns of delayed payments reduce a casino's rating.
+          </p>
+        </div>
+        <div>
+          <h3 class="font-headline font-semibold text-on-surface mb-2">Customer Support</h3>
+          <p class="text-on-surface-variant text-sm leading-relaxed">
+            Response times, available channels (live chat, email, phone), operating hours, and the quality of support interactions are all tested.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    {/* Internal Links */}
+    <section class="mb-16">
+      <h2 class="font-headline font-bold text-2xl text-on-surface mb-6">Explore More Casino Categories</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <a href="/crypto-casinos/" class="flex items-center gap-3 bg-surface-container-low rounded-lg px-5 py-4 ghost-border hover:border-primary/30 transition-all">
+          <span class="material-symbols-outlined text-primary">currency_bitcoin</span>
+          <span class="text-on-surface font-medium">Crypto Casinos</span>
+        </a>
+        <a href="/no-deposit-bonus/" class="flex items-center gap-3 bg-surface-container-low rounded-lg px-5 py-4 ghost-border hover:border-primary/30 transition-all">
+          <span class="material-symbols-outlined text-primary">redeem</span>
+          <span class="text-on-surface font-medium">No Deposit Bonuses</span>
+        </a>
+        <a href="/new-casinos/" class="flex items-center gap-3 bg-surface-container-low rounded-lg px-5 py-4 ghost-border hover:border-primary/30 transition-all">
+          <span class="material-symbols-outlined text-primary">new_releases</span>
+          <span class="text-on-surface font-medium">New Casinos 2026</span>
+        </a>
+        <a href="/fast-withdrawal-casinos/" class="flex items-center gap-3 bg-surface-container-low rounded-lg px-5 py-4 ghost-border hover:border-primary/30 transition-all">
+          <span class="material-symbols-outlined text-primary">bolt</span>
+          <span class="text-on-surface font-medium">Fast Withdrawal Casinos</span>
+        </a>
+        <a href="/mobile-casinos/" class="flex items-center gap-3 bg-surface-container-low rounded-lg px-5 py-4 ghost-border hover:border-primary/30 transition-all">
+          <span class="material-symbols-outlined text-primary">smartphone</span>
+          <span class="text-on-surface font-medium">Mobile Casinos</span>
+        </a>
+      </div>
+    </section>
+
+    {/* FAQ */}
+    <FAQSection faqs={faqs} />
+  </div>
+</BaseLayout>

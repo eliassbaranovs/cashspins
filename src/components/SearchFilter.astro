@@ -1,0 +1,79 @@
+---
+interface Props {
+  categories?: string[];
+}
+const { categories = [] } = Astro.props;
+---
+
+<div class="search-filter-wrapper">
+  {/* Search input */}
+  <div class="relative mb-4">
+    <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-xl">search</span>
+    <input
+      type="text"
+      id="casino-search"
+      placeholder="Search casinos..."
+      class="w-full bg-surface-container-lowest text-on-surface pl-10 pr-4 py-3 rounded-xl border border-outline-variant/20 focus:border-primary/50 focus:outline-none transition-colors placeholder:text-on-surface-variant/50"
+    />
+  </div>
+
+  {/* Filter chips */}
+  {categories.length > 0 && (
+    <div class="flex flex-wrap gap-2" id="filter-chips">
+      {categories.map((cat) => (
+        <button
+          type="button"
+          data-category={cat}
+          class="filter-chip rounded-full px-4 py-1.5 text-sm font-label transition-all bg-surface-container-high text-on-surface-variant hover:bg-surface-container-highest"
+        >
+          {cat}
+        </button>
+      ))}
+    </div>
+  )}
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const searchInput = document.getElementById("casino-search") as HTMLInputElement | null;
+    const chips = document.querySelectorAll<HTMLButtonElement>(".filter-chip");
+    const activeCategories = new Set<string>();
+
+    function dispatchFilterEvent() {
+      const detail = {
+        search: searchInput?.value?.trim() || "",
+        categories: Array.from(activeCategories),
+      };
+      window.dispatchEvent(new CustomEvent("filter-change", { detail }));
+    }
+
+    // Search input
+    if (searchInput) {
+      let debounce: ReturnType<typeof setTimeout>;
+      searchInput.addEventListener("input", () => {
+        clearTimeout(debounce);
+        debounce = setTimeout(dispatchFilterEvent, 250);
+      });
+    }
+
+    // Category chips
+    chips.forEach((chip) => {
+      chip.addEventListener("click", () => {
+        const cat = chip.dataset.category;
+        if (!cat) return;
+
+        if (activeCategories.has(cat)) {
+          activeCategories.delete(cat);
+          chip.classList.remove("bg-primary", "text-on-primary");
+          chip.classList.add("bg-surface-container-high", "text-on-surface-variant");
+        } else {
+          activeCategories.add(cat);
+          chip.classList.remove("bg-surface-container-high", "text-on-surface-variant");
+          chip.classList.add("bg-primary", "text-on-primary");
+        }
+
+        dispatchFilterEvent();
+      });
+    });
+  });
+</script>

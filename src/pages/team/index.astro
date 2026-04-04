@@ -1,12 +1,12 @@
 ---
 import { getCollection } from "astro:content";
-import Layout from "../../layouts/Layout.astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Breadcrumbs from "../../components/Breadcrumbs.astro";
 
 const authors = await getCollection("authors");
 const allCasinos = await getCollection("casinos");
 const allBonuses = await getCollection("bonuses");
 
-// Count articles per author
 const articleCount = new Map<string, number>();
 for (const entry of [...allCasinos, ...allBonuses]) {
   const slug = entry.data.authorSlug;
@@ -14,26 +14,37 @@ for (const entry of [...allCasinos, ...allBonuses]) {
 }
 ---
 
-<Layout
-  title="Our Casino Experts"
-  description="Meet the team of certified iGaming specialists who write and verify every casino review and bonus analysis on CasinoRank."
-  canonical="https://casinorank.com/team/"
+<BaseLayout
+  title="Our Expert Team | CashSpins"
+  description="Meet the CashSpins editorial team — certified iGaming specialists who write and verify every casino review and bonus analysis."
 >
-  <div class="container team-page">
-    <header class="team-header">
-      <h1>Our Casino Experts</h1>
-      <p class="team-header__lead">
-        Every review you read on CasinoRank is written and fact-checked by a specialist with
-        real hands-on experience. Meet the analysts behind the ratings.
+  <div class="max-w-7xl mx-auto px-8 py-12">
+    <Breadcrumbs items={[
+      { label: "Home", href: "/" },
+      { label: "Our Team" },
+    ]} />
+
+    <header class="text-center mt-8 mb-12">
+      <h1 class="font-headline font-extrabold text-4xl md:text-5xl text-on-surface mb-4">
+        The Editorial Team
+      </h1>
+      <p class="text-on-surface-variant max-w-xl mx-auto leading-relaxed">
+        Every review on CashSpins is written and fact-checked by a specialist with real hands-on experience.
+        Meet the analysts behind the ratings.
       </p>
     </header>
 
-    <div class="team-grid">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
       {authors.map((author) => {
         const d = author.data;
         const count = articleCount.get(d.slug) ?? 0;
+        const bioSnippet = d.bio.length > 120 ? d.bio.slice(0, 117) + "..." : d.bio;
+
         return (
-          <a href={`/team/${d.slug}/`} class="team-card">
+          <a
+            href={`/team/${d.slug}/`}
+            class="group bg-surface-container-low rounded-xl p-6 ghost-border hover:border-primary/40 transition-all flex flex-col items-center text-center"
+          >
             <img
               src={d.avatar}
               alt={`${d.name} — ${d.role ?? "Casino Analyst"}`}
@@ -41,137 +52,40 @@ for (const entry of [...allCasinos, ...allBonuses]) {
               height="96"
               loading="lazy"
               decoding="async"
-              class="team-card__avatar"
+              class="w-24 h-24 rounded-full object-cover border-3 border-primary mb-4"
               onerror="this.src='/images/authors/placeholder.png'"
             />
-            <div class="team-card__body">
-              <strong class="team-card__name">{d.name}</strong>
-              {d.role && <span class="team-card__role">{d.role}</span>}
-              <p class="team-card__bio">
-                {d.bio.length > 100 ? d.bio.slice(0, 97) + "…" : d.bio}
-              </p>
-              {d.expertise?.length && (
-                <ul class="team-card__tags">
-                  {d.expertise.slice(0, 3).map((e) => <li>{e}</li>)}
-                </ul>
-              )}
-              <span class="team-card__count">{count} article{count !== 1 ? "s" : ""}</span>
-            </div>
+
+            <h2 class="font-headline font-bold text-lg text-on-surface group-hover:text-primary transition-colors">
+              {d.name}
+            </h2>
+
+            {d.role && (
+              <span class="inline-block mt-1 text-xs font-label text-primary bg-primary/10 px-3 py-0.5 rounded-full">
+                {d.role}
+              </span>
+            )}
+
+            <p class="text-on-surface-variant text-sm mt-3 leading-relaxed">
+              {bioSnippet}
+            </p>
+
+            {d.expertise && d.expertise.length > 0 && (
+              <div class="flex flex-wrap justify-center gap-1.5 mt-3">
+                {d.expertise.slice(0, 3).map((tag: string) => (
+                  <span class="text-xs text-on-surface-variant bg-surface-container-lowest border border-outline-variant/20 px-2 py-0.5 rounded">
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            )}
+
+            <span class="text-xs text-on-surface-variant mt-3">
+              {count} article{count !== 1 ? "s" : ""} published
+            </span>
           </a>
         );
       })}
     </div>
   </div>
-</Layout>
-
-<style>
-  .team-page {
-    padding-top: 3rem;
-    padding-bottom: 4rem;
-  }
-
-  .team-header {
-    text-align: center;
-    margin-bottom: 3rem;
-  }
-
-  .team-header h1 {
-    font-size: clamp(1.6rem, 4vw, 2.25rem);
-    color: #eef0fa;
-    margin-bottom: 0.75rem;
-  }
-
-  .team-header__lead {
-    color: #7a80a0;
-    max-width: 520px;
-    margin: 0 auto;
-    font-size: 0.95rem;
-    line-height: 1.6;
-  }
-
-  .team-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 1.5rem;
-  }
-
-  .team-card {
-    background: #13131f;
-    border: 1px solid #2a2a40;
-    border-radius: 12px;
-    padding: 1.5rem;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    text-decoration: none;
-    transition: border-color 0.2s, transform 0.2s;
-  }
-
-  .team-card:hover {
-    border-color: #f0c040;
-    transform: translateY(-2px);
-  }
-
-  .team-card__avatar {
-    width: 96px;
-    height: 96px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 3px solid #f0c040;
-    margin-bottom: 1rem;
-  }
-
-  .team-card__body {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.4rem;
-    width: 100%;
-  }
-
-  .team-card__name {
-    font-size: 1.05rem;
-    color: #eef0fa;
-  }
-
-  .team-card__role {
-    font-size: 0.78rem;
-    color: #f0c040;
-    background: rgba(240, 192, 64, 0.1);
-    padding: 0.15rem 0.6rem;
-    border-radius: 4px;
-  }
-
-  .team-card__bio {
-    font-size: 0.85rem;
-    color: #7a80a0;
-    margin: 0.35rem 0;
-    line-height: 1.5;
-  }
-
-  .team-card__tags {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 0.35rem;
-  }
-
-  .team-card__tags li {
-    font-size: 0.72rem;
-    color: #585d7a;
-    background: #1a1a2e;
-    border: 1px solid #2a2a40;
-    padding: 0.1rem 0.45rem;
-    border-radius: 3px;
-  }
-
-  .team-card__count {
-    font-size: 0.78rem;
-    color: #585d7a;
-    margin-top: 0.25rem;
-  }
-</style>
+</BaseLayout>

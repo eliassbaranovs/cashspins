@@ -1,137 +1,210 @@
 ---
 import { getCollection } from "astro:content";
-import CTAButton from "../../components/CTAButton.astro";
-import RatingBadge from "../../components/RatingBadge.astro";
-import Layout from "../../layouts/Layout.astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import CasinoCard from "../../components/CasinoCard.astro";
+import Breadcrumbs from "../../components/Breadcrumbs.astro";
 
-const allPosts = await getCollection("casinos");
-const reviews = allPosts
-  .filter((p) => !p.data.draft)
+const allCasinos = await getCollection("casinos");
+const casinos = allCasinos
+  .filter((c) => !c.data.draft)
   .sort((a, b) => (b.data.ourRating ?? 0) - (a.data.ourRating ?? 0));
 ---
 
-<Layout
-  title="Best Online Casino Reviews 2026"
-  seoTitle="Best Online Casino Reviews 2026 — CasinoRank"
-  description="Expert casino reviews updated for 2026. Compare ratings, bonuses, game libraries, and payment methods to find the best casino for you."
+<BaseLayout
+  title="Best Online Casinos 2026 — Expert Reviews | CashSpins"
+  description="Discover the best online casinos for 2026. Our experts test bonuses, game libraries, payout speeds, and player protections so you don't have to."
+  canonical="https://cashspins.online/casinos/"
 >
-  <div class="container">
-    <div class="page-header">
-      <h1>Casino Reviews</h1>
-      <p class="page-header__sub">
-        We test and rate every casino on bonuses, game variety, payout speed, and player protection.
-        Updated {new Date().getFullYear()}.
+  <div class="max-w-screen-2xl mx-auto px-4 md:px-8 pt-8 pb-20">
+    {/* Breadcrumbs */}
+    <Breadcrumbs
+      items={[
+        { label: "Home", href: "/" },
+        { label: "Casino Reviews" },
+      ]}
+    />
+
+    {/* Header */}
+    <header class="mt-8 mb-12">
+      <div class="flex items-center gap-3 mb-4">
+        <span class="h-px w-12 bg-secondary/40"></span>
+        <span class="font-label text-xs font-bold uppercase tracking-[0.2em] text-secondary">Verified Selections</span>
+      </div>
+      <h1 class="text-5xl md:text-7xl font-headline font-extrabold tracking-tighter mb-6 leading-none text-on-surface">
+        The Elite Selection
+      </h1>
+      <p class="max-w-2xl text-lg text-on-surface-variant leading-relaxed">
+        Every casino on this list has been vetted by our team for fairness, payout reliability, bonus transparency, and player protection. Updated {new Date().getFullYear()}.
       </p>
+    </header>
+
+    {/* Search & Filter */}
+    <div class="mb-10">
+      {/* Search bar */}
+      <div class="relative mb-6">
+        <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
+        <input
+          type="text"
+          id="casino-search"
+          placeholder="Search by casino name..."
+          class="w-full bg-surface-container-lowest text-on-surface pl-12 pr-4 py-3.5 rounded-xl border border-outline-variant/20 focus:border-primary/50 focus:outline-none transition-colors placeholder:text-on-surface-variant/50 font-body"
+        />
+      </div>
+
+      {/* Category filter chips — human-readable */}
+      <div class="flex flex-wrap gap-2" id="filter-chips">
+        <button type="button" data-category="all" class="filter-chip rounded-full px-5 py-2 text-sm font-label font-bold transition-all bg-primary text-on-primary">
+          <span class="material-symbols-outlined text-sm mr-1 align-middle">apps</span>
+          All Casinos
+        </button>
+        <button type="button" data-category="crypto-casino" class="filter-chip rounded-full px-5 py-2 text-sm font-label font-bold transition-all bg-surface-container-high text-on-surface-variant hover:bg-surface-container-highest">
+          <span class="material-symbols-outlined text-sm mr-1 align-middle">currency_bitcoin</span>
+          Crypto
+        </button>
+        <button type="button" data-category="bitcoin-casino" class="filter-chip rounded-full px-5 py-2 text-sm font-label font-bold transition-all bg-surface-container-high text-on-surface-variant hover:bg-surface-container-highest">
+          <span class="material-symbols-outlined text-sm mr-1 align-middle">currency_bitcoin</span>
+          Bitcoin
+        </button>
+        <button type="button" data-category="fast-withdrawal-casino" class="filter-chip rounded-full px-5 py-2 text-sm font-label font-bold transition-all bg-surface-container-high text-on-surface-variant hover:bg-surface-container-highest">
+          <span class="material-symbols-outlined text-sm mr-1 align-middle">bolt</span>
+          Fast Withdrawal
+        </button>
+        <button type="button" data-category="no-deposit-bonus" class="filter-chip rounded-full px-5 py-2 text-sm font-label font-bold transition-all bg-surface-container-high text-on-surface-variant hover:bg-surface-container-highest">
+          <span class="material-symbols-outlined text-sm mr-1 align-middle">redeem</span>
+          No Deposit
+        </button>
+        <button type="button" data-category="live-casino" class="filter-chip rounded-full px-5 py-2 text-sm font-label font-bold transition-all bg-surface-container-high text-on-surface-variant hover:bg-surface-container-highest">
+          <span class="material-symbols-outlined text-sm mr-1 align-middle">videocam</span>
+          Live Casino
+        </button>
+        <button type="button" data-category="vip-program-casino" class="filter-chip rounded-full px-5 py-2 text-sm font-label font-bold transition-all bg-surface-container-high text-on-surface-variant hover:bg-surface-container-highest">
+          <span class="material-symbols-outlined text-sm mr-1 align-middle">workspace_premium</span>
+          VIP Program
+        </button>
+        <button type="button" data-category="new-casino" class="filter-chip rounded-full px-5 py-2 text-sm font-label font-bold transition-all bg-surface-container-high text-on-surface-variant hover:bg-surface-container-highest">
+          <span class="material-symbols-outlined text-sm mr-1 align-middle">new_releases</span>
+          New Casinos
+        </button>
+        <button type="button" data-category="licensed-casino" class="filter-chip rounded-full px-5 py-2 text-sm font-label font-bold transition-all bg-surface-container-high text-on-surface-variant hover:bg-surface-container-highest">
+          <span class="material-symbols-outlined text-sm mr-1 align-middle">verified</span>
+          Licensed
+        </button>
+      </div>
     </div>
 
-    <ul class="casino-list" role="list">
-      {reviews.map((post) => {
-        const d = post.data;
-        return (
-          <li class="casino-card">
-            <div class="casino-card__logo-wrap">
-              {d.logo
-                ? <img src={d.logo} alt={`${d.casinoName} logo`} width="80" height="80" class="casino-card__logo" loading="lazy" />
-                : <div class="casino-card__logo-placeholder">{(d.casinoName ?? "?")[0]}</div>
-              }
-            </div>
+    {/* Results count */}
+    <div class="flex items-center justify-between mb-6">
+      <p class="text-sm text-on-surface-variant">
+        Showing <span class="text-on-surface font-bold" id="casino-count">{casinos.length}</span> casinos
+      </p>
+      <div class="flex items-center gap-2 text-xs text-on-surface-variant">
+        <span class="material-symbols-outlined text-sm">sort</span>
+        Sorted by rating
+      </div>
+    </div>
 
-            <div class="casino-card__body">
-              <div class="casino-card__top">
-                <h2 class="casino-card__name">
-                  <a href={`/casinos/${d.slug}/`}>{d.casinoName}</a>
-                </h2>
-                {d.ourRating && <RatingBadge rating={d.ourRating} size="sm" />}
-              </div>
+    {/* Casino list */}
+    <div class="space-y-6" id="casino-list">
+      {casinos.map((casino, i) => (
+        <div
+          class:list={[
+            "casino-list-item rounded-xl",
+            i % 2 === 0 ? "bg-surface" : "bg-surface-container-low",
+          ]}
+          data-casino-name={casino.data.casinoName?.toLowerCase() ?? ""}
+          data-categories={JSON.stringify(casino.data.categories ?? [])}
+        >
+          <CasinoCard casino={casino} />
+        </div>
+      ))}
+    </div>
 
-              {d.best_for && <p class="casino-card__best-for">Best for: {d.best_for}</p>}
-              {d.excerpt && <p class="casino-card__excerpt">{d.excerpt}</p>}
-
-              <ul class="casino-card__facts">
-                {d.bonus_title && <li><span class="fact-label">Bonus</span>{d.bonus_title}</li>}
-                {d.licences && <li><span class="fact-label">Licence</span>{d.licences}</li>}
-                {d.game_count && <li><span class="fact-label">Games</span>{d.game_count.toLocaleString()}+</li>}
-                {d.established && <li><span class="fact-label">Est.</span>{d.established}</li>}
-              </ul>
-            </div>
-
-            <div class="casino-card__actions">
-              <CTAButton href={`/go/${d.casino}/`} label="Visit Casino" />
-              <a href={`/casinos/${d.slug}/`} class="casino-card__review-link">Read Review →</a>
-            </div>
-          </li>
-        );
-      })}
-    </ul>
-
-    {reviews.length === 0 && (
-      <p class="empty-state">No casino reviews published yet.</p>
+    {casinos.length === 0 && (
+      <p class="text-on-surface-variant text-center py-16">No casino reviews published yet. Check back soon.</p>
     )}
+
+    {/* SEO text block */}
+    <section class="mt-20 max-w-3xl">
+      <h2 class="font-headline font-bold text-2xl text-on-surface mb-4">How We Review Online Casinos</h2>
+      <div class="text-on-surface-variant leading-relaxed space-y-4">
+        <p>
+          At CashSpins, every casino goes through a rigorous multi-step evaluation before it earns a spot on our list. We use our own money to test deposits and withdrawals, read every line of the bonus T&Cs, verify licenses directly with issuing authorities, and evaluate game libraries for quality — not just quantity.
+        </p>
+        <p>
+          Our ratings are updated regularly as casinos change their terms, add payment methods, or receive new player complaints. We believe transparency is non-negotiable — if a casino falls below our standards, it gets demoted or removed. No exceptions, no matter the affiliate deal.
+        </p>
+        <p>
+          We rate casinos on 8 key criteria: security & licensing, bonus transparency, payment testing, game library, customer support, player complaints, mobile experience, and terms fairness.
+        </p>
+      </div>
+      <a href="/how-we-review/" class="inline-flex items-center gap-2 mt-6 text-primary font-headline font-bold hover:gap-3 transition-all">
+        Read our full methodology
+        <span class="material-symbols-outlined text-sm">arrow_forward</span>
+      </a>
+    </section>
   </div>
-</Layout>
+</BaseLayout>
 
-<style>
-  .page-header { padding: 2.5rem 0 1.5rem; }
-  .page-header__sub { color: #8a90b0; font-size: 1.05rem; max-width: 640px; }
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const searchInput = document.getElementById("casino-search") as HTMLInputElement | null;
+    const chips = document.querySelectorAll<HTMLButtonElement>(".filter-chip");
+    const items = document.querySelectorAll<HTMLElement>(".casino-list-item");
+    const countEl = document.getElementById("casino-count");
 
-  .casino-list {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 1.25rem;
-    padding-bottom: 3rem;
-  }
+    let activeCategory = "all";
+    let searchQuery = "";
 
-  .casino-card {
-    display: grid;
-    grid-template-columns: 90px 1fr auto;
-    gap: 1.25rem;
-    align-items: center;
-    background: #14141f;
-    border: 1px solid rgba(255 255 255 / 0.07);
-    border-radius: 12px;
-    padding: 1.25rem 1.5rem;
-    transition: border-color 0.15s;
-  }
-  .casino-card:hover { border-color: rgba(240 192 64 / 0.4); }
+    function applyFilters() {
+      const query = searchQuery.toLowerCase();
+      let visible = 0;
 
-  .casino-card__logo-wrap { display: flex; align-items: center; justify-content: center; }
-  .casino-card__logo { width: 80px; height: 80px; object-fit: contain; border-radius: 8px; }
-  .casino-card__logo-placeholder {
-    width: 80px; height: 80px; border-radius: 8px;
-    background: rgba(255 255 255 / 0.06);
-    display: grid; place-items: center;
-    font-size: 2rem; font-weight: 800; color: #f0c040;
-  }
+      items.forEach((item) => {
+        const name = item.dataset.casinoName ?? "";
+        const cats: string[] = JSON.parse(item.dataset.categories ?? "[]");
 
-  .casino-card__top { display: flex; align-items: center; gap: 0.85rem; flex-wrap: wrap; margin-bottom: 0.3rem; }
-  .casino-card__name { margin: 0; font-size: 1.1rem; }
-  .casino-card__name a { color: #eef0fa; text-decoration: none; }
-  .casino-card__name a:hover { color: #f0c040; }
+        const matchesSearch = !query || name.includes(query);
+        const matchesCat = activeCategory === "all" || cats.some(c => c === activeCategory);
 
-  .casino-card__best-for { margin: 0 0 0.35rem; font-size: 0.82rem; color: #f0c040; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; }
-  .casino-card__excerpt { margin: 0 0 0.75rem; color: #8a90b0; font-size: 0.9rem; line-height: 1.5; }
+        const show = matchesSearch && matchesCat;
+        item.style.display = show ? "" : "none";
+        if (show) visible++;
+      });
 
-  .casino-card__facts {
-    list-style: none; padding: 0; margin: 0;
-    display: flex; flex-wrap: wrap; gap: 0.4rem 1.2rem;
-    font-size: 0.82rem; color: #a0a5c0;
-  }
-  .casino-card__facts li { display: flex; gap: 0.35rem; }
-  .fact-label { color: #585d7a; }
+      if (countEl) countEl.textContent = String(visible);
+    }
 
-  .casino-card__actions { display: flex; flex-direction: column; align-items: flex-end; gap: 0.6rem; min-width: 130px; }
-  .casino-card__review-link { font-size: 0.85rem; color: #8a90b0; text-decoration: none; white-space: nowrap; }
-  .casino-card__review-link:hover { color: #f0c040; }
+    // Search
+    if (searchInput) {
+      let debounce: ReturnType<typeof setTimeout>;
+      searchInput.addEventListener("input", () => {
+        clearTimeout(debounce);
+        debounce = setTimeout(() => {
+          searchQuery = searchInput.value.trim();
+          applyFilters();
+        }, 200);
+      });
+    }
 
-  .empty-state { color: #585d7a; text-align: center; padding: 3rem 0; }
+    // Category chips — single select (radio style)
+    chips.forEach((chip) => {
+      chip.addEventListener("click", () => {
+        const cat = chip.dataset.category ?? "all";
+        activeCategory = cat;
 
-  @media (max-width: 680px) {
-    .casino-card { grid-template-columns: 60px 1fr; grid-template-rows: auto auto; }
-    .casino-card__logo { width: 60px; height: 60px; }
-    .casino-card__logo-placeholder { width: 60px; height: 60px; font-size: 1.5rem; }
-    .casino-card__actions { grid-column: 1 / -1; flex-direction: row; align-items: center; justify-content: space-between; }
-  }
-</style>
+        // Update chip styles
+        chips.forEach((c) => {
+          if (c.dataset.category === cat) {
+            c.classList.remove("bg-surface-container-high", "text-on-surface-variant");
+            c.classList.add("bg-primary", "text-on-primary");
+          } else {
+            c.classList.remove("bg-primary", "text-on-primary");
+            c.classList.add("bg-surface-container-high", "text-on-surface-variant");
+          }
+        });
+
+        applyFilters();
+      });
+    });
+  });
+</script>

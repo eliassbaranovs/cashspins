@@ -1,0 +1,165 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Breadcrumbs from "../components/Breadcrumbs.astro";
+import CasinoCard from "../components/CasinoCard.astro";
+import FAQSection from "../components/FAQSection.astro";
+
+const allCasinos = await getCollection("casinos");
+const filtered = allCasinos
+  .filter(
+    (c) =>
+      !c.data.draft &&
+      (c.data.categories?.includes("crypto-casino") ||
+        c.data.categories?.includes("bitcoin-casino"))
+  )
+  .sort((a, b) => (b.data.ourRating ?? 0) - (a.data.ourRating ?? 0));
+
+const casinos = filtered.length > 0 ? filtered : allCasinos.filter((c) => !c.data.draft).sort((a, b) => (b.data.ourRating ?? 0) - (a.data.ourRating ?? 0));
+
+const itemListSchema = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "ItemList",
+  "name": "Best Crypto Casinos 2026",
+  "numberOfItems": casinos.length,
+  "itemListElement": casinos.slice(0, 10).map((c: any, i: number) => ({
+    "@type": "ListItem",
+    "position": i + 1,
+    "name": c.data.casinoName ?? c.data.title,
+    "url": `https://cashspins.online/casinos/${c.data.slug}/`,
+  })),
+});
+
+const faqs = [
+  {
+    question: "What is a crypto casino?",
+    answer: "A crypto casino is an online gambling platform that accepts cryptocurrencies like Bitcoin, Ethereum, and USDT for deposits and withdrawals. Many crypto casinos also offer provably fair games where players can independently verify the fairness of each outcome using blockchain technology."
+  },
+  {
+    question: "Are crypto casinos safe?",
+    answer: "Reputable crypto casinos hold valid gambling licences and use the same encryption standards as traditional online casinos. The blockchain also adds a layer of transparency for transactions. However, as with any online casino, you should always verify licensing, read reviews, and check the complaint history before depositing."
+  },
+  {
+    question: "What cryptocurrencies can I use at these casinos?",
+    answer: "Most crypto casinos accept Bitcoin (BTC), Ethereum (ETH), and Tether (USDT) at a minimum. Many also support Litecoin, Dogecoin, TRON, and other altcoins. Check each casino's payment page for the full list of supported cryptocurrencies."
+  },
+  {
+    question: "Are crypto casino withdrawals faster than regular casinos?",
+    answer: "Generally, yes. Cryptocurrency withdrawals bypass traditional banking intermediaries, which means they are often processed within minutes to a few hours rather than the 1-5 business days typical of bank transfers or card withdrawals."
+  },
+  {
+    question: "Do I need to complete KYC verification at crypto casinos?",
+    answer: "It depends on the casino and your jurisdiction. Some crypto casinos offer anonymous play with minimal verification, while others require full KYC (Know Your Customer) documentation, especially for larger withdrawals. Licenced casinos are increasingly required to implement KYC procedures."
+  },
+];
+---
+
+<BaseLayout
+  title="Best Crypto & Bitcoin Casinos 2026 | CashSpins"
+  description="Discover the top-rated crypto and Bitcoin casinos of 2026. Fast payouts, provably fair games, and exclusive crypto bonuses reviewed by our experts."
+  schemaJsonLd={itemListSchema}
+>
+  <div class="max-w-7xl mx-auto px-8 py-12">
+    <Breadcrumbs items={[
+      { label: "Home", href: "/" },
+      { label: "Crypto Casinos" },
+    ]} />
+
+    <header class="mt-8 mb-12">
+      <h1 class="font-headline font-extrabold text-4xl md:text-5xl text-on-surface mb-6">
+        Best Crypto Casinos 2026
+      </h1>
+      <div class="max-w-3xl space-y-4 text-on-surface-variant leading-relaxed">
+        <p>
+          Crypto casinos have fundamentally changed how players deposit, play, and withdraw. With
+          blockchain-verified transactions, near-instant payouts, and enhanced privacy, the best
+          Bitcoin and cryptocurrency casinos offer advantages that traditional platforms cannot match.
+        </p>
+        <p>
+          Our team tests every crypto casino for licence validity, provably fair game availability,
+          withdrawal speed, bonus fairness, and the range of supported cryptocurrencies. The casinos
+          listed below have passed our evaluation and represent the best options for crypto players in 2026.
+        </p>
+      </div>
+
+      {/* Trust Badges */}
+      <div class="flex flex-wrap gap-4 mt-8">
+        <div class="flex items-center gap-2 bg-surface-container-low rounded-lg px-4 py-2.5">
+          <span class="material-symbols-outlined text-primary">lock</span>
+          <span class="text-on-surface text-sm font-medium">SSL Encrypted</span>
+        </div>
+        <div class="flex items-center gap-2 bg-surface-container-low rounded-lg px-4 py-2.5">
+          <span class="material-symbols-outlined text-primary">verified_user</span>
+          <span class="text-on-surface text-sm font-medium">Provably Fair</span>
+        </div>
+        <div class="flex items-center gap-2 bg-surface-container-low rounded-lg px-4 py-2.5">
+          <span class="material-symbols-outlined text-primary">bolt</span>
+          <span class="text-on-surface text-sm font-medium">Instant Payouts</span>
+        </div>
+      </div>
+    </header>
+
+    {/* Casino List */}
+    <section class="space-y-6 mb-16">
+      {casinos.map((casino) => (
+        <CasinoCard casino={casino} />
+      ))}
+    </section>
+
+    {/* How We Rate */}
+    <section class="bg-surface-container-low rounded-xl p-8 md:p-10 mb-16">
+      <h2 class="font-headline font-bold text-2xl text-on-surface mb-6">
+        <span class="material-symbols-outlined text-primary align-middle mr-2">shield</span>
+        What We Look for in Crypto Casinos
+      </h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+          <h3 class="font-headline font-semibold text-on-surface mb-2">Supported Cryptocurrencies</h3>
+          <p class="text-on-surface-variant text-sm leading-relaxed">
+            We check which coins are accepted, minimum deposit thresholds, and whether conversions to fiat happen automatically or if you can play directly in crypto.
+          </p>
+        </div>
+        <div>
+          <h3 class="font-headline font-semibold text-on-surface mb-2">Withdrawal Speed</h3>
+          <p class="text-on-surface-variant text-sm leading-relaxed">
+            Crypto's biggest advantage is speed. We test actual withdrawal times for BTC, ETH, and USDT and report the averages in each review.
+          </p>
+        </div>
+        <div>
+          <h3 class="font-headline font-semibold text-on-surface mb-2">Provably Fair Games</h3>
+          <p class="text-on-surface-variant text-sm leading-relaxed">
+            We verify whether the casino offers provably fair games and whether the cryptographic verification system is accessible and properly implemented.
+          </p>
+        </div>
+        <div>
+          <h3 class="font-headline font-semibold text-on-surface mb-2">Privacy & KYC</h3>
+          <p class="text-on-surface-variant text-sm leading-relaxed">
+            We document each casino's KYC requirements, data collection practices, and privacy policies so you know what to expect before you sign up.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    {/* Internal Links */}
+    <section class="mb-16">
+      <h2 class="font-headline font-bold text-2xl text-on-surface mb-6">Related Categories</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <a href="/best-online-casinos/" class="flex items-center gap-3 bg-surface-container-low rounded-lg px-5 py-4 ghost-border hover:border-primary/30 transition-all">
+          <span class="material-symbols-outlined text-primary">star</span>
+          <span class="text-on-surface font-medium">Best Online Casinos</span>
+        </a>
+        <a href="/fast-withdrawal-casinos/" class="flex items-center gap-3 bg-surface-container-low rounded-lg px-5 py-4 ghost-border hover:border-primary/30 transition-all">
+          <span class="material-symbols-outlined text-primary">bolt</span>
+          <span class="text-on-surface font-medium">Fast Withdrawal Casinos</span>
+        </a>
+        <a href="/no-deposit-bonus/" class="flex items-center gap-3 bg-surface-container-low rounded-lg px-5 py-4 ghost-border hover:border-primary/30 transition-all">
+          <span class="material-symbols-outlined text-primary">redeem</span>
+          <span class="text-on-surface font-medium">No Deposit Bonuses</span>
+        </a>
+      </div>
+    </section>
+
+    {/* FAQ */}
+    <FAQSection faqs={faqs} />
+  </div>
+</BaseLayout>

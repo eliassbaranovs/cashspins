@@ -1,7 +1,7 @@
 ---
 import { getCollection } from "astro:content";
-import AuthorCard from "../../components/AuthorCard.astro";
-import Layout from "../../layouts/Layout.astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Breadcrumbs from "../../components/Breadcrumbs.astro";
 
 export async function getStaticPaths() {
   const authors = await getCollection("authors");
@@ -14,7 +14,6 @@ export async function getStaticPaths() {
 const { author } = Astro.props;
 const d = author.data;
 
-// Gather all articles by this author across all collections
 const [casinos, bonuses] = await Promise.all([
   getCollection("casinos"),
   getCollection("bonuses"),
@@ -26,352 +25,195 @@ const authorCasinos = casinos
 
 const authorBonuses = bonuses
   .filter((p) => p.data.authorSlug === d.slug && !p.data.draft)
-  .sort((a, b) =>
-    new Date(b.data.lastVerified ?? 0).getTime() -
-    new Date(a.data.lastVerified ?? 0).getTime()
+  .sort(
+    (a, b) =>
+      new Date(b.data.lastVerified ?? 0).getTime() -
+      new Date(a.data.lastVerified ?? 0).getTime()
   );
 
 const totalArticles = authorCasinos.length + authorBonuses.length;
+
+const personSchema = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": author.data.name,
+  "jobTitle": author.data.role ?? "Casino Analyst",
+  "description": author.data.bio,
+  "knowsAbout": author.data.expertise ?? [],
+  ...(author.data.credentials?.length ? {
+    "hasCredential": author.data.credentials.map((c: string) => ({
+      "@type": "EducationalOccupationalCredential",
+      "credentialCategory": "Certification",
+      "name": c,
+    })),
+  } : {}),
+  "sameAs": [
+    author.data.socialLinks?.twitter,
+    author.data.socialLinks?.linkedin,
+  ].filter(Boolean),
+  "url": `https://cashspins.online/team/${author.data.slug}/`,
+  ...(author.data.avatar ? { "image": `https://cashspins.online${author.data.avatar}` } : {}),
+});
 ---
 
-<Layout
-  title={`${d.name} — ${d.role ?? "Casino Analyst"} at CasinoRank`}
-  description={d.bio}
-  canonical={`https://casinorank.com/team/${d.slug}/`}
+<BaseLayout
+  title={`${d.name} — ${d.role ?? "Casino Analyst"} | CashSpins`}
+  description={d.bio.length > 160 ? d.bio.slice(0, 157) + "..." : d.bio}
   ogType="profile"
+  schemaJsonLd={personSchema}
 >
-  <!-- Breadcrumbs -->
-  <nav class="breadcrumbs container" aria-label="Breadcrumb">
-    <ol>
-      <li><a href="/">Home</a></li>
-      <li><a href="/team/">Our Experts</a></li>
-      <li aria-current="page">{d.name}</li>
-    </ol>
-  </nav>
+  <div class="max-w-7xl mx-auto px-8 py-12">
+    <Breadcrumbs items={[
+      { label: "Home", href: "/" },
+      { label: "Our Team", href: "/team/" },
+      { label: d.name },
+    ]} />
 
-  <!-- Profile Header -->
-  <div class="container profile-header">
-    <img
-      src={d.avatar}
-      alt={`${d.name} — ${d.role ?? "Casino Analyst"}`}
-      width="120"
-      height="120"
-      loading="eager"
-      decoding="async"
-      class="profile-avatar"
-      onerror="this.src='/images/authors/placeholder.png'"
-    />
-    <div class="profile-info">
-      <h1 class="profile-name">{d.name}</h1>
-      {d.role && <p class="profile-role">{d.role}</p>}
-      <p class="profile-bio">{d.bio}</p>
+    {/* Hero / Profile Header */}
+    <div class="flex flex-col md:flex-row gap-8 items-start mt-8 pb-8 border-b border-outline-variant/20">
+      <img
+        src={d.avatar}
+        alt={`${d.name} — ${d.role ?? "Casino Analyst"}`}
+        width="128"
+        height="128"
+        loading="eager"
+        decoding="async"
+        class="w-32 h-32 rounded-full object-cover border-3 border-primary shrink-0"
+        onerror="this.src='/images/authors/placeholder.png'"
+      />
 
-      {d.credentials?.length && (
-        <ul class="profile-credentials">
-          {d.credentials.map((c) => <li>{c}</li>)}
-        </ul>
-      )}
+      <div class="flex flex-col gap-3">
+        <h1 class="font-headline font-extrabold text-3xl md:text-4xl text-on-surface">
+          {d.name}
+        </h1>
 
-      {d.expertise?.length && (
-        <div class="profile-expertise">
-          <span class="profile-expertise__label">Specialisms:</span>
-          <ul>
-            {d.expertise.map((e) => <li>{e}</li>)}
-          </ul>
-        </div>
-      )}
+        {d.role && (
+          <span class="inline-block text-sm font-label text-primary font-semibold">
+            {d.role}
+          </span>
+        )}
 
-      {d.socialLinks && (
-        <div class="profile-social">
-          {d.socialLinks.twitter && (
-            <a
-              href={d.socialLinks.twitter}
-              class="social-link"
-              rel="noopener noreferrer"
-              target="_blank"
-              aria-label={`${d.name} on Twitter / X`}
-            >
-              Twitter / X
-            </a>
-          )}
-          {d.socialLinks.linkedin && (
-            <a
-              href={d.socialLinks.linkedin}
-              class="social-link"
-              rel="noopener noreferrer"
-              target="_blank"
-              aria-label={`${d.name} on LinkedIn`}
-            >
-              LinkedIn
-            </a>
-          )}
-        </div>
-      )}
-    </div>
-  </div>
-
-  <!-- Article counts -->
-  <div class="container article-counts">
-    <p>{totalArticles} article{totalArticles !== 1 ? "s" : ""} published</p>
-  </div>
-
-  <!-- Casino Reviews by this author -->
-  {authorCasinos.length > 0 && (
-    <section class="container author-section">
-      <h2 class="author-section__heading">Casino Reviews</h2>
-      <ul class="article-list">
-        {authorCasinos.map((entry) => (
-          <li class="article-list__item">
-            <a href={`/casinos/${entry.data.slug}/`} class="article-list__link">
-              {entry.data.casinoName ?? entry.data.title}
-            </a>
-            {entry.data.ourRating && (
-              <span class="article-list__meta">Rating: {entry.data.ourRating}/10</span>
-            )}
-            {entry.data.lastVerified && (
-              <span class="article-list__date">
-                Last verified: {entry.data.lastVerified}
+        {d.credentials && d.credentials.length > 0 && (
+          <div class="flex flex-wrap gap-2">
+            {d.credentials.map((c: string) => (
+              <span class="text-xs text-primary bg-primary/10 border border-primary/20 px-3 py-1 rounded-full">
+                {c}
               </span>
-            )}
-          </li>
-        ))}
-      </ul>
-    </section>
-  )}
+            ))}
+          </div>
+        )}
 
-  <!-- Bonus Articles by this author -->
-  {authorBonuses.length > 0 && (
-    <section class="container author-section">
-      <h2 class="author-section__heading">Bonus Guides</h2>
-      <ul class="article-list">
-        {authorBonuses.map((entry) => (
-          <li class="article-list__item">
-            <a href={`/bonus/${entry.data.slug}/`} class="article-list__link">
-              {entry.data.bonus_title ?? entry.data.title}
-            </a>
-            {entry.data.lastVerified && (
-              <span class="article-list__date">
-                Last verified: {entry.data.lastVerified}
+        <p class="text-on-surface-variant leading-relaxed max-w-2xl">
+          {d.bio}
+        </p>
+
+        {d.expertise && d.expertise.length > 0 && (
+          <div class="flex flex-wrap items-center gap-2">
+            <span class="text-xs text-on-surface-variant font-label uppercase tracking-wider">Specialisms:</span>
+            {d.expertise.map((e: string) => (
+              <span class="text-xs text-on-surface-variant bg-surface-container-lowest border border-outline-variant/20 px-2 py-0.5 rounded">
+                {e}
               </span>
+            ))}
+          </div>
+        )}
+
+        {d.socialLinks && (
+          <div class="flex gap-3 mt-1">
+            {d.socialLinks.twitter && (
+              <a
+                href={d.socialLinks.twitter}
+                class="text-sm text-on-surface-variant border border-outline-variant/30 px-3 py-1.5 rounded-md hover:text-primary hover:border-primary transition-colors"
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                <span class="material-symbols-outlined text-sm align-middle mr-1">open_in_new</span>
+                Twitter / X
+              </a>
             )}
-          </li>
-        ))}
-      </ul>
-    </section>
-  )}
-
-  {totalArticles === 0 && (
-    <div class="container">
-      <p class="no-articles">No published articles yet.</p>
+            {d.socialLinks.linkedin && (
+              <a
+                href={d.socialLinks.linkedin}
+                class="text-sm text-on-surface-variant border border-outline-variant/30 px-3 py-1.5 rounded-md hover:text-primary hover:border-primary transition-colors"
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                <span class="material-symbols-outlined text-sm align-middle mr-1">open_in_new</span>
+                LinkedIn
+              </a>
+            )}
+          </div>
+        )}
+      </div>
     </div>
-  )}
 
-  <!-- AuthorCard at bottom (self-referential — shows bio summary) -->
-  <div class="container">
-    <AuthorCard
-      name={d.name}
-      slug={d.slug}
-      bio={d.bio}
-      avatar={d.avatar}
-      role={d.role}
-      credentials={d.credentials}
-    />
+    {/* Article count */}
+    <p class="text-on-surface-variant text-sm mt-6 mb-8">
+      <span class="material-symbols-outlined text-sm align-middle mr-1">article</span>
+      {totalArticles} article{totalArticles !== 1 ? "s" : ""} published
+    </p>
+
+    {/* Casino Reviews */}
+    {authorCasinos.length > 0 && (
+      <section class="mb-10">
+        <h2 class="font-headline font-bold text-xl text-on-surface mb-4 pb-3 border-b border-outline-variant/20">
+          Casino Reviews
+        </h2>
+        <div class="space-y-3">
+          {authorCasinos.map((entry) => (
+            <a
+              href={`/casinos/${entry.data.slug}/`}
+              class="flex items-baseline gap-4 flex-wrap bg-surface-container-low rounded-lg px-5 py-4 ghost-border hover:border-primary/30 transition-all"
+            >
+              <span class="text-on-surface font-medium flex-1 min-w-[180px]">
+                {entry.data.casinoName ?? entry.data.title}
+              </span>
+              {entry.data.ourRating && (
+                <span class="text-xs text-primary font-semibold">
+                  Rating: {entry.data.ourRating}/10
+                </span>
+              )}
+              {entry.data.lastVerified && (
+                <span class="text-xs text-on-surface-variant ml-auto">
+                  Verified: {entry.data.lastVerified}
+                </span>
+              )}
+            </a>
+          ))}
+        </div>
+      </section>
+    )}
+
+    {/* Bonus Guides */}
+    {authorBonuses.length > 0 && (
+      <section class="mb-10">
+        <h2 class="font-headline font-bold text-xl text-on-surface mb-4 pb-3 border-b border-outline-variant/20">
+          Bonus Guides
+        </h2>
+        <div class="space-y-3">
+          {authorBonuses.map((entry) => (
+            <a
+              href={`/bonus/${entry.data.slug}/`}
+              class="flex items-baseline gap-4 flex-wrap bg-surface-container-low rounded-lg px-5 py-4 ghost-border hover:border-primary/30 transition-all"
+            >
+              <span class="text-on-surface font-medium flex-1 min-w-[180px]">
+                {entry.data.bonus_title ?? entry.data.title}
+              </span>
+              {entry.data.lastVerified && (
+                <span class="text-xs text-on-surface-variant ml-auto">
+                  Verified: {entry.data.lastVerified}
+                </span>
+              )}
+            </a>
+          ))}
+        </div>
+      </section>
+    )}
+
+    {totalArticles === 0 && (
+      <p class="text-on-surface-variant text-center py-12">
+        No published articles yet.
+      </p>
+    )}
   </div>
-</Layout>
-
-<style>
-  /* Breadcrumbs */
-  .breadcrumbs { padding: 0.75rem 0; }
-  .breadcrumbs ol { list-style: none; padding: 0; margin: 0; display: flex; gap: 0.5rem; font-size: 0.82rem; color: #585d7a; flex-wrap: wrap; }
-  .breadcrumbs li + li::before { content: "/"; margin-right: 0.5rem; }
-  .breadcrumbs a { color: #7a80a0; text-decoration: none; }
-  .breadcrumbs a:hover { color: #f0c040; }
-
-  /* Profile */
-  .profile-header {
-    display: flex;
-    gap: 2rem;
-    align-items: flex-start;
-    padding-top: 2.5rem;
-    padding-bottom: 2rem;
-    border-bottom: 1px solid #2a2a40;
-    flex-wrap: wrap;
-  }
-
-  .profile-avatar {
-    width: 120px;
-    height: 120px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 3px solid #f0c040;
-    flex-shrink: 0;
-  }
-
-  .profile-info {
-    display: flex;
-    flex-direction: column;
-    gap: 0.6rem;
-    flex: 1;
-    min-width: 240px;
-  }
-
-  .profile-name {
-    font-size: clamp(1.4rem, 3vw, 2rem);
-    color: #eef0fa;
-    margin: 0;
-  }
-
-  .profile-role {
-    color: #f0c040;
-    font-size: 0.9rem;
-    margin: 0;
-    font-weight: 600;
-  }
-
-  .profile-bio {
-    color: #b0b0c8;
-    line-height: 1.65;
-    font-size: 0.95rem;
-    margin: 0;
-    max-width: 620px;
-  }
-
-  .profile-credentials {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.4rem;
-  }
-
-  .profile-credentials li {
-    font-size: 0.78rem;
-    color: #f0c040;
-    background: rgba(240, 192, 64, 0.08);
-    border: 1px solid rgba(240, 192, 64, 0.25);
-    padding: 0.2rem 0.6rem;
-    border-radius: 4px;
-  }
-
-  .profile-expertise {
-    display: flex;
-    align-items: flex-start;
-    gap: 0.5rem;
-    flex-wrap: wrap;
-  }
-
-  .profile-expertise__label {
-    font-size: 0.8rem;
-    color: #585d7a;
-    padding-top: 0.2rem;
-    white-space: nowrap;
-  }
-
-  .profile-expertise ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.35rem;
-  }
-
-  .profile-expertise ul li {
-    font-size: 0.78rem;
-    background: #1a1a2e;
-    color: #7a80a0;
-    border: 1px solid #2a2a40;
-    padding: 0.1rem 0.45rem;
-    border-radius: 3px;
-  }
-
-  .profile-social {
-    display: flex;
-    gap: 0.75rem;
-    flex-wrap: wrap;
-  }
-
-  .social-link {
-    font-size: 0.82rem;
-    color: #7a80a0;
-    text-decoration: none;
-    border: 1px solid #2a2a40;
-    padding: 0.25rem 0.75rem;
-    border-radius: 5px;
-    transition: color 0.15s, border-color 0.15s;
-  }
-  .social-link:hover {
-    color: #f0c040;
-    border-color: #f0c040;
-  }
-
-  /* Counts */
-  .article-counts {
-    padding: 0.75rem 0;
-    font-size: 0.85rem;
-    color: #585d7a;
-  }
-
-  /* Article sections */
-  .author-section {
-    margin-bottom: 2.5rem;
-  }
-
-  .author-section__heading {
-    font-size: 1.1rem;
-    color: #eef0fa;
-    margin-bottom: 1rem;
-    padding-bottom: 0.5rem;
-    border-bottom: 1px solid #2a2a40;
-  }
-
-  .article-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-  }
-
-  .article-list__item {
-    display: flex;
-    align-items: baseline;
-    gap: 0.75rem;
-    flex-wrap: wrap;
-    background: #13131f;
-    border: 1px solid #2a2a40;
-    border-radius: 8px;
-    padding: 0.75rem 1rem;
-  }
-
-  .article-list__link {
-    color: #eef0fa;
-    text-decoration: none;
-    font-size: 0.95rem;
-    flex: 1;
-    min-width: 180px;
-  }
-  .article-list__link:hover {
-    color: #f0c040;
-  }
-
-  .article-list__meta {
-    font-size: 0.78rem;
-    color: #f0c040;
-  }
-
-  .article-list__date {
-    font-size: 0.75rem;
-    color: #585d7a;
-    margin-left: auto;
-  }
-
-  .no-articles {
-    color: #585d7a;
-    font-size: 0.9rem;
-    padding: 2rem 0;
-    text-align: center;
-  }
-</style>
+</BaseLayout>

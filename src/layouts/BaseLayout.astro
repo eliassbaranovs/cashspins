@@ -1,0 +1,118 @@
+---
+import Navbar from "../components/Navbar.astro";
+import Footer from "../components/Footer.astro";
+import "../styles/global.css";
+
+interface Props {
+  title: string;
+  seoTitle?: string;
+  description?: string;
+  image?: string;
+  imageAlt?: string;
+  imageWidth?: number;
+  imageHeight?: number;
+  canonical?: string;
+  robots?: string;
+  schemaJsonLd?: string;
+  noIndex?: boolean;
+  ogType?: string;
+}
+
+const {
+  title,
+  seoTitle,
+  description = "Discover top-rated online casinos, exclusive bonuses, and expert guides at CashSpins.",
+  image,
+  imageAlt,
+  imageWidth,
+  imageHeight,
+  canonical,
+  robots = "index, follow",
+  schemaJsonLd,
+  noIndex = false,
+  ogType = "website",
+} = Astro.props;
+
+const pageTitle = seoTitle ?? title;
+const siteBase = (Astro.site ?? Astro.url.origin).toString().replace(/\/$/, "");
+const ogImage = new URL(image ?? "/images/og-default.webp", siteBase + "/").href;
+const canonicalUrl = canonical ?? new URL(Astro.url.pathname, Astro.site ?? Astro.url.origin).href;
+---
+
+<!doctype html>
+<html lang="en" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" />
+    <meta name="generator" content={Astro.generator} />
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Manrope:wght@600;700;800&family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=swap"
+      rel="stylesheet"
+      media="print"
+      onload="this.media='all'"
+    />
+    <noscript>
+      <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Manrope:wght@600;700;800&family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=swap"
+        rel="stylesheet"
+      />
+    </noscript>
+
+    <title>{pageTitle}</title>
+    {description && <meta name="description" content={description} />}
+    <meta name="robots" content={noIndex ? "noindex, nofollow" : robots} />
+    <link rel="canonical" href={canonicalUrl} />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content={pageTitle} />
+    {description && <meta property="og:description" content={description} />}
+    <meta property="og:image" content={ogImage} />
+    {imageAlt && <meta property="og:image:alt" content={imageAlt} />}
+    {imageWidth && <meta property="og:image:width" content={String(imageWidth)} />}
+    {imageHeight && <meta property="og:image:height" content={String(imageHeight)} />}
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:type" content={ogType} />
+    <meta property="og:locale" content="en_US" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={pageTitle} />
+    {description && <meta name="twitter:description" content={description} />}
+    <meta name="twitter:image" content={ogImage} />
+    {imageAlt && <meta name="twitter:image:alt" content={imageAlt} />}
+
+    <!-- Site metadata -->
+    <meta property="og:site_name" content="CashSpins" />
+    <meta name="theme-color" content="#131313" />
+
+    <!-- Schema.org JSON-LD -->
+    {schemaJsonLd && <script type="application/ld+json" set:html={schemaJsonLd} />}
+
+    {/* Preload cover image for LCP */}
+    {image && <link rel="preload" as="image" href={image} />}
+  </head>
+  <body class="bg-surface text-on-surface font-body antialiased min-h-screen flex flex-col">
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+    <Navbar />
+    <main id="main-content" class="flex-1">
+      <slot />
+    </main>
+    <Footer />
+
+    <script>
+      // Add target="_blank" and rel="noopener noreferrer" to external links in prose content
+      document.querySelectorAll('.prose a[href^="http"]').forEach((link) => {
+        if (!link.getAttribute('href')?.includes('cashspins.online')) {
+          link.setAttribute('target', '_blank');
+          link.setAttribute('rel', 'noopener noreferrer');
+        }
+      });
+    </script>
+  </body>
+</html>

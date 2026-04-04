@@ -1,362 +1,626 @@
 ---
 import { getCollection, getEntry, render } from "astro:content";
-import AuthorCard from "../../components/AuthorCard.astro";
-import CTAButton from "../../components/CTAButton.astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Breadcrumbs from "../../components/Breadcrumbs.astro";
+import RatingStars from "../../components/RatingStars.astro";
 import RatingBadge from "../../components/RatingBadge.astro";
-import Layout from "../../layouts/Layout.astro";
+import CTAButton from "../../components/CTAButton.astro";
+import ProsCons from "../../components/ProsCons.astro";
+import FAQSection from "../../components/FAQSection.astro";
+import RelatedContent from "../../components/RelatedContent.astro";
+import { buildCanonical, generateReviewSchema, generateFAQSchema } from "../../lib/seo";
+import { getRelatedByTags } from "../../lib/collections";
 
 export async function getStaticPaths() {
-  const posts = await getCollection("casinos");
-  return posts
-    .filter((p) => !p.data.draft)
-    .map((post) => ({ params: { slug: post.data.slug }, props: { post } }));
+  const casinos = await getCollection("casinos");
+  return casinos
+    .filter((c) => !c.data.draft)
+    .map((casino) => ({
+      params: { slug: casino.data.slug },
+      props: { casino },
+    }));
 }
 
-const { post } = Astro.props;
-const d = post.data;
-const { Content } = await render(post);
+const { casino } = Astro.props;
+const d = casino.data;
+const { Content } = await render(casino);
 
-const depositArr = d.depositMethods?.split("|").map((s) => s.trim()) ?? [];
-const withdrawalArr = d.withdrawalMethods?.split("|").map((s) => s.trim()) ?? [];
-const providersArr = d.gameProviders?.split("|").map((s) => s.trim()) ?? [];
-const currenciesArr = d.currencies?.split("|").map((s) => s.trim()) ?? [];
+// Parse pipe-delimited fields
+const depositArr = d.depositMethods?.split("|").map((s: string) => s.trim()).filter(Boolean) ?? [];
+const withdrawalArr = d.withdrawalMethods?.split("|").map((s: string) => s.trim()).filter(Boolean) ?? [];
+const providersArr = d.gameProviders?.split("|").map((s: string) => s.trim()).filter(Boolean) ?? [];
+const currenciesArr = d.currencies?.split("|").map((s: string) => s.trim()).filter(Boolean) ?? [];
 
-const authorEntry = d.authorSlug
-  ? await getEntry("authors", d.authorSlug)
-  : undefined;
+// Related casinos
+const allCasinos = await getCollection("casinos");
+const related = getRelatedByTags(d.tags ?? [], allCasinos.filter((c) => !c.data.draft), d.slug, 3);
+
+// Author
+let authorEntry: any = undefined;
+try {
+  if (d.authorSlug) {
+    const authors = await getCollection("authors");
+    authorEntry = authors.find((a) => a.data.slug === d.authorSlug);
+  }
+} catch {}
+
+// SEO schemas
+const canonical = buildCanonical(`casinos/${d.slug}`);
+const reviewSchema = generateReviewSchema({
+  title: d.title,
+  description: d.description ?? "",
+  ourRating: d.ourRating,
+  image: d.image,
+  author: d.author,
+  publishedAt: d.publishedAt,
+  slug: d.slug,
+});
+
+const faqSchema = d.faqs?.length ? generateFAQSchema(d.faqs) : undefined;
+
+// Combine schemas
+const schemas: string[] = [reviewSchema];
+if (faqSchema) schemas.push(faqSchema);
+const combinedSchema = `[${schemas.join(",")}]`;
 ---
 
-<Layout
+<BaseLayout
   title={d.title}
   seoTitle={d.seoTitle}
   description={d.description}
   image={d.image}
   imageAlt={d.imageAlt}
-  canonical={d.canonical}
+  canonical={canonical}
   robots={d.robots}
-  schemaJsonLd={d.schemaJsonLd}
+  schemaJsonLd={d.schemaJsonLd || combinedSchema}
   noIndex={d.noIndex}
   ogType="article"
 >
-  <!-- Breadcrumbs -->
-  <nav class="breadcrumbs container" aria-label="Breadcrumb">
-    <ol>
-      <li><a href="/">Home</a></li>
-      <li><a href="/casinos/">Casinos</a></li>
-      <li aria-current="page">{d.casinoName}</li>
-    </ol>
-  </nav>
+  <div class="max-w-screen-2xl mx-auto px-4 md:px-8 pt-8 pb-20">
 
-  <!-- Cover Image -->
-  {d.image && (
-    <div class="cover-image-wrap">
-      <img
-        src={d.image}
-        alt={d.imageAlt ?? `${d.casinoName} cover`}
-        width={d.imageWidth ?? 1792}
-        height={d.imageHeight ?? 1024}
-        class="cover-image"
-        loading="eager"
-        decoding="async"
-      />
-    </div>
-  )}
+    {/* ───────────────── HERO HEADER ───────────────── */}
+    <header class="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-16">
 
-  <!-- Hero -->
-  <div class="review-hero container">
-    <div class="review-hero__left">
-      {d.logo
-        ? <img src={d.logo} alt={`${d.casinoName} logo`} width="96" height="96" class="review-hero__logo" />
-        : <div class="review-hero__logo-placeholder">{(d.casinoName ?? "?")[0]}</div>
-      }
-    </div>
-    <div class="review-hero__info">
-      <h1 class="review-hero__title">{d.title}</h1>
-      {d.best_for && <p class="review-hero__best-for">Best for: {d.best_for}</p>}
-      <div class="review-hero__meta">
-        {d.ourRating && <RatingBadge rating={d.ourRating} size="lg" />}
-        {d.casino_type && <span class="tag">{d.casino_type}</span>}
-        {d.isNewCasino && <span class="tag tag--new">New</span>}
-      </div>
-    </div>
-    <div class="review-hero__cta">
-      {d.casino && <CTAButton href={`/go/${d.casino}/`} label="Visit Casino" />}
-      {d.bonus_title && (
-        <p class="review-hero__bonus-hint">{d.bonus_title}</p>
-      )}
-    </div>
-  </div>
+      {/* Left column */}
+      <div class="lg:col-span-8 flex flex-col justify-center">
+        {/* Breadcrumbs */}
+        <div class="mb-6">
+          <Breadcrumbs
+            items={[
+              { label: "Home", href: "/" },
+              { label: "Casino Reviews", href: "/casinos/" },
+              { label: d.casinoName ?? d.title },
+            ]}
+          />
+        </div>
 
-  <!-- Key Facts Table -->
-  <div class="container">
-    <div class="key-facts">
-      {d.licences && <div class="key-facts__item"><span class="key-facts__label">Licence</span><span>{d.licences}</span></div>}
-      {d.established && <div class="key-facts__item"><span class="key-facts__label">Established</span><span>{d.established}</span></div>}
-      {d.company && <div class="key-facts__item"><span class="key-facts__label">Operator</span><span>{d.company}</span></div>}
-      {d.game_count && <div class="key-facts__item"><span class="key-facts__label">Games</span><span>{d.game_count.toLocaleString()}+</span></div>}
-      {d.cryptoWithdrawalSpeedMinutes && <div class="key-facts__item"><span class="key-facts__label">Crypto Payout</span><span>~{d.cryptoWithdrawalSpeedMinutes} min</span></div>}
-      {d.min_deposit && <div class="key-facts__item"><span class="key-facts__label">Min Deposit</span><span>{d.min_deposit}</span></div>}
-      {d.wagering && <div class="key-facts__item"><span class="key-facts__label">Wagering</span><span>{d.wagering}</span></div>}
-      {d.vip_program !== undefined && <div class="key-facts__item"><span class="key-facts__label">VIP Program</span><span>{d.vip_program ? "Yes" : "No"}</span></div>}
-      {d.kycRequired !== undefined && <div class="key-facts__item"><span class="key-facts__label">KYC Required</span><span>{d.kycRequired ? "Yes" : "No"}</span></div>}
-      {d.lastVerified && <div class="key-facts__item"><span class="key-facts__label">Last Verified</span><span>{d.lastVerified}</span></div>}
-    </div>
-  </div>
-
-  <!-- Content columns -->
-  <div class="container review-layout">
-    <article class="review-body prose">
-      <Content />
-
-      <!-- Pros & Cons -->
-      {(d.pros?.length || d.cons?.length) && (
-        <section class="pros-cons" aria-label="Pros and Cons">
-          <h2>Pros &amp; Cons</h2>
-          <div class="pros-cons__grid">
-            {d.pros?.length && (
-              <div class="pros-cons__col pros-cons__col--pros">
-                <h3>Pros</h3>
-                <ul>
-                  {d.pros.map((item) => <li>{item}</li>)}
-                </ul>
-              </div>
-            )}
-            {d.cons?.length && (
-              <div class="pros-cons__col pros-cons__col--cons">
-                <h3>Cons</h3>
-                <ul>
-                  {d.cons.map((item) => <li>{item}</li>)}
-                </ul>
-              </div>
-            )}
-          </div>
-        </section>
-      )}
-
-      <!-- FAQs -->
-      {d.faqs?.length && (
-        <section class="faqs" aria-label="Frequently Asked Questions">
-          <h2>Frequently Asked Questions</h2>
-          {d.faqs.map((faq) => (
-            <details class="faq-item">
-              <summary class="faq-item__q">{faq.question}</summary>
-              <p class="faq-item__a">{faq.answer}</p>
-            </details>
-          ))}
-        </section>
-      )}
-    </article>
-
-    <!-- Sidebar -->
-    <aside class="review-sidebar">
-      <!-- All Bonuses -->
-      {d.bonuses?.length && (
-        <div class="sidebar-card">
-          <h3 class="sidebar-card__title">All Bonuses</h3>
-          {d.bonuses.map((bonus) => (
-            <div class="bonus-row">
-              <span class="bonus-row__tag">{bonus.type}</span>
-              <strong class="bonus-row__name">{bonus.name}</strong>
-              <ul class="bonus-row__details">
-                {bonus.wagering && <li>Wagering: {bonus.wagering}</li>}
-                {bonus.min_deposit && <li>Min deposit: {bonus.min_deposit}</li>}
-                {bonus.expiry && <li>Expiry: {bonus.expiry}</li>}
-              </ul>
+        {/* Logo + heading group */}
+        <div class="flex items-center gap-6 mb-6">
+          {d.logo ? (
+            <div class="w-24 h-24 bg-surface-container-high rounded-xl flex items-center justify-center p-4 shadow-xl border border-outline-variant/20 overflow-hidden shrink-0">
+              <img
+                src={d.logo}
+                alt={`${d.casinoName} logo`}
+                class="w-full h-full object-contain"
+                loading="eager"
+                width="64"
+                height="64"
+              />
             </div>
-          ))}
-          {d.casino && <CTAButton href={`/go/${d.casino}/`} label="Claim Bonus" variant="primary" />}
-        </div>
-      )}
-
-      <!-- Cryptos Accepted -->
-      {d.acceptedCryptos?.length && (
-        <div class="sidebar-card">
-          <h3 class="sidebar-card__title">Accepted Crypto</h3>
-          <ul class="crypto-list">
-            {d.acceptedCryptos.map((c) => <li class="crypto-list__item">{c}</li>)}
-          </ul>
-        </div>
-      )}
-
-      <!-- Deposit / Withdrawal -->
-      {(depositArr.length > 0 || withdrawalArr.length > 0) && (
-        <div class="sidebar-card">
-          <h3 class="sidebar-card__title">Payments</h3>
-          {depositArr.length > 0 && (
-            <>
-              <p class="sidebar-card__label">Deposit</p>
-              <ul class="method-list">{depositArr.map((m) => <li>{m}</li>)}</ul>
-            </>
+          ) : (
+            <div class="w-24 h-24 bg-surface-container-high rounded-xl flex items-center justify-center shrink-0">
+              <span class="material-symbols-outlined text-outline text-4xl">casino</span>
+            </div>
           )}
-          {withdrawalArr.length > 0 && (
-            <>
-              <p class="sidebar-card__label">Withdrawal</p>
-              <ul class="method-list">{withdrawalArr.map((m) => <li>{m}</li>)}</ul>
-            </>
-          )}
-        </div>
-      )}
+          <div>
+            {/* Verified badge */}
+            {d.ourRating != null && d.ourRating >= 8 && (
+              <div class="flex items-center gap-3 mb-2">
+                <span class="bg-secondary-container/20 text-secondary text-[10px] font-bold tracking-widest uppercase px-2 py-0.5 rounded-sm flex items-center gap-1">
+                  <span class="material-symbols-outlined text-[12px]" style="font-variation-settings: 'FILL' 1;">verified</span> Verified Expert Choice
+                </span>
+              </div>
+            )}
+            {d.lastVerified && (
+              <div class="flex items-center gap-1.5 mt-1">
+                <span class="material-symbols-outlined text-primary text-sm" style="font-variation-settings: 'FILL' 1;">verified</span>
+                <span class="text-xs text-on-surface-variant">Last verified: {new Date(d.lastVerified).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })}</span>
+              </div>
+            )}
 
-      <!-- Game Providers -->
-      {providersArr.length > 0 && (
-        <div class="sidebar-card">
-          <h3 class="sidebar-card__title">Game Providers</h3>
-          <ul class="method-list">{providersArr.map((p) => <li>{p}</li>)}</ul>
-        </div>
-      )}
+            <h1 class="text-4xl sm:text-5xl md:text-6xl font-headline font-extrabold tracking-tighter text-on-surface mb-2">
+              {d.casinoName ?? d.title}
+            </h1>
 
-      <!-- Currencies -->
-      {currenciesArr.length > 0 && (
-        <div class="sidebar-card">
-          <h3 class="sidebar-card__title">Currencies</h3>
-          <ul class="method-list">{currenciesArr.map((c) => <li>{c}</li>)}</ul>
-        </div>
-      )}
+            {/* Rating row */}
+            <div class="flex items-center gap-4 text-on-surface-variant flex-wrap">
+              {d.ourRating != null && (
+                <>
+                  <RatingStars rating={d.ourRating} />
+                  <span class="font-semibold text-lg text-on-surface">{d.ourRating.toFixed(1)} / 10</span>
+                  <span class="text-outline-variant">|</span>
+                  <span class="text-sm">Based on expert review</span>
+                </>
+              )}
+            </div>
 
-      <!-- Screenshots -->
-      {d.screenshots?.length && (
-        <div class="sidebar-card">
-          <h3 class="sidebar-card__title">Screenshots</h3>
-          <div class="screenshot-grid">
-            {d.screenshots.map((s) => (
-              <img src={s.url} alt={s.alt} loading="lazy" class="screenshot-grid__img" />
-            ))}
+            {/* Dates — freshness signal for Google */}
+            <div class="flex items-center gap-3 mt-3 text-xs text-on-surface-variant font-label">
+              {d.publishedAt && (
+                <div class="flex items-center gap-1">
+                  <span class="material-symbols-outlined text-sm">calendar_today</span>
+                  <span>Published: <time datetime={d.publishedAt}>{new Date(d.publishedAt).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })}</time></span>
+                </div>
+              )}
+              {d.updatedAt && d.updatedAt !== d.publishedAt && (
+                <div class="flex items-center gap-1">
+                  <span class="material-symbols-outlined text-sm">update</span>
+                  <span>Updated: <time datetime={d.updatedAt}>{new Date(d.updatedAt).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })}</time></span>
+                </div>
+              )}
+            </div>
           </div>
         </div>
+      </div>
+
+      {/* Right column — Bonus CTA card */}
+      <div class="lg:col-span-4">
+        <div class="bg-surface-container-low rounded-xl p-8 relative overflow-hidden flex flex-col items-center text-center shadow-2xl group transition-all duration-500 hover:bg-surface-container">
+          <div class="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-50 pointer-events-none"></div>
+
+          <p class="text-on-surface-variant font-label font-bold tracking-widest uppercase text-xs mb-4">
+            Exclusive Welcome Bonus
+          </p>
+
+          {d.bonus_title && (
+            <h2 class="text-primary text-3xl sm:text-4xl font-headline font-extrabold tracking-tighter mb-2">
+              {d.bonus_title}
+            </h2>
+          )}
+
+          {d.wagering && (
+            <p class="text-on-surface-variant text-sm mb-6 leading-relaxed">
+              Wagering: {d.wagering}. T&Cs apply.
+            </p>
+          )}
+
+          {!d.wagering && (
+            <p class="text-on-surface-variant text-sm mb-6 leading-relaxed">
+              T&Cs apply.
+            </p>
+          )}
+
+          <div class="w-full">
+            <CTAButton
+              href={`/go/${d.slug}/`}
+              label="Claim Bonus Now"
+              variant="primary"
+              size="lg"
+              sponsored={true}
+              ariaLabel={`Claim bonus at ${d.casinoName ?? d.title}`}
+            />
+          </div>
+
+          <p class="mt-4 text-[10px] text-outline opacity-60">
+            18+ | Play Responsibly | New Customers Only
+          </p>
+        </div>
+      </div>
+    </header>
+
+    {/* ───────────────── QUICK STATS GRID ───────────────── */}
+    <section class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-16">
+      {d.cryptoWithdrawalSpeedMinutes != null && (
+        <div class="bg-surface-container-lowest p-6 rounded-lg border-b-2 border-primary/20">
+          <span class="material-symbols-outlined text-primary mb-3">speed</span>
+          <p class="text-xs text-outline font-bold tracking-wide uppercase mb-1">Payout Speed</p>
+          <p class="font-bold text-on-surface">~{d.cryptoWithdrawalSpeedMinutes} min</p>
+        </div>
       )}
-    </aside>
-  </div>
 
-  <!-- Author -->
-  {authorEntry && (
-    <div class="container">
-      <AuthorCard
-        name={authorEntry.data.name}
-        slug={authorEntry.data.slug}
-        bio={authorEntry.data.bio}
-        avatar={authorEntry.data.avatar}
-        role={authorEntry.data.role}
-        credentials={authorEntry.data.credentials}
-      />
+      {d.licences && (
+        <div class="bg-surface-container-lowest p-6 rounded-lg border-b-2 border-secondary/20">
+          <span class="material-symbols-outlined text-secondary mb-3">gavel</span>
+          <p class="text-xs text-outline font-bold tracking-wide uppercase mb-1">Licensing</p>
+          <p class="font-bold text-on-surface text-sm">{d.licences}</p>
+        </div>
+      )}
+
+      {d.game_count != null && (
+        <div class="bg-surface-container-lowest p-6 rounded-lg border-b-2 border-tertiary/20">
+          <span class="material-symbols-outlined text-tertiary mb-3">casino</span>
+          <p class="text-xs text-outline font-bold tracking-wide uppercase mb-1">Total Games</p>
+          <p class="font-bold text-on-surface">{d.game_count.toLocaleString()}+ Titles</p>
+        </div>
+      )}
+
+      {d.min_deposit && (
+        <div class="bg-surface-container-lowest p-6 rounded-lg border-b-2 border-primary/20">
+          <span class="material-symbols-outlined text-primary mb-3">savings</span>
+          <p class="text-xs text-outline font-bold tracking-wide uppercase mb-1">Min. Deposit</p>
+          <p class="font-bold text-on-surface">{d.min_deposit}</p>
+        </div>
+      )}
+
+      {/* Fallback stats when crypto speed is missing — show established/operator instead */}
+      {d.cryptoWithdrawalSpeedMinutes == null && d.established && (
+        <div class="bg-surface-container-lowest p-6 rounded-lg border-b-2 border-primary/20">
+          <span class="material-symbols-outlined text-primary mb-3">history</span>
+          <p class="text-xs text-outline font-bold tracking-wide uppercase mb-1">Established</p>
+          <p class="font-bold text-on-surface">{d.established}</p>
+        </div>
+      )}
+
+      {!d.min_deposit && d.company && (
+        <div class="bg-surface-container-lowest p-6 rounded-lg border-b-2 border-primary/20">
+          <span class="material-symbols-outlined text-primary mb-3">apartment</span>
+          <p class="text-xs text-outline font-bold tracking-wide uppercase mb-1">Operator</p>
+          <p class="font-bold text-on-surface text-sm">{d.company}</p>
+        </div>
+      )}
+    </section>
+
+    {/* Cover Image */}
+    {d.image && (
+      <div class="mb-16 rounded-xl overflow-hidden">
+        <img
+          src={d.image}
+          alt={d.imageAlt ?? `${d.casinoName ?? d.title} review`}
+          width={d.imageWidth ?? 1792}
+          height={d.imageHeight ?? 1024}
+          class="w-full h-auto object-cover"
+          loading="eager"
+        />
+      </div>
+    )}
+
+    {/* ───────────────── TWO-COLUMN LAYOUT ───────────────── */}
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+
+      {/* Main content */}
+      <div class="lg:col-span-8 space-y-16">
+
+        {/* Pros & Cons */}
+        <ProsCons pros={d.pros} cons={d.cons} />
+
+        {/* Article body */}
+        <article class="prose prose-invert max-w-none text-on-surface-variant leading-relaxed">
+          <Content />
+        </article>
+
+        {/* Author Card — E-E-A-T signal */}
+        {(d.author || authorEntry) && (
+          <section class="bg-surface-container-low rounded-xl p-6 flex flex-col sm:flex-row gap-5 items-start">
+            {authorEntry?.data?.avatar && (
+              <img
+                src={authorEntry.data.avatar}
+                alt={authorEntry.data.name ?? d.author}
+                class="w-16 h-16 rounded-full object-cover shrink-0"
+                loading="lazy"
+                width="64"
+                height="64"
+              />
+            )}
+            <div>
+              <p class="text-xs font-label text-on-surface-variant uppercase tracking-wider mb-1">Reviewed by</p>
+              <p class="font-headline font-bold text-on-surface text-lg">
+                {authorEntry ? (
+                  <a href={`/team/${authorEntry.data.slug}/`} class="hover:text-primary transition-colors">{authorEntry.data.name}</a>
+                ) : d.author}
+              </p>
+              {authorEntry?.data?.role && (
+                <p class="text-secondary text-xs font-bold mt-0.5">{authorEntry.data.role}</p>
+              )}
+              {authorEntry?.data?.bio && (
+                <p class="text-on-surface-variant text-sm mt-2 line-clamp-2">{authorEntry.data.bio}</p>
+              )}
+              {authorEntry?.data?.expertise && authorEntry.data.expertise.length > 0 && (
+                <div class="flex flex-wrap gap-1.5 mt-3">
+                  {authorEntry.data.expertise.map((tag: string) => (
+                    <span class="bg-surface-container-highest text-on-surface-variant text-[10px] px-2 py-0.5 rounded-full">{tag}</span>
+                  ))}
+                </div>
+              )}
+            </div>
+          </section>
+        )}
+
+        {/* Tags — internal linking */}
+        {d.tags && d.tags.length > 0 && (
+          <section>
+            <div class="flex flex-wrap gap-2">
+              {d.tags.map((tag: string) => (
+                <span class="bg-surface-container-high text-on-surface-variant text-xs font-label px-3 py-1.5 rounded-full flex items-center gap-1">
+                  <span class="material-symbols-outlined text-xs">sell</span>
+                  {tag}
+                </span>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {/* Screenshots Gallery */}
+        {d.screenshots && d.screenshots.length > 0 && (
+          <section>
+            <h2 class="font-headline font-bold text-2xl text-on-surface mb-6 flex items-center gap-3">
+              <span class="material-symbols-outlined text-secondary">photo_library</span>
+              Screenshots
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {d.screenshots.map((s: any) => (
+                <div class="rounded-xl overflow-hidden bg-surface-container-low">
+                  <img
+                    src={s.url}
+                    alt={s.alt ?? `${d.casinoName} screenshot`}
+                    loading="lazy"
+                    width="640"
+                    height="360"
+                    class="w-full aspect-video object-cover hover:scale-105 transition-transform duration-500"
+                  />
+                  {s.alt && (
+                    <p class="p-3 text-xs text-on-surface-variant">{s.alt}</p>
+                  )}
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {/* FAQ */}
+        {d.faqs && d.faqs.length > 0 && (
+          <FAQSection faqs={d.faqs} />
+        )}
+      </div>
+
+      {/* Sidebar */}
+      <aside class="lg:col-span-4 space-y-6 lg:sticky lg:top-24">
+
+        {/* All Bonuses */}
+        {d.bonuses && d.bonuses.length > 0 && (
+          <div class="bg-surface-container-low rounded-xl p-6">
+            <h3 class="font-headline font-bold text-lg text-on-surface mb-4 flex items-center gap-2">
+              <span class="material-symbols-outlined text-secondary">redeem</span>
+              All Bonuses
+            </h3>
+            <div class="space-y-4">
+              {d.bonuses.map((bonus: any) => (
+                <div class="border-b border-outline-variant/10 pb-4 last:border-b-0 last:pb-0">
+                  {bonus.type && (
+                    <span class="inline-block px-2 py-0.5 bg-secondary-container/20 text-secondary text-[10px] font-bold uppercase tracking-widest rounded-sm mb-1.5">
+                      {bonus.type}
+                    </span>
+                  )}
+                  <p class="text-primary font-headline font-extrabold text-sm mb-1">{bonus.name}</p>
+                  <ul class="text-xs text-on-surface-variant space-y-0.5">
+                    {bonus.wagering && <li>Wagering: {bonus.wagering}</li>}
+                    {bonus.min_deposit && <li>Min deposit: {bonus.min_deposit}</li>}
+                    {bonus.expiry && <li>Expiry: {bonus.expiry}</li>}
+                    {bonus.free_spins && <li>Free spins: {bonus.free_spins}</li>}
+                  </ul>
+                </div>
+              ))}
+            </div>
+            <div class="mt-4">
+              <CTAButton
+                href={`/go/${d.slug}/`}
+                label="Claim Bonus"
+                variant="primary"
+                size="md"
+                sponsored={true}
+                ariaLabel={`Claim bonus at ${d.casinoName ?? d.title}`}
+              />
+            </div>
+          </div>
+        )}
+
+        {/* Accepted Cryptos */}
+        {d.acceptedCryptos && d.acceptedCryptos.length > 0 && (
+          <div class="bg-surface-container-low rounded-xl p-6">
+            <h3 class="font-headline font-bold text-lg text-on-surface mb-4 flex items-center gap-2">
+              <span class="material-symbols-outlined text-secondary">currency_bitcoin</span>
+              Accepted Crypto
+            </h3>
+            <div class="flex flex-wrap gap-2">
+              {d.acceptedCryptos.map((crypto: string) => (
+                <span class="px-3 py-1 bg-surface-container-lowest rounded-full text-xs font-label text-on-surface-variant">
+                  {crypto}
+                </span>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Payment Methods */}
+        {(depositArr.length > 0 || withdrawalArr.length > 0) && (
+          <div class="bg-surface-container-low rounded-xl p-6">
+            <h3 class="font-headline font-bold text-lg text-on-surface mb-4 flex items-center gap-2">
+              <span class="material-symbols-outlined text-secondary">account_balance_wallet</span>
+              Payment Methods
+            </h3>
+            {depositArr.length > 0 && (
+              <div class="mb-4">
+                <p class="text-[10px] text-outline font-bold uppercase tracking-widest mb-2">Deposit</p>
+                <ul class="text-sm text-on-surface-variant space-y-1">
+                  {depositArr.map((m: string) => (
+                    <li class="flex items-center gap-2">
+                      <span class="text-outline text-xs">&#183;</span>
+                      {m}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+            {withdrawalArr.length > 0 && (
+              <div>
+                <p class="text-[10px] text-outline font-bold uppercase tracking-widest mb-2">Withdrawal</p>
+                <ul class="text-sm text-on-surface-variant space-y-1">
+                  {withdrawalArr.map((m: string) => (
+                    <li class="flex items-center gap-2">
+                      <span class="text-outline text-xs">&#183;</span>
+                      {m}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Currencies */}
+        {currenciesArr.length > 0 && (
+          <div class="bg-surface-container-low rounded-xl p-6">
+            <h3 class="font-headline font-bold text-lg text-on-surface mb-4 flex items-center gap-2">
+              <span class="material-symbols-outlined text-secondary">payments</span>
+              Currencies
+            </h3>
+            <div class="flex flex-wrap gap-2">
+              {currenciesArr.map((c: string) => (
+                <span class="px-3 py-1 bg-surface-container-lowest rounded-full text-xs font-label text-on-surface-variant">{c}</span>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Game Providers */}
+        {providersArr.length > 0 && (
+          <div class="bg-surface-container-low rounded-xl p-6">
+            <h3 class="font-headline font-bold text-lg text-on-surface mb-4 flex items-center gap-2">
+              <span class="material-symbols-outlined text-secondary">sports_esports</span>
+              Game Providers
+            </h3>
+            <div class="flex flex-wrap gap-1.5 max-h-48 overflow-y-auto">
+              {providersArr.slice(0, 20).map((p: string) => (
+                <span class="px-2 py-0.5 bg-surface-container-lowest rounded text-xs text-on-surface-variant">
+                  {p}
+                </span>
+              ))}
+              {providersArr.length > 20 && (
+                <span class="px-2 py-0.5 text-xs text-outline">
+                  +{providersArr.length - 20} more
+                </span>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* Key Info */}
+        <div class="bg-surface-container-low rounded-xl p-6">
+          <h3 class="font-headline font-bold text-lg text-on-surface mb-4 flex items-center gap-2">
+            <span class="material-symbols-outlined text-secondary">info</span>
+            Key Info
+          </h3>
+          <dl class="space-y-3 text-sm">
+            {d.established && (
+              <div class="flex justify-between">
+                <dt class="text-on-surface-variant flex items-center gap-1">
+                  <span class="material-symbols-outlined text-outline text-sm">history</span>
+                  Established
+                </dt>
+                <dd class="text-on-surface font-semibold">{d.established}</dd>
+              </div>
+            )}
+            {d.company && (
+              <div class="flex justify-between">
+                <dt class="text-on-surface-variant flex items-center gap-1">
+                  <span class="material-symbols-outlined text-outline text-sm">apartment</span>
+                  Operator
+                </dt>
+                <dd class="text-on-surface font-semibold">{d.company}</dd>
+              </div>
+            )}
+            {d.casino_type && (
+              <div class="flex justify-between">
+                <dt class="text-on-surface-variant flex items-center gap-1">
+                  <span class="material-symbols-outlined text-outline text-sm">category</span>
+                  Type
+                </dt>
+                <dd class="text-on-surface font-semibold">{d.casino_type}</dd>
+              </div>
+            )}
+            {d.wagering && (
+              <div class="flex justify-between">
+                <dt class="text-on-surface-variant flex items-center gap-1">
+                  <span class="material-symbols-outlined text-outline text-sm">calculate</span>
+                  Wagering
+                </dt>
+                <dd class="text-on-surface font-semibold">{d.wagering}</dd>
+              </div>
+            )}
+            {d.vip_program !== undefined && (
+              <div class="flex justify-between">
+                <dt class="text-on-surface-variant flex items-center gap-1">
+                  <span class="material-symbols-outlined text-outline text-sm">workspace_premium</span>
+                  VIP Program
+                </dt>
+                <dd class="text-on-surface font-semibold">{d.vip_program ? "Yes" : "No"}</dd>
+              </div>
+            )}
+            {d.kycRequired !== undefined && (
+              <div class="flex justify-between">
+                <dt class="text-on-surface-variant flex items-center gap-1">
+                  <span class="material-symbols-outlined text-outline text-sm">badge</span>
+                  KYC Required
+                </dt>
+                <dd class="text-on-surface font-semibold">{d.kycRequired ? "Yes" : "No"}</dd>
+              </div>
+            )}
+            {d.lastVerified && (
+              <div class="flex justify-between">
+                <dt class="text-on-surface-variant flex items-center gap-1">
+                  <span class="material-symbols-outlined text-outline text-sm">verified</span>
+                  Last Verified
+                </dt>
+                <dd class="text-on-surface font-semibold">{d.lastVerified}</dd>
+              </div>
+            )}
+          </dl>
+        </div>
+
+        {/* Categories — SEO internal linking */}
+        {d.categories && d.categories.length > 0 && (
+          <div class="bg-surface-container-low rounded-xl p-6">
+            <h3 class="font-headline font-bold text-lg text-on-surface mb-4 flex items-center gap-2">
+              <span class="material-symbols-outlined text-secondary">label</span>
+              Categories
+            </h3>
+            <div class="flex flex-wrap gap-2">
+              {d.categories.map((cat: string) => {
+                const catMap = {
+                  "crypto-casino": "/crypto-casinos/",
+                  "bitcoin-casino": "/crypto-casinos/",
+                  "fast-withdrawal-casino": "/fast-withdrawal-casinos/",
+                  "instant-withdrawal-casino": "/fast-withdrawal-casinos/",
+                  "new-casino": "/new-casinos/",
+                  "no-deposit-bonus": "/no-deposit-bonus/",
+                  "online-casino": "/best-online-casinos/",
+                } as any;
+                const href = catMap[cat];
+                const label = cat.replace(/-/g, " ").replace(/\b\w/g, (l: string) => l.toUpperCase());
+                return href ? (
+                  <a href={href} class="bg-surface-container-lowest text-on-surface-variant text-xs px-2.5 py-1 rounded-md hover:text-primary hover:bg-surface-container-highest transition-all">
+                    {label}
+                  </a>
+                ) : (
+                  <span class="bg-surface-container-lowest text-on-surface-variant text-xs px-2.5 py-1 rounded-md">
+                    {label}
+                  </span>
+                );
+              })}
+            </div>
+          </div>
+        )}
+      </aside>
     </div>
-  )}
-</Layout>
 
-<style>
-  /* Breadcrumbs */
-  .breadcrumbs { padding: 0.75rem 0; }
-  .breadcrumbs ol { list-style: none; padding: 0; margin: 0; display: flex; gap: 0.5rem; font-size: 0.82rem; color: #585d7a; flex-wrap: wrap; }
-  .breadcrumbs li + li::before { content: "/"; margin-right: 0.5rem; }
-  .breadcrumbs a { color: #7a80a0; text-decoration: none; }
-  .breadcrumbs a:hover { color: #f0c040; }
-
-  /* Hero */
-  .review-hero {
-    display: grid;
-    grid-template-columns: auto 1fr auto;
-    gap: 1.5rem;
-    align-items: start;
-    padding: 1.5rem 0 2rem;
-  }
-  .review-hero__logo { width: 96px; height: 96px; object-fit: contain; border-radius: 12px; }
-  .review-hero__logo-placeholder {
-    width: 96px; height: 96px; border-radius: 12px;
-    background: rgba(255 255 255 / 0.06);
-    display: grid; place-items: center;
-    font-size: 2.5rem; font-weight: 800; color: #f0c040;
-  }
-  .review-hero__title { margin: 0 0 0.35rem; }
-  .review-hero__best-for { margin: 0 0 0.6rem; font-size: 0.85rem; color: #f0c040; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; }
-  .review-hero__meta { display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; }
-  .review-hero__cta { display: flex; flex-direction: column; align-items: flex-end; gap: 0.5rem; }
-  .cover-image-wrap { width: 100%; max-height: 420px; overflow: hidden; margin-bottom: 0; }
-  .cover-image { width: 100%; height: 420px; object-fit: cover; object-position: center; display: block; }
-
-  .review-hero__bonus-hint { margin: 0; font-size: 0.78rem; color: #7a80a0; text-align: right; max-width: 160px; }
-
-  .tag { display: inline-block; padding: 0.2rem 0.55rem; background: rgba(255 255 255 / 0.07); border-radius: 4px; font-size: 0.75rem; color: #8a90b0; }
-  .tag--new { background: rgba(76 218 122 / 0.15); color: #4cda7a; }
-
-  /* Key Facts */
-  .key-facts {
-    display: flex; flex-wrap: wrap; gap: 0;
-    background: #14141f; border: 1px solid rgba(255 255 255 / 0.07); border-radius: 10px;
-    overflow: hidden; margin-bottom: 2.5rem;
-  }
-  .key-facts__item {
-    flex: 1 1 160px;
-    padding: 0.85rem 1rem;
-    border-right: 1px solid rgba(255 255 255 / 0.07);
-    border-bottom: 1px solid rgba(255 255 255 / 0.07);
-    display: flex; flex-direction: column; gap: 0.2rem;
-    font-size: 0.88rem;
-  }
-  .key-facts__label { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.06em; color: #585d7a; }
-
-  /* Layout */
-  .review-layout {
-    display: grid;
-    grid-template-columns: 1fr 300px;
-    gap: 2.5rem;
-    align-items: start;
-    padding-bottom: 3rem;
-  }
-
-  /* Prose */
-  .prose :global(h2) { font-size: 1.45rem; border-bottom: 1px solid rgba(255 255 255 / 0.07); padding-bottom: 0.4rem; }
-  .prose :global(h3) { font-size: 1.1rem; }
-  .prose :global(a) { color: #f0c040; }
-  .prose :global(strong) { color: #eef0fa; }
-
-  /* Pros & Cons */
-  .pros-cons { margin: 2rem 0; }
-  .pros-cons__grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-  .pros-cons__col { background: #14141f; border-radius: 10px; padding: 1rem 1.25rem; border: 1px solid rgba(255 255 255 / 0.07); }
-  .pros-cons__col--pros { border-top: 3px solid #4cda7a; }
-  .pros-cons__col--cons { border-top: 3px solid #e05050; }
-  .pros-cons__col h3 { margin: 0 0 0.65rem; font-size: 0.95rem; }
-  .pros-cons__col ul { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.4rem; }
-  .pros-cons__col--pros ul li::before { content: "✓ "; color: #4cda7a; }
-  .pros-cons__col--cons ul li::before { content: "✗ "; color: #e05050; }
-
-  /* FAQs */
-  .faqs { margin: 2rem 0; }
-  .faq-item { border: 1px solid rgba(255 255 255 / 0.07); border-radius: 8px; margin-bottom: 0.6rem; overflow: hidden; }
-  .faq-item__q { padding: 0.9rem 1rem; cursor: pointer; font-weight: 600; color: #eef0fa; list-style: none; }
-  .faq-item__q::-webkit-details-marker { display: none; }
-  .faq-item__q::after { content: " +"; color: #f0c040; }
-  .faq-item[open] .faq-item__q::after { content: " −"; }
-  .faq-item__a { padding: 0 1rem 0.9rem; margin: 0; color: #8a90b0; }
-
-  /* Sidebar */
-  .review-sidebar { display: flex; flex-direction: column; gap: 1rem; position: sticky; top: 4.5rem; }
-  .sidebar-card { background: #14141f; border: 1px solid rgba(255 255 255 / 0.07); border-radius: 10px; padding: 1rem 1.25rem; }
-  .sidebar-card__title { margin: 0 0 0.85rem; font-size: 0.95rem; color: #eef0fa; }
-  .sidebar-card__label { margin: 0.65rem 0 0.25rem; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.06em; color: #585d7a; }
-
-  .bonus-row { margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px solid rgba(255 255 255 / 0.06); }
-  .bonus-row:last-of-type { border-bottom: none; margin-bottom: 0.75rem; }
-  .bonus-row__tag { display: inline-block; padding: 0.15rem 0.45rem; background: rgba(240 192 64 / 0.12); color: #f0c040; border-radius: 4px; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.3rem; }
-  .bonus-row__name { display: block; font-size: 0.88rem; color: #eef0fa; margin-bottom: 0.4rem; }
-  .bonus-row__details { list-style: none; padding: 0; margin: 0; font-size: 0.78rem; color: #7a80a0; display: flex; flex-direction: column; gap: 0.15rem; }
-
-  .crypto-list { list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: 0.4rem; }
-  .crypto-list__item { padding: 0.25rem 0.6rem; background: rgba(255 255 255 / 0.06); border-radius: 5px; font-size: 0.8rem; color: #a0a5c0; }
-
-  .method-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.2rem; font-size: 0.82rem; color: #8a90b0; }
-  .method-list li::before { content: "· "; color: #585d7a; }
-
-  .screenshot-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; }
-  .screenshot-grid__img { border-radius: 6px; object-fit: cover; width: 100%; aspect-ratio: 16/9; }
-
-  @media (max-width: 900px) {
-    .review-layout { grid-template-columns: 1fr; }
-    .review-sidebar { position: static; }
-  }
-  @media (max-width: 680px) {
-    .review-hero { grid-template-columns: 64px 1fr; grid-template-rows: auto auto; }
-    .review-hero__logo, .review-hero__logo-placeholder { width: 64px; height: 64px; }
-    .review-hero__cta { grid-column: 1 / -1; flex-direction: row; }
-    .pros-cons__grid { grid-template-columns: 1fr; }
-  }
-</style>
+    {/* ───────────────── RELATED CASINOS ───────────────── */}
+    {related.length > 0 && (
+      <section class="mt-20">
+        <RelatedContent
+          title="Related Casinos"
+          items={related.map((r) => ({ slug: r.data.slug, collection: "casinos", data: r.data }))}
+          type="casino"
+        />
+      </section>
+    )}
+  </div>
+</BaseLayout>
