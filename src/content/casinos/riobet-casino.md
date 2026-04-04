@@ -4,8 +4,8 @@ slug: "riobet-casino"
 description: "Jake Morrison's 2026 RioBet Casino Review: In-depth analysis of bonuses, payment methods, game selection, and player safety. Is RioBet worth your time?"
 seoTitle: "RioBet Casino Review 2026 | Bonuses, Payments, Safety"
 excerpt: "As Jake Morrison, a casino analyst, I've dived deep into RioBet Casino for this 2026 review. Established in 2014, RioBet boasts a 'Very High Safety Index' of 9.8/10, fair T&Cs, and an enormous game library from 96 providers."
-publishedAt: "2026-04-04T20:54:02.870Z"
-updatedAt: "2026-04-04T20:54:02.870Z"
+publishedAt: "2026-04-04T21:05:41.543Z"
+updatedAt: "2026-04-04T21:05:41.543Z"
 publishDate: "2026-04-04"
 author: "Jake Morrison"
 authorSlug: "jake-morrison"
@@ -32,7 +32,8 @@ established: "2014"
 company: "Riotech N.V."
 licences: "Comoros (Anjouan Gaming), Curaçao (Curaçao Gaming Authority)"
 casino_type: "Crypto Casino"
-website: "/exit?casinoId=207&domainLanguageId=2&preferredLanguagesStr=49,2&tosLinkRequired=false&userCountryId=119&listName=casino-detail&pageType=16&listPosition=1"
+website: "https://riobet.com"
+claim_url: "https://riobet.com"
 bonus_title: "100% up to 5,000 R$"
 vip_program: false
 bonuses:
@@ -122,7 +123,6 @@ screenshots:
     alt: "RioBet Casino screenshot 5"
   - url: "/images/casinos/riobet-casino/screenshot_6.webp"
     alt: "RioBet Casino screenshot 6"
-claim_url: "/exit?casinoId=207&domainLanguageId=2&preferredLanguagesStr=49,2&tosLinkRequired=false&userCountryId=119&listName=casino-detail&pageType=16&listPosition=1"
 ---
 # RioBet Casino Review 2026: An Honest Look at Bonuses, Payments, and Player Experience
 
