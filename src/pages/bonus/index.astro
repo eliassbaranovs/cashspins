@@ -64,19 +64,12 @@ const breadcrumbs = [
       </div>
     </div>
 
-    <!-- Filter Pills (static/visual) -->
+    <!-- Category Links -->
     <div class="flex flex-wrap gap-3 mb-10">
-      {["All", "Welcome", "No Deposit", "Free Spins", "Cashback", "Reload"].map((label, i) => (
-        <span
-          class={`px-5 py-2 rounded-full text-sm font-bold cursor-pointer transition-all ${
-            i === 0
-              ? "bg-primary text-on-primary shadow-md"
-              : "bg-surface-container-high text-on-surface-variant hover:text-on-surface"
-          }`}
-        >
-          {label}
-        </span>
-      ))}
+      <a href="/bonus/" class="px-5 py-2 rounded-full text-sm font-bold bg-primary text-on-primary shadow-md no-underline">All Bonuses</a>
+      <a href="/casinos/" class="px-5 py-2 rounded-full text-sm font-bold bg-surface-container-high text-on-surface-variant hover:text-on-surface no-underline transition-all">Casino Reviews</a>
+      <a href="/crypto-casinos/" class="px-5 py-2 rounded-full text-sm font-bold bg-surface-container-high text-on-surface-variant hover:text-on-surface no-underline transition-all">Crypto Casinos</a>
+      <a href="/compare/" class="px-5 py-2 rounded-full text-sm font-bold bg-surface-container-high text-on-surface-variant hover:text-on-surface no-underline transition-all">Comparisons</a>
     </div>
 
     <!-- Bonus List -->

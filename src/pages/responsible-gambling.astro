@@ -1,0 +1,215 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Breadcrumbs from "../components/Breadcrumbs.astro";
+import FAQSection from "../components/FAQSection.astro";
+import { generateFAQSchema } from "../lib/seo";
+
+const faqs = [
+  {
+    question: "How do I know if I have a gambling problem?",
+    answer: "Warning signs include spending more than you can afford, chasing losses, borrowing money to gamble, neglecting responsibilities, and feeling anxious or irritable when not gambling. If gambling is causing stress or financial problems, it may be time to seek help.",
+  },
+  {
+    question: "What is self-exclusion and how does it work?",
+    answer: "Self-exclusion is a voluntary program that allows you to ban yourself from gambling sites for a set period. Services like GamStop (UK), OASIS (Germany), and Spelpaus (Sweden) let you register once and be blocked from all licensed operators in that jurisdiction.",
+  },
+  {
+    question: "Can I set deposit limits at online casinos?",
+    answer: "Yes. Most licensed online casinos offer tools to set daily, weekly, or monthly deposit limits. You can usually find these in your account settings under 'Responsible Gambling' or 'Player Protection.' We evaluate these tools as part of our review process.",
+  },
+  {
+    question: "Where can I get help for problem gambling?",
+    answer: "Contact GambleAware (begambleaware.org), GamCare (gamcare.org.uk), Gamblers Anonymous (gamblersanonymous.org), or the National Council on Problem Gambling (ncpgambling.org). Most offer free, confidential support via phone, chat, or email.",
+  },
+  {
+    question: "Is CashSpins a gambling site?",
+    answer: "No. CashSpins is an independent review and information site. We do not accept bets, wagers, or deposits. We provide reviews, comparisons, and guides to help you make informed decisions about online casinos.",
+  },
+];
+
+const schemaJsonLd = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  name: "Responsible Gambling",
+  url: "https://cashspins.online/responsible-gambling/",
+  description: "CashSpins is committed to responsible gambling. Find resources, self-assessment tools, and help for problem gambling.",
+  publisher: {
+    "@type": "Organization",
+    name: "CashSpins",
+    url: "https://cashspins.online",
+  },
+});
+---
+
+<BaseLayout
+  title="Responsible Gambling | CashSpins"
+  description="Gambling should be entertainment, not a source of stress. Find warning signs of problem gambling, self-exclusion tools, and help resources."
+  schemaJsonLd={schemaJsonLd}
+>
+  <div class="max-w-4xl mx-auto px-4 md:px-8 pt-8 pb-20">
+    <Breadcrumbs items={[
+      { label: "Home", href: "/" },
+      { label: "Responsible Gambling" },
+    ]} />
+
+    <header class="mt-8 mb-16">
+      <div class="flex items-center gap-3 mb-4">
+        <span class="h-px w-12 bg-red-500/40"></span>
+        <span class="font-label text-xs font-bold uppercase tracking-[0.2em] text-red-400">Player Safety</span>
+      </div>
+      <h1 class="text-4xl md:text-6xl font-headline font-extrabold tracking-tighter mb-6 leading-none text-on-surface">
+        Responsible Gambling
+      </h1>
+      <p class="max-w-2xl text-lg text-on-surface-variant leading-relaxed">
+        Gambling should be entertainment. If it stops being fun, it is time to stop. This page provides resources to help you stay in control.
+      </p>
+    </header>
+
+    <!-- Crisis Box -->
+    <div class="bg-red-950/30 border border-red-500/30 rounded-xl p-8 mb-16">
+      <div class="flex items-start gap-4">
+        <span class="material-symbols-outlined text-red-400 text-3xl shrink-0 mt-1">emergency</span>
+        <div>
+          <h2 class="font-headline font-bold text-xl text-red-400 mb-3">Need Help Now?</h2>
+          <div class="space-y-2 text-on-surface-variant">
+            <p><strong class="text-on-surface">UK:</strong> <a href="https://www.begambleaware.org" target="_blank" rel="noopener noreferrer" class="text-primary hover:underline">GambleAware</a> &mdash; 0808 8020 133 (free, 24/7)</p>
+            <p><strong class="text-on-surface">US:</strong> <a href="https://www.ncpgambling.org" target="_blank" rel="noopener noreferrer" class="text-primary hover:underline">NCPG</a> &mdash; 1-800-522-4700 (free, 24/7)</p>
+            <p><strong class="text-on-surface">International:</strong> <a href="https://www.gamblingtherapy.org" target="_blank" rel="noopener noreferrer" class="text-primary hover:underline">Gambling Therapy</a> &mdash; Free online chat and support</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Warning Signs -->
+    <section class="mb-16">
+      <h2 class="font-headline font-bold text-3xl text-on-surface mb-6">Warning Signs of Problem Gambling</h2>
+      <p class="text-on-surface-variant leading-relaxed mb-8">
+        Problem gambling can affect anyone. Recognising the signs early is the most important step. If you identify with several of these, consider reaching out to one of the organisations listed on this page.
+      </p>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {[
+          "Spending more money on gambling than you can afford to lose",
+          "Chasing losses by increasing bets to win back money",
+          "Borrowing money or selling possessions to fund gambling",
+          "Neglecting work, education, or family responsibilities",
+          "Lying to friends or family about how much you gamble",
+          "Feeling anxious, irritable, or restless when not gambling",
+          "Using gambling to escape problems or relieve negative emotions",
+          "Being unable to stop or reduce gambling despite wanting to",
+          "Continuing to gamble despite it causing relationship problems",
+          "Thinking about gambling constantly or planning the next session",
+        ].map((sign) => (
+          <div class="flex items-start gap-3 bg-surface-container-low rounded-xl p-5">
+            <span class="material-symbols-outlined text-red-400 shrink-0 mt-0.5" style="font-size: 20px;">warning</span>
+            <span class="text-on-surface-variant text-sm leading-relaxed">{sign}</span>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <!-- Staying in Control -->
+    <section class="mb-16">
+      <h2 class="font-headline font-bold text-3xl text-on-surface mb-6">Staying in Control</h2>
+      <div class="bg-surface-container-low rounded-xl p-8 space-y-4 text-on-surface-variant leading-relaxed">
+        <p>These are practical steps you can take to keep gambling as entertainment:</p>
+        <ul class="space-y-3 list-none p-0 m-0">
+          {[
+            { icon: "payments", text: "Set a budget before you start and stick to it. Never gamble with money you need for bills, rent, or essentials." },
+            { icon: "timer", text: "Set a time limit for each session. Most casinos offer session timer tools — use them." },
+            { icon: "block", text: "Never chase losses. If you lose your budget, stop. Chasing losses is the fastest path to problem gambling." },
+            { icon: "no_drinks", text: "Do not gamble under the influence of alcohol or when you are emotionally distressed." },
+            { icon: "pause_circle", text: "Take regular breaks. Step away from the screen and do something else." },
+            { icon: "trending_up", text: "Use deposit limits. Set daily, weekly, or monthly limits in your casino account settings." },
+          ].map((tip) => (
+            <li class="flex items-start gap-3">
+              <span class="material-symbols-outlined text-primary shrink-0 mt-0.5" style="font-size: 20px;">{tip.icon}</span>
+              <span>{tip.text}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+
+    <!-- Self-Exclusion -->
+    <section class="mb-16">
+      <h2 class="font-headline font-bold text-3xl text-on-surface mb-6">Self-Exclusion Tools</h2>
+      <p class="text-on-surface-variant leading-relaxed mb-8">
+        Self-exclusion allows you to voluntarily block yourself from gambling sites for a set period. Once activated, you cannot reverse it until the exclusion period ends. These services are free.
+      </p>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="bg-surface-container-low rounded-xl p-6">
+          <h3 class="font-headline font-bold text-on-surface mb-2">GamStop</h3>
+          <p class="text-sm text-on-surface-variant mb-3">UK &mdash; Blocks all UKGC-licensed gambling sites for 6 months, 1 year, or 5 years.</p>
+          <a href="https://www.gamstop.co.uk" target="_blank" rel="noopener noreferrer" class="text-primary text-sm hover:underline font-semibold">Register at GamStop &rarr;</a>
+        </div>
+        <div class="bg-surface-container-low rounded-xl p-6">
+          <h3 class="font-headline font-bold text-on-surface mb-2">OASIS</h3>
+          <p class="text-sm text-on-surface-variant mb-3">Germany &mdash; Central exclusion system for all licensed German gambling operators.</p>
+          <a href="https://oasis.mgba.de" target="_blank" rel="noopener noreferrer" class="text-primary text-sm hover:underline font-semibold">Learn about OASIS &rarr;</a>
+        </div>
+        <div class="bg-surface-container-low rounded-xl p-6">
+          <h3 class="font-headline font-bold text-on-surface mb-2">Spelpaus</h3>
+          <p class="text-sm text-on-surface-variant mb-3">Sweden &mdash; National self-exclusion register managed by Spelinspektionen.</p>
+          <a href="https://www.spelpaus.se" target="_blank" rel="noopener noreferrer" class="text-primary text-sm hover:underline font-semibold">Register at Spelpaus &rarr;</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Help Organisations -->
+    <section class="mb-16">
+      <h2 class="font-headline font-bold text-3xl text-on-surface mb-6">Help Organisations</h2>
+      <p class="text-on-surface-variant leading-relaxed mb-8">
+        These organisations provide free, confidential support for people affected by problem gambling. Reach out to any of them — you do not need a diagnosis or referral.
+      </p>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {[
+          { name: "BeGambleAware", url: "https://www.begambleaware.org", desc: "UK charity providing information, advice, and support. Free helpline: 0808 8020 133.", img: "/images/trust/gamble-aware.webp" },
+          { name: "GamCare", url: "https://www.gamcare.org.uk", desc: "UK support service offering counselling, forum, and live chat. Free helpline: 0808 8020 133.", img: "/images/trust/gamcare.webp" },
+          { name: "Gamblers Anonymous", url: "https://www.gamblersanonymous.org", desc: "International fellowship of people who share their experience to help each other recover.", img: "/images/trust/gamblers-anonymous.webp" },
+          { name: "NCPG", url: "https://www.ncpgambling.org", desc: "US National Council on Problem Gambling. Helpline: 1-800-522-4700. Text: 1-800-522-4700.", img: "/images/trust/ncpg.webp" },
+        ].map((org) => (
+          <a href={org.url} target="_blank" rel="noopener noreferrer" class="flex items-start gap-4 bg-surface-container-low rounded-xl p-6 hover:bg-surface-container transition-colors no-underline group">
+            <img src={org.img} alt={org.name} class="h-10 w-auto object-contain shrink-0 mt-1 opacity-70 group-hover:opacity-100 transition-opacity" loading="lazy" />
+            <div>
+              <h3 class="font-headline font-bold text-on-surface group-hover:text-primary transition-colors">{org.name}</h3>
+              <p class="text-sm text-on-surface-variant mt-1">{org.desc}</p>
+            </div>
+          </a>
+        ))}
+      </div>
+    </section>
+
+    <!-- Underage Gambling -->
+    <section class="mb-16">
+      <h2 class="font-headline font-bold text-3xl text-on-surface mb-6">Underage Gambling Prevention</h2>
+      <div class="bg-surface-container-low rounded-xl p-8 space-y-4 text-on-surface-variant leading-relaxed">
+        <p>
+          Online gambling is illegal for anyone under the age of 18 (or the legal gambling age in your jurisdiction). CashSpins does not promote gambling to minors. All casinos we review are required to verify player age before allowing deposits or gameplay.
+        </p>
+        <p>
+          If you are a parent or guardian concerned about a minor accessing gambling sites, consider using parental control software such as <a href="https://www.netnanny.com" target="_blank" rel="noopener noreferrer" class="text-primary hover:underline">Net Nanny</a> or <a href="https://www.cyberpatrol.com" target="_blank" rel="noopener noreferrer" class="text-primary hover:underline">CyberPatrol</a> to restrict access to gambling-related content.
+        </p>
+      </div>
+    </section>
+
+    <!-- Our Commitment -->
+    <section class="mb-16">
+      <h2 class="font-headline font-bold text-3xl text-on-surface mb-6">Our Commitment</h2>
+      <div class="bg-surface-container-low rounded-xl p-8 space-y-4 text-on-surface-variant leading-relaxed">
+        <p>
+          Every casino we review is evaluated on its responsible gambling features. We check for deposit limits, session time controls, self-exclusion tools, and links to help organisations. Casinos that lack basic player protection features are penalised in our ratings.
+        </p>
+        <p>
+          We believe that an honest review site has a responsibility to promote safe play, not just list bonuses. Our <a href="/how-we-review/" class="text-primary hover:underline font-semibold">review methodology</a> includes responsible gambling as a core evaluation criterion.
+        </p>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="mb-12">
+      <FAQSection faqs={faqs} />
+    </section>
+  </div>
+
+  <script type="application/ld+json" set:html={generateFAQSchema(faqs)} />
+</BaseLayout>

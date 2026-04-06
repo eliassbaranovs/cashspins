@@ -307,17 +307,33 @@ const withdrawalArr = d.withdrawalMethods?.split("|").map((s: string) => s.trim(
               All Current Offers
             </h3>
             <div class="space-y-4">
-              {d.bonuses.map((bonus: { name: string; type?: string; free_spins?: string | number }) => (
+              {d.bonuses.map((bonus: { name: string; type?: string; wagering?: string; min_deposit?: string; max_cashout?: string; free_spins?: string | number; expiry?: string }) => (
                 <div class="bg-surface-container-lowest rounded-lg p-4">
-                  <p class="font-headline font-bold text-sm text-on-surface mb-1">{bonus.name}</p>
-                  {bonus.type && (
-                    <span class="inline-block bg-primary/10 text-primary text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-sm mb-2">
-                      {bonus.type}
-                    </span>
-                  )}
-                  {bonus.free_spins && (
-                    <p class="text-secondary text-xs font-semibold">{bonus.free_spins}</p>
-                  )}
+                  <div class="flex items-start justify-between gap-2 mb-2">
+                    <p class="font-headline font-bold text-sm text-on-surface">{bonus.name}</p>
+                    {bonus.type && (
+                      <span class="inline-block bg-primary/10 text-primary text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-sm shrink-0">
+                        {bonus.type}
+                      </span>
+                    )}
+                  </div>
+                  <div class="space-y-1 text-xs text-on-surface-variant">
+                    {bonus.wagering && (
+                      <div class="flex justify-between"><span>Wagering</span><span class="text-on-surface font-semibold">{bonus.wagering}</span></div>
+                    )}
+                    {bonus.min_deposit && (
+                      <div class="flex justify-between"><span>Min Deposit</span><span class="text-on-surface font-semibold">{bonus.min_deposit}</span></div>
+                    )}
+                    {bonus.free_spins && (
+                      <div class="flex justify-between"><span>Free Spins</span><span class="text-secondary font-semibold">{bonus.free_spins}</span></div>
+                    )}
+                    {bonus.max_cashout && (
+                      <div class="flex justify-between"><span>Max Cashout</span><span class="text-on-surface font-semibold">{bonus.max_cashout}</span></div>
+                    )}
+                    {bonus.expiry && (
+                      <div class="flex justify-between"><span>Expiry</span><span class="text-on-surface font-semibold">{bonus.expiry}</span></div>
+                    )}
+                  </div>
                   {d.casino && (
                     <div class="mt-3">
                       <CTAButton href={`/go/${d.casino}/`} label="Claim" size="sm" sponsored />

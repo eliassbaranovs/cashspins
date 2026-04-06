@@ -1,0 +1,154 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Breadcrumbs from "../components/Breadcrumbs.astro";
+
+const schemaJsonLd = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "ContactPage",
+  name: "Contact CashSpins",
+  url: "https://cashspins.online/contact/",
+  description: "Get in touch with the CashSpins editorial team. Questions about reviews, affiliate partnerships, or responsible gambling resources.",
+  publisher: {
+    "@type": "Organization",
+    name: "CashSpins",
+    url: "https://cashspins.online",
+  },
+});
+---
+
+<BaseLayout
+  title="Contact Us | CashSpins"
+  description="Get in touch with the CashSpins team. Questions about casino reviews, affiliate partnerships, or responsible gambling — we're here to help."
+  schemaJsonLd={schemaJsonLd}
+>
+  <div class="max-w-4xl mx-auto px-4 md:px-8 pt-8 pb-20">
+    <Breadcrumbs items={[
+      { label: "Home", href: "/" },
+      { label: "Contact" },
+    ]} />
+
+    <header class="mt-8 mb-16">
+      <div class="flex items-center gap-3 mb-4">
+        <span class="h-px w-12 bg-secondary/40"></span>
+        <span class="font-label text-xs font-bold uppercase tracking-[0.2em] text-secondary">Get in Touch</span>
+      </div>
+      <h1 class="text-4xl md:text-6xl font-headline font-extrabold tracking-tighter mb-6 leading-none text-on-surface">
+        Contact Us
+      </h1>
+      <p class="max-w-2xl text-lg text-on-surface-variant leading-relaxed">
+        Questions about a review? Want to report a concern about a casino? Think we got something wrong? We want to hear from you.
+      </p>
+    </header>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
+      <div class="bg-surface-container-low rounded-xl p-6">
+        <span class="material-symbols-outlined text-primary text-2xl mb-3 block">mail</span>
+        <h3 class="font-headline font-bold text-on-surface mb-1">General Inquiries</h3>
+        <p class="text-sm text-on-surface-variant">info@cashspins.online</p>
+      </div>
+      <div class="bg-surface-container-low rounded-xl p-6">
+        <span class="material-symbols-outlined text-primary text-2xl mb-3 block">edit_note</span>
+        <h3 class="font-headline font-bold text-on-surface mb-1">Editorial</h3>
+        <p class="text-sm text-on-surface-variant">editorial@cashspins.online</p>
+      </div>
+      <div class="bg-surface-container-low rounded-xl p-6">
+        <span class="material-symbols-outlined text-primary text-2xl mb-3 block">gavel</span>
+        <h3 class="font-headline font-bold text-on-surface mb-1">Legal & Privacy</h3>
+        <p class="text-sm text-on-surface-variant">legal@cashspins.online</p>
+      </div>
+    </div>
+
+    <section class="mb-16">
+      <h2 class="font-headline font-bold text-3xl text-on-surface mb-8">Send Us a Message</h2>
+
+      <form id="contact-form" class="space-y-6" novalidate>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label for="name" class="block text-sm font-semibold text-on-surface mb-2">Name</label>
+            <input type="text" id="name" name="name" required placeholder="Your name" class="w-full bg-surface-container-low border border-outline-variant/30 rounded-xl px-4 py-3 text-on-surface placeholder:text-on-surface-variant/40 focus:outline-none focus:border-primary transition-colors" />
+          </div>
+          <div>
+            <label for="email" class="block text-sm font-semibold text-on-surface mb-2">Email</label>
+            <input type="email" id="email" name="email" required placeholder="your@email.com" class="w-full bg-surface-container-low border border-outline-variant/30 rounded-xl px-4 py-3 text-on-surface placeholder:text-on-surface-variant/40 focus:outline-none focus:border-primary transition-colors" />
+          </div>
+        </div>
+
+        <div>
+          <label for="subject" class="block text-sm font-semibold text-on-surface mb-2">Subject</label>
+          <select id="subject" name="subject" required class="w-full bg-surface-container-low border border-outline-variant/30 rounded-xl px-4 py-3 text-on-surface focus:outline-none focus:border-primary transition-colors">
+            <option value="" disabled selected>Select a topic</option>
+            <option value="review-question">Question about a review</option>
+            <option value="report-casino">Report a casino concern</option>
+            <option value="suggest-casino">Suggest a casino for review</option>
+            <option value="affiliate">Affiliate partnership inquiry</option>
+            <option value="correction">Report an error or correction</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+
+        <div>
+          <label for="message" class="block text-sm font-semibold text-on-surface mb-2">Message</label>
+          <textarea id="message" name="message" required minlength="10" rows="6" placeholder="Tell us what's on your mind..." class="w-full bg-surface-container-low border border-outline-variant/30 rounded-xl px-4 py-3 text-on-surface placeholder:text-on-surface-variant/40 focus:outline-none focus:border-primary transition-colors resize-y"></textarea>
+        </div>
+
+        <button type="submit" class="inline-flex items-center gap-2 bg-primary text-on-primary font-headline font-bold px-8 py-3 rounded-xl hover:brightness-110 transition-all">
+          <span class="material-symbols-outlined" style="font-size: 20px;">send</span>
+          Send Message
+        </button>
+      </form>
+
+      <div id="contact-success" class="hidden bg-green-950/30 border border-green-500/30 rounded-xl p-8 text-center">
+        <span class="material-symbols-outlined text-green-400 text-4xl mb-4 block">check_circle</span>
+        <h3 class="font-headline font-bold text-xl text-on-surface mb-2">Message Sent</h3>
+        <p class="text-on-surface-variant">Thank you for reaching out. We typically respond within 48 hours.</p>
+      </div>
+    </section>
+
+    <section>
+      <h2 class="font-headline font-bold text-3xl text-on-surface mb-8">Looking for Something Else?</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        {[
+          { href: "/how-we-review/", icon: "science", title: "How We Review", desc: "Our 8-step testing methodology" },
+          { href: "/responsible-gambling/", icon: "shield", title: "Responsible Gambling", desc: "Help resources and self-exclusion tools" },
+          { href: "/affiliate-disclosure/", icon: "handshake", title: "Affiliate Disclosure", desc: "How we earn revenue" },
+          { href: "/about/", icon: "group", title: "About CashSpins", desc: "Meet the team behind the reviews" },
+        ].map((link) => (
+          <a href={link.href} class="flex items-start gap-4 bg-surface-container-low rounded-xl p-6 hover:bg-surface-container transition-colors no-underline group">
+            <span class="material-symbols-outlined text-primary text-2xl shrink-0 mt-0.5">{link.icon}</span>
+            <div>
+              <h3 class="font-headline font-bold text-on-surface group-hover:text-primary transition-colors">{link.title}</h3>
+              <p class="text-sm text-on-surface-variant mt-1">{link.desc}</p>
+            </div>
+          </a>
+        ))}
+      </div>
+    </section>
+  </div>
+
+  <script>
+    const form = document.getElementById('contact-form') as HTMLFormElement;
+    const success = document.getElementById('contact-success') as HTMLDivElement;
+
+    form?.addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      const name = (form.querySelector('#name') as HTMLInputElement).value.trim();
+      const email = (form.querySelector('#email') as HTMLInputElement).value.trim();
+      const subject = (form.querySelector('#subject') as HTMLSelectElement).value;
+      const message = (form.querySelector('#message') as HTMLTextAreaElement).value.trim();
+
+      if (!name || !email || !subject || message.length < 10) {
+        return;
+      }
+
+      const btn = form.querySelector('button[type="submit"]') as HTMLButtonElement;
+      btn.disabled = true;
+      btn.innerHTML = '<span class="material-symbols-outlined animate-spin" style="font-size: 20px;">progress_activity</span> Sending...';
+
+      setTimeout(() => {
+        form.classList.add('hidden');
+        success.classList.remove('hidden');
+      }, 2000);
+    });
+  </script>
+</BaseLayout>

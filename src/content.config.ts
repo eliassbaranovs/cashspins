@@ -68,16 +68,26 @@ const universalFields = {
 
 // ─── Casino-specific fields (shared by casinos + bonuses collections) ─────────
 
+const iconSchema = z.object({
+  name: z.string(),
+  icon: z.string(),
+}).passthrough();
+
 const casinoFields = {
   casino: z.string().optional(),
   casinoName: z.string().optional(),
   ourRating: z.number().min(0).max(10).optional(),
   player_rating: z.union([z.number(), z.string()]).optional(),
   best_for: z.string().optional(),
+  avoid_if: z.string().optional(),
+  verdict: z.string().optional(),
+  rating_justification: z.string().optional(),
+  safetyIndex: z.string().optional(),
   website: z.string().optional(),
   established: z.string().optional(),
   company: z.string().optional(),
   licences: z.string().optional(),
+  license_status: z.string().optional(),
   casino_type: z.string().optional(),
 
   // Bonus headline fields
@@ -90,7 +100,10 @@ const casinoFields = {
   wageringMultiplier: z.number().optional(),
   free_spins: z.union([z.string(), z.number()]).optional(),
   bonus_code: z.string().optional(),
+  bonus_max_bet: z.string().optional(),
+  bonus_time_limit: z.string().optional(),
   vip_program: z.boolean().optional(),
+  vip_details: z.string().optional(),
 
   // Structured bonuses
   bonuses: z.array(bonusSchema).optional(),
@@ -103,22 +116,39 @@ const casinoFields = {
   acceptedCryptos: z.array(z.string()).optional(),
   depositMethods: z.string().optional(),
   withdrawalMethods: z.string().optional(),
+  paymentMethods: z.string().optional(),
   currencies: z.string().optional(),
   cryptoWithdrawalSpeedMinutes: z.number().optional(),
+  payout_speed: z.string().optional(),
 
   // Games
   gameProviders: z.string().optional(),
+  gameTypes: z.array(z.string()).optional(),
   game_count: z.number().optional(),
+  languages: z.array(z.string()).optional(),
 
   // Compliance / meta
   kycRequired: z.boolean().optional(),
+  kyc_details: z.string().optional(),
   isNewCasino: z.boolean().optional(),
   lastVerified: z.string().optional(),
+  tc_fairness: z.string().optional(),
+  blacklist_status: z.string().optional(),
+  trustpilot_score: z.string().optional(),
+  askgamblers_score: z.string().optional(),
+
+  // SEO metadata
+  seo_score: z.number().optional(),
+  word_count: z.number().optional(),
+  primary_keyword: z.string().optional(),
+  secondary_keywords: z.array(z.string()).optional(),
 
   // Media
   logo: z.string().optional(),
   screenshots: z.array(screenshotSchema).optional().nullable(),
   sectionImages: z.array(sectionImageSchema).optional(),
+  paymentIcons: z.array(iconSchema).optional(),
+  providerIcons: z.array(iconSchema).optional(),
 
   // FAQs
   faqs: z.array(faqSchema).optional(),

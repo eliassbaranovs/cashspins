@@ -65,8 +65,10 @@ const updatedDate = d.updatedAt
     })
   : null;
 
-const isAWinner = d.winner && d.winner === d.casino_a_name;
-const isBWinner = d.winner && d.winner === d.casino_b_name;
+const isAWinner = d.winner && (d.winner === d.casino_a_slug || d.winner === d.casino_a_name);
+const isBWinner = d.winner && (d.winner === d.casino_b_slug || d.winner === d.casino_b_name);
+const winnerName = isAWinner ? d.casino_a_name : isBWinner ? d.casino_b_name : d.winner;
+const winnerSlug = isAWinner ? d.casino_a_slug : isBWinner ? d.casino_b_slug : null;
 ---
 
 <BaseLayout
@@ -120,7 +122,7 @@ const isBWinner = d.winner && d.winner === d.casino_b_name;
               <img
                 src={d.casino_a_logo}
                 alt={d.casino_a_name}
-                class="w-20 h-20 mx-auto rounded-xl object-cover mb-4"
+                class="w-20 h-20 mx-auto rounded-xl object-contain bg-surface-container-lowest p-2 mb-4"
                 loading="eager"
               />
             )}
@@ -175,7 +177,7 @@ const isBWinner = d.winner && d.winner === d.casino_b_name;
               <img
                 src={d.casino_b_logo}
                 alt={d.casino_b_name}
-                class="w-20 h-20 mx-auto rounded-xl object-cover mb-4"
+                class="w-20 h-20 mx-auto rounded-xl object-contain bg-surface-container-lowest p-2 mb-4"
                 loading="eager"
               />
             )}
@@ -207,7 +209,7 @@ const isBWinner = d.winner && d.winner === d.casino_b_name;
                 class="material-symbols-outlined"
                 style="font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;"
               >emoji_events</span>
-              Our Pick: {d.winner}
+              Our Pick: {winnerName}
             </div>
           </div>
         )}
@@ -370,14 +372,12 @@ const isBWinner = d.winner && d.winner === d.casino_b_name;
                 Our Verdict
               </h3>
               <p class="text-on-surface-variant text-sm leading-relaxed mb-4">
-                After comparing all key factors, <strong class="text-on-surface">{d.winner}</strong> comes out on top in this matchup.
+                After comparing all key factors, <strong class="text-on-surface">{winnerName}</strong> comes out on top in this matchup.
               </p>
-              {(d.casino_a_slug || d.casino_b_slug) && (
+              {winnerSlug && (
                 <CTAButton
-                  href={`/casinos/${
-                    d.winner === d.casino_a_name ? d.casino_a_slug : d.casino_b_slug
-                  }/`}
-                  label={`Visit ${d.winner}`}
+                  href={`/casinos/${winnerSlug}/`}
+                  label={`Visit ${winnerName}`}
                   variant="primary"
                   size="sm"
                 />

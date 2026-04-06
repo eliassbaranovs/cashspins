@@ -9,13 +9,21 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "sync": "node --env-file=.env.local --import tsx/esm src/scripts/sync.ts",
+    "transform": "tsx src/scripts/transform.ts",
+    "transform:force": "tsx src/scripts/transform.ts --force",
+    "publish": "node --env-file=.env.local --import tsx/esm src/scripts/sync.ts && tsx src/scripts/transform.ts --force && astro build"
   },
   "dependencies": {
     "@astrojs/mdx": "^5.0.3",
     "@astrojs/sitemap": "^3.7.2",
+    "@supabase/supabase-js": "^2.101.1",
     "@tailwindcss/vite": "^4.2.2",
     "astro": "^6.1.3",
     "tailwindcss": "^4.2.2"
+  },
+  "devDependencies": {
+    "tsx": "^4.21.0"
   }
 }

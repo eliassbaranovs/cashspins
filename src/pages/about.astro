@@ -1,0 +1,143 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Breadcrumbs from "../components/Breadcrumbs.astro";
+import { getCollection } from "astro:content";
+
+const authors = await getCollection("authors");
+
+const schemaJsonLd = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  name: "CashSpins",
+  url: "https://cashspins.online",
+  description: "Independent online casino review site with real-money testing methodology.",
+  foundingDate: "2025",
+  contactPage: "https://cashspins.online/contact/",
+  ethicsPolicy: "https://cashspins.online/how-we-review/",
+});
+---
+
+<BaseLayout
+  title="About Us — Independent Casino Reviews | CashSpins"
+  description="Meet the team behind CashSpins. Learn how we test and review online casinos with real deposits, transparent methodology, and independent ratings."
+  schemaJsonLd={schemaJsonLd}
+>
+  <div class="max-w-4xl mx-auto px-4 md:px-8 pt-8 pb-20">
+    <Breadcrumbs items={[
+      { label: "Home", href: "/" },
+      { label: "About Us" },
+    ]} />
+
+    <header class="mt-8 mb-16">
+      <div class="flex items-center gap-3 mb-4">
+        <span class="h-px w-12 bg-secondary/40"></span>
+        <span class="font-label text-xs font-bold uppercase tracking-[0.2em] text-secondary">Who We Are</span>
+      </div>
+      <h1 class="text-4xl md:text-6xl font-headline font-extrabold tracking-tighter mb-6 leading-none text-on-surface">
+        About CashSpins
+      </h1>
+    </header>
+
+    <section class="mb-16">
+      <div class="bg-surface-container-low rounded-xl p-8 space-y-4 text-on-surface-variant leading-relaxed text-lg">
+        <p>
+          CashSpins exists because most casino review sites are useless. They rank casinos by commission rate, copy-paste bonus terms from the operator's marketing page, and slap a 9/10 on everything.
+        </p>
+        <p>
+          We do it differently. Every casino on this site has been tested with real cryptocurrency and fiat deposits by a named reviewer who documents the entire experience. We deposit real money, play for hours, test the withdrawal process, and verify the license before writing a single word.
+        </p>
+        <p>
+          Our team includes people who have worked on the operator side of online gambling. They know how casinos structure bonus terms to look generous while burying the real cost in wagering requirements and game weightings. That insider knowledge is what makes our reviews different.
+        </p>
+      </div>
+    </section>
+
+    <section class="mb-16">
+      <h2 class="font-headline font-bold text-3xl text-on-surface mb-6">Why We Exist</h2>
+      <div class="space-y-4 text-on-surface-variant leading-relaxed">
+        <p>
+          The online casino space is growing fast and largely unregulated in many jurisdictions. Players need reliable information about which casinos actually pay out, which bonuses are worth claiming, and which platforms to avoid entirely.
+        </p>
+        <p>
+          Most existing review sites are either outdated, commercially compromised, or both. CashSpins fills that gap with current, tested, transparent reviews from people who understand the industry from the inside.
+        </p>
+      </div>
+    </section>
+
+    <section class="mb-16">
+      <h2 class="font-headline font-bold text-3xl text-on-surface mb-6">Our Team</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {authors.map((author) => (
+          <a href={`/team/${author.data.slug}/`} class="flex items-start gap-4 bg-surface-container-low rounded-xl p-6 hover:bg-surface-container transition-colors no-underline group">
+            <img
+              src={author.data.avatar}
+              alt={author.data.name}
+              width="64"
+              height="64"
+              class="w-16 h-16 rounded-full object-cover shrink-0"
+              loading="lazy"
+            />
+            <div>
+              <h3 class="font-headline font-bold text-on-surface group-hover:text-primary transition-colors">{author.data.name}</h3>
+              <p class="text-sm text-on-surface-variant mt-1 line-clamp-3">{author.data.bio?.slice(0, 160)}...</p>
+              <span class="text-xs text-primary font-semibold mt-2 inline-block">Read full profile &rarr;</span>
+            </div>
+          </a>
+        ))}
+      </div>
+    </section>
+
+    <section class="mb-16">
+      <h2 class="font-headline font-bold text-3xl text-on-surface mb-6">Our Review Process</h2>
+      <div class="bg-surface-container-low rounded-xl p-8 space-y-4 text-on-surface-variant leading-relaxed">
+        <p>
+          Every casino review follows our 8-step testing process. We register a fresh account, deposit real money, play for a minimum of 2 hours across game categories, test the withdrawal process end-to-end, and verify the casino's license independently. No casino receives a rating without completing all 8 steps.
+        </p>
+        <a href="/how-we-review/" class="inline-flex items-center gap-2 text-primary font-semibold hover:underline mt-2">
+          <span class="material-symbols-outlined" style="font-size: 18px;">science</span>
+          Read our full review methodology
+        </a>
+      </div>
+    </section>
+
+    <section class="mb-16">
+      <h2 class="font-headline font-bold text-3xl text-on-surface mb-6">Editorial Independence</h2>
+      <div class="bg-surface-container-low rounded-xl p-8 space-y-4 text-on-surface-variant leading-relaxed">
+        <p>
+          <strong class="text-on-surface">Our ratings are not for sale.</strong> CashSpins earns revenue through affiliate partnerships — when you click a link and sign up at a casino, we may receive a commission. This is how we fund our testing operations.
+        </p>
+        <p>
+          However, affiliate partnerships never influence our ratings, our review content, or our recommendations. Every review is written before any commercial relationship is discussed. Casinos that score poorly are published with the same transparency as casinos that score well.
+        </p>
+        <a href="/affiliate-disclosure/" class="inline-flex items-center gap-2 text-primary font-semibold hover:underline mt-2">
+          <span class="material-symbols-outlined" style="font-size: 18px;">handshake</span>
+          Read our full affiliate disclosure
+        </a>
+      </div>
+    </section>
+
+    <section class="mb-16">
+      <h2 class="font-headline font-bold text-3xl text-on-surface mb-6">Responsible Gambling</h2>
+      <div class="bg-surface-container-low rounded-xl p-8 space-y-4 text-on-surface-variant leading-relaxed">
+        <p>
+          Gambling involves risk. We believe every player should have access to tools that help them stay in control. Every review evaluates the casino's responsible gambling features — deposit limits, self-exclusion tools, and session time controls. If a casino lacks basic player protection, it is reflected in the rating.
+        </p>
+        <a href="/responsible-gambling/" class="inline-flex items-center gap-2 text-primary font-semibold hover:underline mt-2">
+          <span class="material-symbols-outlined" style="font-size: 18px;">shield</span>
+          Responsible gambling resources
+        </a>
+      </div>
+    </section>
+
+    <div class="bg-surface-container-low rounded-xl p-8 text-center">
+      <h2 class="font-headline font-bold text-2xl text-on-surface mb-3">Questions?</h2>
+      <p class="text-on-surface-variant mb-6">
+        Think we got something wrong? Want to suggest a casino for testing? We want to hear from you.
+      </p>
+      <a href="/contact/" class="inline-flex items-center gap-2 bg-primary text-on-primary font-headline font-bold px-8 py-3 rounded-xl hover:brightness-110 transition-all no-underline">
+        <span class="material-symbols-outlined" style="font-size: 20px;">mail</span>
+        Get in Touch
+      </a>
+    </div>
+  </div>
+</BaseLayout>

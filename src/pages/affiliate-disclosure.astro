@@ -1,63 +1,180 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Breadcrumbs from "../components/Breadcrumbs.astro";
+import FAQSection from "../components/FAQSection.astro";
+import { generateFAQSchema } from "../lib/seo";
+
+const faqs = [
+  {
+    question: "Does CashSpins get paid to write positive reviews?",
+    answer: "No. Our reviews are written independently of any commercial relationship. Casinos cannot pay for higher ratings, and commission rates do not influence review scores. We have removed high-paying casinos that failed our testing process.",
+  },
+  {
+    question: "Do affiliate links cost me extra money?",
+    answer: "No. Clicking an affiliate link and signing up costs you exactly the same as visiting the casino directly. The casino pays us from their marketing budget — there is no markup or additional fee passed to players.",
+  },
+  {
+    question: "How does CashSpins make money?",
+    answer: "We earn commissions when readers click affiliate links to casinos and sign up or deposit. This is the standard business model for casino review sites. The difference is that we disclose it openly and maintain editorial independence from our commercial partners.",
+  },
+  {
+    question: "Can I trust casino reviews from an affiliate site?",
+    answer: "Look at the methodology, not just the business model. We test every casino with real deposits, publish cons alongside pros, and remove casinos that mistreat players. Our full testing process is documented on our How We Review page.",
+  },
+  {
+    question: "What is CPA vs revenue share in casino affiliates?",
+    answer: "CPA (Cost Per Acquisition) means the casino pays a one-time fee when a referred player signs up and deposits. Revenue share means the casino pays a percentage of its ongoing net revenue from that player. Some casinos use hybrid models combining both.",
+  },
+  {
+    question: "How do I know which links are affiliate links?",
+    answer: "Assume any link to a casino on this site is an affiliate link. This includes buttons like 'Claim Bonus' or 'Visit Casino,' casino names linked in reviews, comparison tables, and any link using our /go/ URL structure. Links to help resources, news sources, or regulators are not affiliate links.",
+  },
+  {
+    question: "What happens if a casino I signed up through treats me unfairly?",
+    answer: "Contact us. We take player complaints seriously and investigate issues with our partner casinos. If a casino consistently mistreats players, we remove them from the site regardless of how much revenue they generate.",
+  },
+];
+
+const schemaJsonLd = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  name: "Affiliate Disclosure",
+  url: "https://cashspins.online/affiliate-disclosure/",
+  description: "Full disclosure about how CashSpins earns money through affiliate partnerships with online casinos.",
+  lastReviewed: "2026-04-06",
+  publisher: {
+    "@type": "Organization",
+    name: "CashSpins",
+    url: "https://cashspins.online",
+  },
+});
 ---
 
 <BaseLayout
-  title="Affiliate Disclosure | CashSpins"
-  description="Learn how CashSpins.online earns revenue through affiliate partnerships and how this relates to our editorial independence."
+  title="Affiliate Disclosure — How CashSpins Makes Money | CashSpins"
+  description="Full transparency about how CashSpins earns money through casino affiliate partnerships. How affiliate links work, our editorial independence policy, and your rights as a reader."
+  schemaJsonLd={schemaJsonLd}
 >
-  <div class="max-w-4xl mx-auto px-8 py-12">
+  <div class="max-w-4xl mx-auto px-4 md:px-8 pt-8 pb-20">
     <Breadcrumbs items={[
       { label: "Home", href: "/" },
       { label: "Affiliate Disclosure" },
     ]} />
 
-    <h1 class="font-headline font-extrabold text-4xl md:text-5xl text-on-surface mt-8 mb-4">
-      Affiliate Disclosure
-    </h1>
-    <p class="text-on-surface-variant text-sm mb-10">Last updated: April 4, 2026</p>
+    <header class="mt-8 mb-12">
+      <div class="flex items-center gap-3 mb-4">
+        <span class="h-px w-12 bg-secondary/40"></span>
+        <span class="font-label text-xs font-bold uppercase tracking-[0.2em] text-secondary">Transparency</span>
+      </div>
+      <h1 class="text-4xl md:text-6xl font-headline font-extrabold tracking-tighter mb-6 leading-none text-on-surface">
+        Affiliate Disclosure
+      </h1>
+      <p class="text-on-surface-variant text-sm">Last updated: April 6, 2026</p>
+    </header>
+
+    <!-- TL;DR Box -->
+    <div class="bg-primary/5 border border-primary/20 rounded-xl p-8 mb-16">
+      <div class="flex items-start gap-4">
+        <span class="material-symbols-outlined text-primary text-3xl shrink-0 mt-1">info</span>
+        <div class="text-on-surface-variant leading-relaxed">
+          <p class="font-headline font-bold text-on-surface text-lg mb-3">CashSpins earns money through affiliate partnerships with online casinos.</p>
+          <p>When you click a link to a casino on our site and sign up or deposit, we may earn a commission. This does not cost you anything — the casino pays us from their marketing budget. Our reviews and ratings are independent of any affiliate relationship.</p>
+        </div>
+      </div>
+    </div>
 
     <div class="prose">
-      <h2>How We Earn Revenue</h2>
+      <h2>How We Make Money</h2>
       <p>
-        CashSpins.online is a free resource for players looking to find the best online casinos,
-        bonuses, and gambling guides. To keep this site running and free to use, we participate in
-        affiliate partnerships with online casino operators. This means that when you click on certain
-        links on our Website and sign up or make a deposit at a casino, we may receive a commission
-        from that casino at no additional cost to you.
+        CashSpins is a free resource. To keep it running, we participate in affiliate partnerships with online casino operators. When you click certain links on our site and sign up or make a deposit at a casino, we may receive a commission at no additional cost to you.
+      </p>
+      <p>
+        When you click an affiliate link, a tracking cookie is placed on your device so the casino can attribute your registration to our referral. This is standard practice across the affiliate marketing industry. The payment structure varies:
+      </p>
+      <ul>
+        <li><strong>CPA (Cost Per Acquisition):</strong> The casino pays us a one-time fee when you sign up and make your first deposit.</li>
+        <li><strong>Revenue Share:</strong> The casino pays us a percentage of their net revenue from your play over time.</li>
+        <li><strong>Hybrid:</strong> A combination of an upfront CPA payment plus ongoing revenue share.</li>
+      </ul>
+      <p>
+        Using our links costs you nothing extra. You pay exactly the same whether you arrive via our link or type the casino's URL directly. The casino pays us from their marketing budget.
       </p>
 
-      <h2>How Affiliate Links Work</h2>
+      <h2>Does This Affect Our Reviews?</h2>
       <p>
-        Throughout our Website, you will find links marked with buttons such as "Claim Bonus" or
-        "Visit Casino." These are affiliate links. When you click on one of these links, a tracking
-        cookie is placed on your device so the casino operator can attribute your registration or
-        deposit to our referral. This process is standard across the affiliate marketing industry
-        and does not affect the price, bonus, or terms you receive from the casino.
+        There is inherent tension in any affiliate model. We earn more when you sign up at casinos. This creates an incentive to recommend everything. Here is how we prevent that from compromising our reviews:
+      </p>
+      <ul>
+        <li>Every casino is tested with real deposits before review publication.</li>
+        <li>No casino can pay for a higher rating or more favourable review language.</li>
+        <li>Commission rates do not influence rankings or scores.</li>
+        <li>Every review includes cons alongside pros — no casino gets a perfect pass.</li>
+        <li>Casinos that mistreat players are removed regardless of revenue impact.</li>
+      </ul>
+      <p>
+        Our editorial team operates independently from our commercial partnerships. Reviewers do not know the commission structure of any casino. Read exactly how we test and rate every casino in our <a href="/how-we-review/">review methodology</a>.
       </p>
 
-      <h2>Editorial Independence</h2>
+      <h2>Identifying Affiliate Links</h2>
+      <p>Assume any link to a casino on this site is an affiliate link. This includes:</p>
+      <ul>
+        <li>Buttons that say "Claim Bonus," "Visit Casino," or "Play Now"</li>
+        <li>Casino names linked in review content</li>
+        <li>Links in comparison tables and top lists</li>
+        <li>Any link using our <code>/go/</code> URL structure</li>
+      </ul>
       <p>
-        Our editorial team operates independently from our commercial partnerships. Affiliate
-        relationships do not influence our ratings, rankings, or reviews. Every casino review on
-        CashSpins is based on objective criteria including licensing, game selection, payout speed,
-        bonus terms, player complaints, and security measures. We apply the same evaluation framework
-        to every casino we review, regardless of whether we have an affiliate relationship with them.
-      </p>
-      <p>
-        If a casino that pays us commissions has poor terms, slow withdrawals, or unresolved player
-        complaints, we will say so in our review. Our credibility depends on honest reporting, and
-        we take that responsibility seriously.
+        Links to responsible gambling resources, news sources, educational content, and regulatory bodies are not affiliate links.
       </p>
 
-      <h2>Your Trust Matters</h2>
+      <h2>Your Rights as a Reader</h2>
       <p>
-        We understand that trust is the foundation of our relationship with our readers. We are
-        committed to full transparency about how we earn revenue. If you have any questions about
-        our affiliate relationships or editorial process, please contact us at
-        <strong>info@cashspins.online</strong>.
+        You are not obligated to use our links. If our reviews help you and you want to support the site, using our affiliate links is the best way to do that. If you prefer not to, you can always navigate directly to any casino we review.
+      </p>
+      <p>
+        Some affiliate links include exclusive bonuses that are not available if you sign up directly. We always note these when applicable so you can make an informed decision.
+      </p>
+
+      <h2>Regulatory Compliance</h2>
+      <p>
+        CashSpins complies with advertising disclosure requirements in the jurisdictions where our content is accessible:
+      </p>
+      <ul>
+        <li><strong>FTC (US):</strong> The Federal Trade Commission requires clear disclosure of affiliate relationships. This page and inline disclosures on individual reviews meet that requirement.</li>
+        <li><strong>ASA/CAP (UK):</strong> Advertising Standards Authority guidelines require clear labelling of commercial content.</li>
+        <li><strong>EU Consumer Rights:</strong> Affiliate relationships are disclosed in accordance with EU transparency requirements for commercial content.</li>
+      </ul>
+      <p>
+        Individual review and bonus pages also carry inline disclosure banners. This page is the comprehensive version.
       </p>
     </div>
+
+    <!-- FAQ -->
+    <section class="mt-16 mb-16">
+      <FAQSection faqs={faqs} />
+    </section>
+
+    <!-- Trust Page Links -->
+    <section>
+      <h2 class="font-headline font-bold text-3xl text-on-surface mb-8">Related Trust Pages</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        {[
+          { href: "/about/", icon: "group", title: "About CashSpins", desc: "Meet the team behind the reviews" },
+          { href: "/how-we-review/", icon: "science", title: "How We Review", desc: "Our 8-step testing process" },
+          { href: "/responsible-gambling/", icon: "shield", title: "Responsible Gambling", desc: "Tools for safe play" },
+          { href: "/contact/", icon: "mail", title: "Contact Us", desc: "Questions? Get in touch" },
+        ].map((link) => (
+          <a href={link.href} class="flex items-start gap-4 bg-surface-container-low rounded-xl p-6 hover:bg-surface-container transition-colors no-underline group">
+            <span class="material-symbols-outlined text-primary text-2xl shrink-0 mt-0.5">{link.icon}</span>
+            <div>
+              <h3 class="font-headline font-bold text-on-surface group-hover:text-primary transition-colors">{link.title}</h3>
+              <p class="text-sm text-on-surface-variant mt-1">{link.desc}</p>
+            </div>
+          </a>
+        ))}
+      </div>
+    </section>
   </div>
+
+  <script type="application/ld+json" set:html={generateFAQSchema(faqs)} />
 </BaseLayout>
