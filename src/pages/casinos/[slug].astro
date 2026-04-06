@@ -1,15 +1,14 @@
 ---
-import { getCollection, getEntry, render } from "astro:content";
-import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getCollection, render } from "astro:content";
 import Breadcrumbs from "../../components/Breadcrumbs.astro";
-import RatingStars from "../../components/RatingStars.astro";
-import RatingBadge from "../../components/RatingBadge.astro";
 import CTAButton from "../../components/CTAButton.astro";
-import ProsCons from "../../components/ProsCons.astro";
 import FAQSection from "../../components/FAQSection.astro";
+import ProsCons from "../../components/ProsCons.astro";
+import RatingStars from "../../components/RatingStars.astro";
 import RelatedContent from "../../components/RelatedContent.astro";
-import { buildCanonical, generateReviewSchema, generateFAQSchema } from "../../lib/seo";
+import BaseLayout from "../../layouts/BaseLayout.astro";
 import { getRelatedByTags } from "../../lib/collections";
+import { buildCanonical, generateFAQSchema, generateReviewSchema } from "../../lib/seo";
 
 export async function getStaticPaths() {
   const casinos = await getCollection("casinos");
@@ -378,37 +377,48 @@ const combinedSchema = `[${schemas.join(",")}]`;
         {/* All Bonuses */}
         {d.bonuses && d.bonuses.length > 0 && (
           <div class="bg-surface-container-low rounded-xl p-6">
-            <h3 class="font-headline font-bold text-lg text-on-surface mb-4 flex items-center gap-2">
+            <h3 class="font-headline font-bold text-lg text-on-surface mb-5 flex items-center gap-2">
               <span class="material-symbols-outlined text-secondary">redeem</span>
-              All Bonuses
+              All Current Offers
             </h3>
-            <div class="space-y-4">
+            <div class="space-y-3">
               {d.bonuses.map((bonus: any) => (
-                <div class="border-b border-outline-variant/10 pb-4 last:border-b-0 last:pb-0">
-                  {bonus.type && (
-                    <span class="inline-block px-2 py-0.5 bg-secondary-container/20 text-secondary text-[10px] font-bold uppercase tracking-widest rounded-sm mb-1.5">
-                      {bonus.type}
-                    </span>
-                  )}
-                  <p class="text-primary font-headline font-extrabold text-sm mb-1">{bonus.name}</p>
-                  <ul class="text-xs text-on-surface-variant space-y-0.5">
-                    {bonus.wagering && <li>Wagering: {bonus.wagering}</li>}
-                    {bonus.min_deposit && <li>Min deposit: {bonus.min_deposit}</li>}
-                    {bonus.expiry && <li>Expiry: {bonus.expiry}</li>}
-                    {bonus.free_spins && <li>Free spins: {bonus.free_spins}</li>}
-                  </ul>
+                <div class="bg-surface-container rounded-xl p-4 border border-outline-variant/10 hover:border-primary/25 transition-colors">
+                  <div class="flex items-start justify-between gap-2 mb-2">
+                    <p class="text-on-surface font-headline font-bold text-sm leading-snug">{bonus.name}</p>
+                    {bonus.type && (
+                      <span class="shrink-0 px-2 py-0.5 bg-secondary-container/20 text-secondary text-[9px] font-bold uppercase tracking-widest rounded-sm">
+                        {bonus.type}
+                      </span>
+                    )}
+                  </div>
+                  <div class="flex flex-wrap gap-x-3 gap-y-1 text-xs mb-3">
+                    {bonus.percentage && (
+                      <span class="text-primary font-bold">{bonus.percentage}</span>
+                    )}
+                    {bonus.amount && (
+                      <span class="text-secondary font-semibold">{bonus.amount}</span>
+                    )}
+                    {bonus.free_spins && (
+                      <span class="inline-flex items-center gap-0.5 text-on-surface-variant">
+                        <span class="material-symbols-outlined text-[11px]">motion_play</span>
+                        {bonus.free_spins} spins
+                      </span>
+                    )}
+                    {(bonus.wagering || d.wagering) && (
+                      <span class="text-outline">WR: {bonus.wagering ?? d.wagering}</span>
+                    )}
+                  </div>
+                  <a
+                    href={`/go/${d.slug}/`}
+                    data-sponsored="true"
+                    rel="nofollow noopener sponsored"
+                    class="inline-flex items-center gap-1.5 px-4 py-1.5 bg-primary/90 hover:bg-primary text-on-primary text-xs font-bold rounded-lg transition-colors"
+                  >
+                    Claim
+                  </a>
                 </div>
               ))}
-            </div>
-            <div class="mt-4">
-              <CTAButton
-                href={`/go/${d.slug}/`}
-                label="Claim Bonus"
-                variant="primary"
-                size="md"
-                sponsored={true}
-                ariaLabel={`Claim bonus at ${d.casinoName ?? d.title}`}
-              />
             </div>
           </div>
         )}
@@ -440,27 +450,25 @@ const combinedSchema = `[${schemas.join(",")}]`;
             {depositArr.length > 0 && (
               <div class="mb-4">
                 <p class="text-[10px] text-outline font-bold uppercase tracking-widest mb-2">Deposit</p>
-                <ul class="text-sm text-on-surface-variant space-y-1">
+                <div class="flex flex-wrap gap-1.5">
                   {depositArr.map((m: string) => (
-                    <li class="flex items-center gap-2">
-                      <span class="text-outline text-xs">&#183;</span>
+                    <span class="px-2.5 py-1 bg-surface-container text-on-surface-variant text-xs rounded-lg border border-outline-variant/15 hover:border-primary/30 hover:text-on-surface transition-colors">
                       {m}
-                    </li>
+                    </span>
                   ))}
-                </ul>
+                </div>
               </div>
             )}
             {withdrawalArr.length > 0 && (
               <div>
                 <p class="text-[10px] text-outline font-bold uppercase tracking-widest mb-2">Withdrawal</p>
-                <ul class="text-sm text-on-surface-variant space-y-1">
+                <div class="flex flex-wrap gap-1.5">
                   {withdrawalArr.map((m: string) => (
-                    <li class="flex items-center gap-2">
-                      <span class="text-outline text-xs">&#183;</span>
+                    <span class="px-2.5 py-1 bg-surface-container text-on-surface-variant text-xs rounded-lg border border-outline-variant/15 hover:border-primary/30 hover:text-on-surface transition-colors">
                       {m}
-                    </li>
+                    </span>
                   ))}
-                </ul>
+                </div>
               </div>
             )}
           </div>
@@ -487,16 +495,22 @@ const combinedSchema = `[${schemas.join(",")}]`;
             <h3 class="font-headline font-bold text-lg text-on-surface mb-4 flex items-center gap-2">
               <span class="material-symbols-outlined text-secondary">sports_esports</span>
               Game Providers
+              <span class="ml-auto text-xs text-outline font-normal font-label normal-case tracking-normal">{providersArr.length} total</span>
             </h3>
-            <div class="flex flex-wrap gap-1.5 max-h-48 overflow-y-auto">
-              {providersArr.slice(0, 20).map((p: string) => (
-                <span class="px-2 py-0.5 bg-surface-container-lowest rounded text-xs text-on-surface-variant">
+            <div class="flex flex-wrap gap-1.5">
+              {providersArr.slice(0, 12).map((p: string) => (
+                <span class="px-2 py-0.5 bg-surface-container text-on-surface-variant text-xs rounded-lg border border-outline-variant/10">
                   {p}
                 </span>
               ))}
-              {providersArr.length > 20 && (
-                <span class="px-2 py-0.5 text-xs text-outline">
-                  +{providersArr.length - 20} more
+              {providersArr.length > 12 && (
+                <span class="relative group inline-block">
+                  <span class="cursor-help px-2.5 py-0.5 bg-secondary/10 text-secondary text-xs font-semibold rounded-lg border border-secondary/20 hover:border-secondary/50 transition-colors inline-block">
+                    +{providersArr.length - 12} more
+                  </span>
+                  <span class="pointer-events-none absolute bottom-full right-0 mb-2 w-72 bg-surface-container-highest text-on-surface-variant text-[11px] rounded-xl p-3 shadow-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-50 leading-relaxed">
+                    {providersArr.slice(12).join(" · ")}
+                  </span>
                 </span>
               )}
             </div>
@@ -509,68 +523,68 @@ const combinedSchema = `[${schemas.join(",")}]`;
             <span class="material-symbols-outlined text-secondary">info</span>
             Key Info
           </h3>
-          <dl class="space-y-3 text-sm">
+          <dl class="space-y-2.5 text-sm">
             {d.established && (
-              <div class="flex justify-between">
-                <dt class="text-on-surface-variant flex items-center gap-1">
+              <div class="grid grid-cols-[auto_1fr] items-start gap-x-3">
+                <dt class="text-on-surface-variant flex items-center gap-1 whitespace-nowrap pt-0.5">
                   <span class="material-symbols-outlined text-outline text-sm">history</span>
                   Established
                 </dt>
-                <dd class="text-on-surface font-semibold">{d.established}</dd>
+                <dd class="text-on-surface font-semibold text-right">{d.established}</dd>
               </div>
             )}
             {d.company && (
-              <div class="flex justify-between">
-                <dt class="text-on-surface-variant flex items-center gap-1">
+              <div class="grid grid-cols-[auto_1fr] items-start gap-x-3">
+                <dt class="text-on-surface-variant flex items-center gap-1 whitespace-nowrap pt-0.5">
                   <span class="material-symbols-outlined text-outline text-sm">apartment</span>
                   Operator
                 </dt>
-                <dd class="text-on-surface font-semibold">{d.company}</dd>
+                <dd class="text-on-surface font-semibold text-right">{d.company}</dd>
               </div>
             )}
             {d.casino_type && (
-              <div class="flex justify-between">
-                <dt class="text-on-surface-variant flex items-center gap-1">
+              <div class="grid grid-cols-[auto_1fr] items-start gap-x-3">
+                <dt class="text-on-surface-variant flex items-center gap-1 whitespace-nowrap pt-0.5">
                   <span class="material-symbols-outlined text-outline text-sm">category</span>
                   Type
                 </dt>
-                <dd class="text-on-surface font-semibold">{d.casino_type}</dd>
+                <dd class="text-on-surface font-semibold text-right">{d.casino_type}</dd>
               </div>
             )}
             {d.wagering && (
-              <div class="flex justify-between">
-                <dt class="text-on-surface-variant flex items-center gap-1">
+              <div class="grid grid-cols-[auto_1fr] items-start gap-x-3">
+                <dt class="text-on-surface-variant flex items-center gap-1 whitespace-nowrap pt-0.5">
                   <span class="material-symbols-outlined text-outline text-sm">calculate</span>
                   Wagering
                 </dt>
-                <dd class="text-on-surface font-semibold">{d.wagering}</dd>
+                <dd class="text-on-surface font-semibold text-right">{d.wagering}</dd>
               </div>
             )}
             {d.vip_program !== undefined && (
-              <div class="flex justify-between">
-                <dt class="text-on-surface-variant flex items-center gap-1">
+              <div class="grid grid-cols-[auto_1fr] items-start gap-x-3">
+                <dt class="text-on-surface-variant flex items-center gap-1 whitespace-nowrap pt-0.5">
                   <span class="material-symbols-outlined text-outline text-sm">workspace_premium</span>
                   VIP Program
                 </dt>
-                <dd class="text-on-surface font-semibold">{d.vip_program ? "Yes" : "No"}</dd>
+                <dd class="text-on-surface font-semibold text-right">{d.vip_program ? "Yes" : "No"}</dd>
               </div>
             )}
             {d.kycRequired !== undefined && (
-              <div class="flex justify-between">
-                <dt class="text-on-surface-variant flex items-center gap-1">
+              <div class="grid grid-cols-[auto_1fr] items-start gap-x-3">
+                <dt class="text-on-surface-variant flex items-center gap-1 whitespace-nowrap pt-0.5">
                   <span class="material-symbols-outlined text-outline text-sm">badge</span>
                   KYC Required
                 </dt>
-                <dd class="text-on-surface font-semibold">{d.kycRequired ? "Yes" : "No"}</dd>
+                <dd class="text-on-surface font-semibold text-right">{d.kycRequired ? "Yes" : "No"}</dd>
               </div>
             )}
             {d.lastVerified && (
-              <div class="flex justify-between">
-                <dt class="text-on-surface-variant flex items-center gap-1">
+              <div class="grid grid-cols-[auto_1fr] items-start gap-x-3">
+                <dt class="text-on-surface-variant flex items-center gap-1 whitespace-nowrap pt-0.5">
                   <span class="material-symbols-outlined text-outline text-sm">verified</span>
                   Last Verified
                 </dt>
-                <dd class="text-on-surface font-semibold">{d.lastVerified}</dd>
+                <dd class="text-on-surface font-semibold text-right">{d.lastVerified}</dd>
               </div>
             )}
           </dl>

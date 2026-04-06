@@ -19,8 +19,9 @@ const guides = allGuides
       new Date(a.data.publishedAt).getTime()
   );
 
-// Derive category tags
-const allTags = [...new Set(guides.flatMap((g: any) => g.data.tags ?? []))];
+// Derive category tags — normalize to lowercase to deduplicate across mixed-case tags
+const allTags = [...new Set(guides.flatMap((g: any) => (g.data.tags ?? []).map((t: string) => t.toLowerCase())))];
+const toTitleCase = (s: string) => s.replace(/\b\w/g, (c: string) => c.toUpperCase());
 
 const featured = guides[0];
 const rest = guides.slice(1);
@@ -56,73 +57,90 @@ const breadcrumbs = [
       <>
         {/* Category Filter Pills */}
         {allTags.length > 0 && (
-          <div class="flex flex-wrap gap-3 mb-10">
-            <span class="px-5 py-2 rounded-full text-sm font-bold bg-primary text-on-primary shadow-md cursor-pointer">
+          <div class="flex flex-wrap gap-3 mb-10" id="guide-filters">
+            <button
+              type="button"
+              data-tag="all"
+              class="filter-pill px-5 py-2 rounded-full text-sm font-bold bg-primary text-on-primary shadow-md transition-all"
+            >
               All Guides
-            </span>
+            </button>
             {allTags.slice(0, 8).map((tag: string) => (
-              <span class="px-5 py-2 rounded-full text-sm font-bold bg-surface-container-high text-on-surface-variant hover:text-on-surface transition-all cursor-pointer">
-                {tag}
-              </span>
+              <button
+                type="button"
+                data-tag={tag}
+                class="filter-pill px-5 py-2 rounded-full text-sm font-bold bg-surface-container-high text-on-surface-variant hover:text-on-surface transition-all"
+              >
+                {toTitleCase(tag)}
+              </button>
             ))}
           </div>
         )}
 
         {/* Featured Guide */}
         {featured && (
-          <a href={`/guides/${featured.data.slug}/`} class="group block bg-surface-container-low rounded-xl overflow-hidden hover:bg-surface-container-high ghost-border transition-all mb-10">
-            <div class="grid grid-cols-1 md:grid-cols-2">
-              {featured.data.image && (
-                <div class="aspect-video md:aspect-auto md:min-h-[360px] overflow-hidden relative">
-                  <img
-                    src={featured.data.image}
-                    alt={featured.data.imageAlt || featured.data.title}
-                    class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                    loading="eager"
-                  />
-                  <div class="absolute top-4 left-4 flex gap-2">
-                    <span class="bg-secondary/90 text-on-secondary text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-sm backdrop-blur-md">Featured Guide</span>
-                    {featured.data.category && (
-                      <span class="bg-surface/80 text-on-surface text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-sm backdrop-blur-md">{featured.data.category}</span>
+          <div data-guide-tags={JSON.stringify((featured.data.tags ?? []).map((t: string) => t.toLowerCase()))} class="guide-card mb-10">
+            <a href={`/guides/${featured.data.slug}/`} class="group block bg-surface-container-low rounded-xl overflow-hidden hover:bg-surface-container-high ghost-border transition-all">
+              <div class="grid grid-cols-1 md:grid-cols-2">
+                {featured.data.image && (
+                  <div class="aspect-video md:aspect-auto md:min-h-[360px] overflow-hidden relative">
+                    <img
+                      src={featured.data.image}
+                      alt={featured.data.imageAlt || featured.data.title}
+                      class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                      loading="eager"
+                    />
+                    <div class="absolute top-4 left-4 flex gap-2">
+                      <span class="bg-secondary/90 text-on-secondary text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-sm backdrop-blur-md">Featured Guide</span>
+                      {featured.data.category && (
+                        <span class="bg-surface/80 text-on-surface text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-sm backdrop-blur-md">{featured.data.category}</span>
+                      )}
+                    </div>
+                  </div>
+                )}
+                <div class="p-8 md:p-10 flex flex-col justify-center">
+                  <div class="flex items-center gap-3 text-xs font-label text-on-surface-variant mb-4">
+                    {featured.data.publishedAt && (
+                      <time>{new Date(featured.data.publishedAt).toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" })}</time>
+                    )}
+                    {featured.data.author && (
+                      <>
+                        <span class="w-1 h-1 rounded-full bg-outline-variant"></span>
+                        <span>By {featured.data.author}</span>
+                      </>
                     )}
                   </div>
-                </div>
-              )}
-              <div class="p-8 md:p-10 flex flex-col justify-center">
-                <div class="flex items-center gap-3 text-xs font-label text-on-surface-variant mb-4">
-                  {featured.data.publishedAt && (
-                    <time>{new Date(featured.data.publishedAt).toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" })}</time>
+                  <h2 class="font-headline text-2xl md:text-3xl font-bold mb-4 group-hover:text-primary transition-colors leading-tight">
+                    {featured.data.title}
+                  </h2>
+                  {featured.data.excerpt && (
+                    <p class="text-on-surface-variant leading-relaxed mb-6 line-clamp-3">{featured.data.excerpt}</p>
                   )}
-                  {featured.data.author && (
-                    <>
-                      <span class="w-1 h-1 rounded-full bg-outline-variant"></span>
-                      <span>By {featured.data.author}</span>
-                    </>
-                  )}
-                </div>
-                <h2 class="font-headline text-2xl md:text-3xl font-bold mb-4 group-hover:text-primary transition-colors leading-tight">
-                  {featured.data.title}
-                </h2>
-                {featured.data.excerpt && (
-                  <p class="text-on-surface-variant leading-relaxed mb-6 line-clamp-3">{featured.data.excerpt}</p>
-                )}
-                <div class="flex items-center gap-2 text-primary font-bold text-sm group-hover:gap-3 transition-all">
-                  <span>Read Guide</span>
-                  <span class="material-symbols-outlined text-sm">trending_flat</span>
+                  <div class="flex items-center gap-2 text-primary font-bold text-sm group-hover:gap-3 transition-all">
+                    <span>Read Guide</span>
+                    <span class="material-symbols-outlined text-sm">trending_flat</span>
+                  </div>
                 </div>
               </div>
-            </div>
-          </a>
+            </a>
+          </div>
         )}
 
         {/* Guide Grid */}
         {rest.length > 0 && (
-          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="guide-grid">
             {rest.map((guide: any) => (
-              <ArticleCard article={{ ...guide, collection: "guides" }} />
+              <div data-guide-tags={JSON.stringify((guide.data.tags ?? []).map((t: string) => t.toLowerCase()))} class="guide-card">
+                <ArticleCard article={{ ...guide, collection: "guides" }} />
+              </div>
             ))}
           </div>
         )}
+
+        {/* Empty filter state */}
+        <p id="no-guides-msg" class="hidden text-center text-on-surface-variant py-12 text-lg">
+          No guides found for this category.
+        </p>
       </>
     ) : (
       /* Empty State */
@@ -136,3 +154,39 @@ const breadcrumbs = [
     )}
   </div>
 </BaseLayout>
+
+<script>
+  const pills = document.querySelectorAll<HTMLButtonElement>('.filter-pill');
+  const cards = document.querySelectorAll<HTMLElement>('.guide-card');
+  const noMsg = document.getElementById('no-guides-msg');
+
+  function setActive(tag: string) {
+    pills.forEach(p => {
+      const active = p.dataset.tag === tag;
+      p.classList.toggle('bg-primary', active);
+      p.classList.toggle('text-on-primary', active);
+      p.classList.toggle('shadow-md', active);
+      p.classList.toggle('bg-surface-container-high', !active);
+      p.classList.toggle('text-on-surface-variant', !active);
+    });
+
+    let visible = 0;
+    cards.forEach(card => {
+      if (tag === 'all') {
+        card.style.display = '';
+        visible++;
+        return;
+      }
+      const tags: string[] = JSON.parse(card.dataset.guideTags ?? '[]');
+      const show = tags.includes(tag);
+      card.style.display = show ? '' : 'none';
+      if (show) visible++;
+    });
+
+    if (noMsg) noMsg.classList.toggle('hidden', visible > 0);
+  }
+
+  pills.forEach(pill => {
+    pill.addEventListener('click', () => setActive(pill.dataset.tag ?? 'all'));
+  });
+</script>
