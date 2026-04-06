@@ -14,19 +14,19 @@ tags: ["video poker","jacks or better","video poker strategy","online casino gam
 category: "beginner"
 faqs: 
   - answer: "In video poker, '9/6' refers to the payout for a Full House (9 credits) and a Flush (6 credits) on a Jacks or Better machine when betting 1 credit. This specific paytable indicates a 'full pay' machine, offering a high Return to Player (RTP) of 99.54% with optimal strategy."
-    question: "What does 9/6 mean in video poker?"
+ question: "What does 9/6 mean in video poker?"
   - answer: "Yes, you should always bet the maximum number of credits (typically 5) in video poker. This is because the payout for a Royal Flush is disproportionately higher when betting max credits (e.g., 4,000 credits for 5 bets vs. 250 credits for 1 bet), significantly boosting the game's overall RTP."
-    question: "Should I always bet max in video poker?"
+ question: "Should I always bet max in video poker?"
   - answer: "You cannot win at video poker every time. Like all casino games, it involves an element of chance and variance. However, by consistently choosing full-pay machines, always betting max credits, and applying optimal strategy, you can minimize the house edge to less than 1%, giving you the best possible long-term odds of winning."
-    question: "How do you win at video poker every time?"
+ question: "How do you win at video poker every time?"
   - answer: "A 'full pay' video poker machine is one that offers the highest possible Return to Player (RTP) for a specific game variant, based on its paytable. For Jacks or Better, a 9/6 paytable is considered full pay. For Deuces Wild, a paytable offering 5 credits for Four of a Kind (no deuces), 3 for a Straight, and 2 for Three of a Kind is often considered full pay."
-    question: "What is a 'full pay' video poker machine?"
+ question: "What is a 'full pay' video poker machine?"
   - answer: "Breaking even, especially by hitting many small wins like a pair of Jacks or Better (which pays 1:1), can feel like losing because your bankroll is not growing significantly. Players often seek larger, more exciting payouts, and a series of break-even hands can feel unrewarding, even though mathematically you are performing well by maintaining your funds."
-    question: "Why does breaking even sometimes feel like losing in video poker?"
+ question: "Why does breaking even sometimes feel like losing in video poker?"
   - answer: "Players may claim 'math is a scam' when they experience a prolonged losing streak or when the short-term results do not align with the theoretical Return to Player (RTP) percentage. This is a misunderstanding of how probability and variance work; RTP is a long-term average, and short-term outcomes can deviate significantly, leading to frustration."
-    question: "Why do some players claim 'math is a scam' in gambling?"
+ question: "Why do some players claim 'math is a scam' in gambling?"
   - answer: "Yes, paytables at bars, restaurants, and smaller gaming establishments are often 'short pay' or 'trash paytables' compared to those found on the main casino floor or at reputable online casinos. They typically offer lower payouts for hands like Full House and Flush (e.g., 6/5 or 7/5 Jacks or Better), which increases the house edge and significantly lowers the game's RTP."
-    question: "Are paytables at bars worse than those in casinos?"
+ question: "Are paytables at bars worse than those in casinos?"
 schemaJsonLd: "[{\"url\":\"https://cashspins.vercel.app/guides/a-beginners-guide-to-video-poker/\",\"@type\":\"Article\",\"image\":{\"url\":\"/images/casinos/a-beginners-guide-to-video-poker-v1.webp\",\"@type\":\"ImageObject\",\"width\":1792,\"height\":1024,\"caption\":\"Cover image for A Beginner's Guide to Video Poker\"},\"@context\":\"https://schema.org\",\"headline\":\"A Beginner's Guide to Video Poker\",\"keywords\":\"how to play video poker, video poker strategy for beginners, jacks or better paytable, video poker rtp, best video poker games, video poker vs slots, video poker hold guide, 9/6 video poker meaning\",\"publisher\":{\"url\":\"https://cashspins.vercel.app\",\"logo\":{\"url\":\"https://cashspins.vercel.app/favicon.svg\",\"@type\":\"ImageObject\"},\"name\":\"cashspins.vercel.app\",\"@type\":\"Organization\"},\"wordCount\":10695,\"description\":\"Learn how to play video poker, understand paytables, master basic strategy, and discover why it offers better odds than slots. Essential tips for new players.\",\"dateModified\":\"2026-04-05T21:24:42.155Z\",\"timeRequired\":\"PT54M\",\"datePublished\":\"2026-04-05T21:24:42.155Z\",\"mainEntityOfPage\":{\"@id\":\"https://cashspins.vercel.app/guides/a-beginners-guide-to-video-poker/\",\"@type\":\"WebPage\"}},{\"@type\":\"FAQPage\",\"@context\":\"https://schema.org\",\"mainEntity\":[{\"name\":\"What does 9/6 mean in video poker?\",\"@type\":\"Question\",\"acceptedAnswer\":{\"text\":\"In video poker, '9/6' refers to the payout for a Full House (9 credits) and a Flush (6 credits) on a Jacks or Better machine when betting 1 credit. This specific paytable indicates a 'full pay' machine, offering a high Return to Player (RTP) of 99.54% with optimal strategy.\",\"@type\":\"Answer\"}},{\"name\":\"Should I always bet max in video poker?\",\"@type\":\"Question\",\"acceptedAnswer\":{\"text\":\"Yes, you should always bet the maximum number of credits (typically 5) in video poker. This is because the payout for a Royal Flush is disproportionately higher when betting max credits (e.g., 4,000 credits for 5 bets vs. 250 credits for 1 bet), significantly boosting the game's overall RTP.\",\"@type\":\"Answer\"}},{\"name\":\"How do you win at video poker every time?\",\"@type\":\"Question\",\"acceptedAnswer\":{\"text\":\"You cannot win at video poker every time. Like all casino games, it involves an element of chance and variance. However, by consistently choosing full-pay machines, always betting max credits, and applying optimal strategy, you can minimize the house edge to less than 1%, giving you the best possible long-term odds of winning.\",\"@type\":\"Answer\"}},{\"name\":\"What is a 'full pay' video poker machine?\",\"@type\":\"Question\",\"acceptedAnswer\":{\"text\":\"A 'full pay' video poker machine is one that offers the highest possible Return to Player (RTP) for a specific game variant, based on its paytable. For Jacks or Better, a 9/6 paytable is considered full pay. For Deuces Wild, a paytable offering 5 credits for Four of a Kind (no deuces), 3 for a Straight, and 2 for Three of a Kind is often considered full pay.\",\"@type\":\"Answer\"}},{\"name\":\"Why does breaking even sometimes feel like losing in video poker?\",\"@type\":\"Question\",\"acceptedAnswer\":{\"text\":\"Breaking even, especially by hitting many small wins like a pair of Jacks or Better (which pays 1:1), can feel like losing because your bankroll is not growing significantly. Players often seek larger, more exciting payouts, and a series of break-even hands can feel unrewarding, even though mathematically you are performing well by maintaining your funds.\",\"@type\":\"Answer\"}},{\"name\":\"Why do some players claim 'math is a scam' in gambling?\",\"@type\":\"Question\",\"acceptedAnswer\":{\"text\":\"Players may claim 'math is a scam' when they experience a prolonged losing streak or when the short-term results do not align with the theoretical Return to Player (RTP) percentage. This is a misunderstanding of how probability and variance work; RTP is a long-term average, and short-term outcomes can deviate significantly, leading to frustration.\",\"@type\":\"Answer\"}},{\"name\":\"Are paytables at bars worse than those in casinos?\",\"@type\":\"Question\",\"acceptedAnswer\":{\"text\":\"Yes, paytables at bars, restaurants, and smaller gaming establishments are often 'short pay' or 'trash paytables' compared to those found on the main casino floor or at reputable online casinos. They typically offer lower payouts for hands like Full House and Flush (e.g., 6/5 or 7/5 Jacks or Better), which increases the house edge and significantly lowers the game's RTP.\",\"@type\":\"Answer\"}}]},{\"@type\":\"BreadcrumbList\",\"@context\":\"https://schema.org\",\"itemListElement\":[{\"item\":\"https://cashspins.vercel.app\",\"name\":\"Home\",\"@type\":\"ListItem\",\"position\":1},{\"item\":\"https://cashspins.vercel.app/guides/\",\"name\":\"Guides\",\"@type\":\"ListItem\",\"position\":2},{\"item\":\"https://cashspins.vercel.app/guides/a-beginners-guide-to-video-poker/\",\"name\":\"A Beginner's Guide to Video Poker\",\"@type\":\"ListItem\",\"position\":3}]},{\"url\":\"https://cashspins.vercel.app\",\"name\":\"cashspins.vercel.app\",\"@type\":\"WebSite\",\"@context\":\"https://schema.org\",\"potentialAction\":{\"@type\":\"SearchAction\",\"target\":{\"@type\":\"EntryPoint\",\"urlTemplate\":\"https://cashspins.vercel.app/search?q={search_term_string}\"},\"query-input\":\"required name=search_term_string\"}}]"
 seo_score: 89
 word_count: 10010
@@ -47,27 +47,27 @@ The game is played on a console, either a physical machine in a land-based casin
 Playing video poker is straightforward once you understand the basic flow. Here is a step-by-step breakdown of a typical round:
 
 1.  **Insert Money or Deposit Funds:**
-    *   **Land-based casino:** Insert cash into the bill acceptor on the machine. The cash is converted into credits, typically displayed at the bottom of the screen.
-    *   **Online casino:** Ensure your account is funded. You will see your balance displayed, and bets will be deducted from it. Many online casinos offer a variety of **[Casino Payment Methods Guide](/guides/)** for deposits and withdrawals.
+ *   **Land-based casino:** Insert cash into the bill acceptor on the machine. The cash is converted into credits, typically displayed at the bottom of the screen.
+ *   **Online casino:** Ensure your account is funded. You will see your balance displayed, and bets will be deducted from it. Many online casinos offer a variety of **[our guides](/guides/)** for deposits and withdrawals.
 
 2.  **Choose Your Bet Size (Credits per Hand):**
-    *   Before each hand, you need to decide how many credits you want to bet. Most video poker machines allow you to bet between 1 and 5 credits.
-    *   Each credit has a specific **denomination**, such as $0.25, $0.50, or $1.00. For example, if you choose a $0.25 denomination and bet 5 credits, your total bet for that hand will be $1.25 (5 credits x $0.25/credit).
-    *   As you will learn, betting the maximum of 5 credits is almost always the mathematically optimal strategy.
+ *   Before each hand, you need to decide how many credits you want to bet. Most video poker machines allow you to bet between 1 and 5 credits.
+ *   Each credit has a specific **denomination**, such as $0.25, $0.50, or $1.00. For example, if you choose a $0.25 denomination and bet 5 credits, your total bet for that hand will be $1.25 (5 credits x $0.25/credit).
+ *   As you will learn, betting the maximum of 5 credits is almost always the mathematically optimal strategy.
 
 3.  **Deal Your First Hand:**
-    *   Once your bet is set, press the "Deal" or "Draw" button. The machine will then display five cards face up on the screen. These are your initial hand.
+ *   Once your bet is set, press the "Deal" or "Draw" button. The machine will then display five cards face up on the screen. These are your initial hand.
 
 4.  **Decide Which Cards to Hold:**
-    *   This is where your skill comes into play. You must decide which of the five cards you want to keep (**hold**) and which you want to discard. You can hold anywhere from zero to all five cards.
-    *   To hold a card, simply click or tap on it. The word "HELD" or "HOLD" will usually appear on the card. If you change your mind, click it again to un-hold.
+ *   This is where your skill comes into play. You must decide which of the five cards you want to keep (**hold**) and which you want to discard. You can hold anywhere from zero to all five cards.
+ *   To hold a card, simply click or tap on it. The word "HELD" or "HOLD" will usually appear on the card. If you change your mind, click it again to un-hold.
 
 5.  **Draw New Cards:**
-    *   After you have selected all the cards you wish to hold, press the "Draw" button again. The cards you did not hold will be replaced with new cards from the virtual deck.
+ *   After you have selected all the cards you wish to hold, press the "Draw" button again. The cards you did not hold will be replaced with new cards from the virtual deck.
 
 6.  **Evaluate Your Final Hand and Payout:**
-    *   The machine will then evaluate your final five-card hand based on standard poker hand rankings (e.g., Pair, Two Pair, Three of a Kind, Straight, Flush, Full House, Four of a Kind, Straight Flush, Royal Flush).
-    *   If your hand qualifies for a payout according to the game's paytable, your winnings will be added to your credit balance. If not, your bet is lost, and you can start a new hand.
+ *   The machine will then evaluate your final five-card hand based on standard poker hand rankings (e.g., Pair, Two Pair, Three of a Kind, Straight, Flush, Full House, Four of a Kind, Straight Flush, Royal Flush).
+ *   If your hand qualifies for a payout according to the game's paytable, your winnings will be added to your credit balance. If not, your bet is lost, and you can start a new hand.
 
 Each hand is an independent event, determined by an **RNG (Random Number Generator)**. This means the cards you receive are entirely random and fair, dispelling common myths like "the machine knows what you discard." The virtual deck is effectively "shuffled" continuously until you hit the "Draw" button.
 
@@ -84,17 +84,17 @@ A Jacks or Better paytable is often described using two numbers, like "9/6" or "
 
 Let us compare the typical paytables for a 1-credit bet:
 
-| Hand            | 9/6 Jacks or Better (Full Pay) | 8/5 Jacks or Better (Short Pay) |
+| Hand | 9/6 Jacks or Better (Full Pay) | 8/5 Jacks or Better (Short Pay) |
 | :-------------- | :----------------------------- | :------------------------------ |
-| Royal Flush     | 250                            | 250                             |
-| Straight Flush  | 50                             | 50                              |
-| Four of a Kind  | 25                             | 25                              |
-| **Full House**  | **9**                          | **8**                           |
-| **Flush**       | **6**                          | **5**                           |
-| Straight        | 4                              | 4                               |
-| Three of a Kind | 3                              | 3                               |
-| Two Pair        | 2                              | 2                               |
-| Jacks or Better | 1                              | 1                               |
+| Royal Flush | 250 | 250 |
+| Straight Flush  | 50 | 50 |
+| Four of a Kind  | 25 | 25 |
+| **Full House**  | **9** | **8** |
+| **Flush** | **6** | **5** |
+| Straight | 4 | 4 |
+| Three of a Kind | 3 | 3 |
+| Two Pair | 2 | 2 |
+| Jacks or Better | 1 | 1 |
 
 The seemingly small difference in payouts for the Full House and Flush has a significant impact on the game's overall RTP:
 
@@ -111,17 +111,17 @@ This is perhaps the most critical piece of advice for any video poker player. Yo
 
 Let us revisit the 9/6 Jacks or Better paytable, comparing a 1-credit bet to a 5-credit bet:
 
-| Hand            | Payout (1-Credit Bet) | Payout (5-Credit Bet) |
+| Hand | Payout (1-Credit Bet) | Payout (5-Credit Bet) |
 | :-------------- | :-------------------- | :-------------------- |
-| **Royal Flush** | **250**               | **4,000**             |
-| Straight Flush  | 50                    | 250                   |
-| Four of a Kind  | 25                    | 125                   |
-| Full House      | 9                     | 45                    |
-| Flush           | 6                     | 30                    |
-| Straight        | 4                     | 20                    |
-| Three of a Kind | 3                     | 15                    |
-| Two Pair        | 2                     | 10                    |
-| Jacks or Better | 1                     | 5                     |
+| **Royal Flush** | **250** | **4,000** |
+| Straight Flush  | 50 | 250 |
+| Four of a Kind  | 25 | 125 |
+| Full House | 9 | 45 |
+| Flush | 6 | 30 |
+| Straight | 4 | 20 |
+| Three of a Kind | 3 | 15 |
+| Two Pair | 2 | 10 |
+| Jacks or Better | 1 | 5 |
 
 Notice the Royal Flush payout. For a 1-credit bet, it pays 250 credits. For a 5-credit bet, it pays a massive 4,000 credits.
 If the payout scaled linearly, a 5-credit bet should pay 5 x 250 = 1,250 credits for a Royal Flush. Instead, it pays 4,000 credits. This is a bonus of 2,750 credits! This bonus payout is designed to incentivize players to bet max credits.
@@ -302,27 +302,27 @@ The game is played on a console, either a physical machine in a land-based casin
 Playing video poker is straightforward once you understand the basic flow. Here is a step-by-step breakdown of a typical round:
 
 1.  **Insert Money or Deposit Funds:**
-    *   **Land-based casino:** Insert cash into the bill acceptor on the machine. The cash is converted into credits, typically displayed at the bottom of the screen.
-    *   **Online casino:** Ensure your account is funded. You will see your balance displayed, and bets will be deducted from it. Many online casinos offer a variety of **[Casino Payment Methods Guide](/guides/)** for deposits and withdrawals.
+ *   **Land-based casino:** Insert cash into the bill acceptor on the machine. The cash is converted into credits, typically displayed at the bottom of the screen.
+ *   **Online casino:** Ensure your account is funded. You will see your balance displayed, and bets will be deducted from it. Many online casinos offer a variety of **[our guides](/guides/)** for deposits and withdrawals.
 
 2.  **Choose Your Bet Size (Credits per Hand):**
-    *   Before each hand, you need to decide how many credits you want to bet. Most video poker machines allow you to bet between 1 and 5 credits.
-    *   Each credit has a specific **denomination**, such as $0.25, $0.50, or $1.00. For example, if you choose a $0.25 denomination and bet 5 credits, your total bet for that hand will be $1.25 (5 credits x $0.25/credit).
-    *   As you will learn, betting the maximum of 5 credits is almost always the mathematically optimal strategy.
+ *   Before each hand, you need to decide how many credits you want to bet. Most video poker machines allow you to bet between 1 and 5 credits.
+ *   Each credit has a specific **denomination**, such as $0.25, $0.50, or $1.00. For example, if you choose a $0.25 denomination and bet 5 credits, your total bet for that hand will be $1.25 (5 credits x $0.25/credit).
+ *   As you will learn, betting the maximum of 5 credits is almost always the mathematically optimal strategy.
 
 3.  **Deal Your First Hand:**
-    *   Once your bet is set, press the "Deal" or "Draw" button. The machine will then display five cards face up on the screen. These are your initial hand.
+ *   Once your bet is set, press the "Deal" or "Draw" button. The machine will then display five cards face up on the screen. These are your initial hand.
 
 4.  **Decide Which Cards to Hold:**
-    *   This is where your skill comes into play. You must decide which of the five cards you want to keep (**hold**) and which you want to discard. You can hold anywhere from zero to all five cards.
-    *   To hold a card, simply click or tap on it. The word "HELD" or "HOLD" will usually appear on the card. If you change your mind, click it again to un-hold.
+ *   This is where your skill comes into play. You must decide which of the five cards you want to keep (**hold**) and which you want to discard. You can hold anywhere from zero to all five cards.
+ *   To hold a card, simply click or tap on it. The word "HELD" or "HOLD" will usually appear on the card. If you change your mind, click it again to un-hold.
 
 5.  **Draw New Cards:**
-    *   After you have selected all the cards you wish to hold, press the "Draw" button again. The cards you did not hold will be replaced with new cards from the virtual deck.
+ *   After you have selected all the cards you wish to hold, press the "Draw" button again. The cards you did not hold will be replaced with new cards from the virtual deck.
 
 6.  **Evaluate Your Final Hand and Payout:**
-    *   The machine will then evaluate your final five-card hand based on standard poker hand rankings (e.g., Pair, Two Pair, Three of a Kind, Straight, Flush, Full House, Four of a Kind, Straight Flush, Royal Flush).
-    *   If your hand qualifies for a payout according to the game's paytable, your winnings will be added to your credit balance. If not, your bet is lost, and you can start a new hand.
+ *   The machine will then evaluate your final five-card hand based on standard poker hand rankings (e.g., Pair, Two Pair, Three of a Kind, Straight, Flush, Full House, Four of a Kind, Straight Flush, Royal Flush).
+ *   If your hand qualifies for a payout according to the game's paytable, your winnings will be added to your credit balance. If not, your bet is lost, and you can start a new hand.
 
 Each hand is an independent event, determined by an **RNG (Random Number Generator)**. This means the cards you receive are entirely random and fair, dispelling common myths like "the machine knows what you discard." The virtual deck is effectively "shuffled" continuously until you hit the "Draw" button.
 
@@ -339,17 +339,17 @@ A Jacks or Better paytable is often described using two numbers, like "9/6" or "
 
 Let us compare the typical paytables for a 1-credit bet:
 
-| Hand            | 9/6 Jacks or Better (Full Pay) | 8/5 Jacks or Better (Short Pay) |
+| Hand | 9/6 Jacks or Better (Full Pay) | 8/5 Jacks or Better (Short Pay) |
 | :-------------- | :----------------------------- | :------------------------------ |
-| Royal Flush     | 250                            | 250                             |
-| Straight Flush  | 50                             | 50                              |
-| Four of a Kind  | 25                             | 25                              |
-| **Full House**  | **9**                          | **8**                           |
-| **Flush**       | **6**                          | **5**                           |
-| Straight        | 4                              | 4                               |
-| Three of a Kind | 3                              | 3                               |
-| Two Pair        | 2                              | 2                               |
-| Jacks or Better | 1                              | 1                               |
+| Royal Flush | 250 | 250 |
+| Straight Flush  | 50 | 50 |
+| Four of a Kind  | 25 | 25 |
+| **Full House**  | **9** | **8** |
+| **Flush** | **6** | **5** |
+| Straight | 4 | 4 |
+| Three of a Kind | 3 | 3 |
+| Two Pair | 2 | 2 |
+| Jacks or Better | 1 | 1 |
 
 The seemingly small difference in payouts for the Full House and Flush has a significant impact on the game's overall RTP:
 
@@ -366,17 +366,17 @@ This is perhaps the most critical piece of advice for any video poker player. Yo
 
 Let us revisit the 9/6 Jacks or Better paytable, comparing a 1-credit bet to a 5-credit bet:
 
-| Hand            | Payout (1-Credit Bet) | Payout (5-Credit Bet) |
+| Hand | Payout (1-Credit Bet) | Payout (5-Credit Bet) |
 | :-------------- | :-------------------- | :-------------------- |
-| **Royal Flush** | **250**               | **4,000**             |
-| Straight Flush  | 50                    | 250                   |
-| Four of a Kind  | 25                    | 125                   |
-| Full House      | 9                     | 45                    |
-| Flush           | 6                     | 30                    |
-| Straight        | 4                     | 20                    |
-| Three of a Kind | 3                     | 15                    |
-| Two Pair        | 2                     | 10                    |
-| Jacks or Better | 1                     | 5                     |
+| **Royal Flush** | **250** | **4,000** |
+| Straight Flush  | 50 | 250 |
+| Four of a Kind  | 25 | 125 |
+| Full House | 9 | 45 |
+| Flush | 6 | 30 |
+| Straight | 4 | 20 |
+| Three of a Kind | 3 | 15 |
+| Two Pair | 2 | 10 |
+| Jacks or Better | 1 | 5 |
 
 Notice the Royal Flush payout. For a 1-credit bet, it pays 250 credits. For a 5-credit bet, it pays a massive 4,000 credits.
 If the payout scaled linearly, a 5-credit bet should pay 5 x 250 = 1,250 credits for a Royal Flush. Instead, it pays 4,000 credits. This is a bonus of 2,750 credits! This bonus payout is designed to incentivize players to bet max credits.

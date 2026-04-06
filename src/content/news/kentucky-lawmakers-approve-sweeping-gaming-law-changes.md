@@ -14,13 +14,13 @@ tags: ["Kentucky","Sports Betting","DFS","Horse Racing","Legislation","Age Restr
 source_url: "https://www.covers.com/industry/kentucky-lawmakers-approve-wide-sweeping-gaming-law-changes-april-2-2026"
 faqs: 
   - answer: "The legal age for sports betting in Kentucky will increase from 18 to 21 if the recently approved legislation is signed into law."
-    question: "What is the new legal age for sports betting in Kentucky?"
+ question: "What is the new legal age for sports betting in Kentucky?"
   - answer: "No, the new legislation prohibits sportsbooks from offering player prop bets specifically on in-state college athletes."
-    question: "Are player prop bets on college athletes still allowed in Kentucky?"
+ question: "Are player prop bets on college athletes still allowed in Kentucky?"
   - answer: "Yes, daily fantasy sports operators will be required to obtain licenses to operate in Kentucky under the new approved legislation."
-    question: "Do daily fantasy sports operators need a license in Kentucky now?"
+ question: "Do daily fantasy sports operators need a license in Kentucky now?"
   - answer: "Fixed odds in horse racing allow bettors to lock in their payout odds at the time they place their wager, unlike traditional pari-mutuel betting where odds can fluctuate until the race begins."
-    question: "What are fixed odds in horse racing?"
+ question: "What are fixed odds in horse racing?"
 schemaJsonLd: "[{\"url\":\"https://cashspins.vercel.app/news/kentucky-lawmakers-approve-sweeping-gaming-law-changes/\",\"@type\":\"Article\",\"image\":{\"url\":\"/images/casinos/kentucky-lawmakers-approve-sweeping-gaming-law-changes-v2.webp\",\"@type\":\"ImageObject\",\"width\":1792,\"height\":1024,\"caption\":\"Cover image for Kentucky Lawmakers Approve Sweeping Gaming Law Changes 2026\"},\"@context\":\"https://schema.org\",\"headline\":\"Kentucky Lawmakers Approve Sweeping Gaming Law Changes 2026\",\"keywords\":\"Kentucky Gaming Law Changes 2026, Kentucky sports betting age, Kentucky DFS licensing, Kentucky college prop bets, Kentucky fixed odds horse racing, Kentucky gambling legislation\",\"publisher\":{\"url\":\"https://cashspins.vercel.app\",\"logo\":{\"url\":\"https://cashspins.vercel.app/favicon.svg\",\"@type\":\"ImageObject\"},\"name\":\"cashspins.vercel.app\",\"@type\":\"Organization\"},\"wordCount\":939,\"description\":\"Kentucky lawmakers approved significant gaming law changes on April 2, 2026, raising the sports betting age to 21, banning college prop bets, and requiring DFS licenses.\",\"dateModified\":\"2026-04-06T11:36:41.238Z\",\"timeRequired\":\"PT5M\",\"datePublished\":\"2026-04-06T11:36:41.238Z\",\"mainEntityOfPage\":{\"@id\":\"https://cashspins.vercel.app/news/kentucky-lawmakers-approve-sweeping-gaming-law-changes/\",\"@type\":\"WebPage\"}},{\"@type\":\"FAQPage\",\"@context\":\"https://schema.org\",\"mainEntity\":[{\"name\":\"What is the new legal age for sports betting in Kentucky?\",\"@type\":\"Question\",\"acceptedAnswer\":{\"text\":\"The legal age for sports betting in Kentucky will increase from 18 to 21 if the recently approved legislation is signed into law.\",\"@type\":\"Answer\"}},{\"name\":\"Are player prop bets on college athletes still allowed in Kentucky?\",\"@type\":\"Question\",\"acceptedAnswer\":{\"text\":\"No, the new legislation prohibits sportsbooks from offering player prop bets specifically on in-state college athletes.\",\"@type\":\"Answer\"}},{\"name\":\"Do daily fantasy sports operators need a license in Kentucky now?\",\"@type\":\"Question\",\"acceptedAnswer\":{\"text\":\"Yes, daily fantasy sports operators will be required to obtain licenses to operate in Kentucky under the new approved legislation.\",\"@type\":\"Answer\"}},{\"name\":\"What are fixed odds in horse racing?\",\"@type\":\"Question\",\"acceptedAnswer\":{\"text\":\"Fixed odds in horse racing allow bettors to lock in their payout odds at the time they place their wager, unlike traditional pari-mutuel betting where odds can fluctuate until the race begins.\",\"@type\":\"Answer\"}}]},{\"@type\":\"BreadcrumbList\",\"@context\":\"https://schema.org\",\"itemListElement\":[{\"item\":\"https://cashspins.vercel.app\",\"name\":\"Home\",\"@type\":\"ListItem\",\"position\":1},{\"item\":\"https://cashspins.vercel.app/news/\",\"name\":\"News\",\"@type\":\"ListItem\",\"position\":2},{\"item\":\"https://cashspins.vercel.app/news/kentucky-lawmakers-approve-sweeping-gaming-law-changes/\",\"name\":\"Kentucky Lawmakers Approve Sweeping Gaming Law Changes 2026\",\"@type\":\"ListItem\",\"position\":3}]},{\"url\":\"https://cashspins.vercel.app\",\"name\":\"cashspins.vercel.app\",\"@type\":\"WebSite\",\"@context\":\"https://schema.org\",\"potentialAction\":{\"@type\":\"SearchAction\",\"target\":{\"@type\":\"EntryPoint\",\"urlTemplate\":\"https://cashspins.vercel.app/search?q={search_term_string}\"},\"query-input\":\"required name=search_term_string\"}}]"
 seo_score: 85
 word_count: 939
@@ -49,13 +49,6 @@ Regarding the age increase for sports betting, the bill's sponsor, Rep. Michael 
 The introduction of fixed odds for horse racing is viewed as a significant opportunity for the industry. Many within the horse racing sector believe this new wagering option could attract new and younger fans to the sport by offering a more predictable betting experience compared to the variable payouts of pari-mutuel pools. Conversely, some industry observers express concern that the prohibition on certain betting markets, such as college player props, could lead to a decrease in tax revenue and potentially push some bettors towards unregulated, offshore platforms.
 
 
-For more on this topic, see our **[Betcoin.ag Casino](/casinos/betcoinag-casino/)** guide.
-
-
-For more on this topic, see our **[Playbet.io Casino](/casinos/playbetio-casino/)** guide.
-
-
-
 ## What This Means for Players
 
 The Kentucky Gaming Law Changes 2026 will have direct consequences for various categories of players:
@@ -72,13 +65,6 @@ The Kentucky Gaming Law Changes 2026 will have direct consequences for various c
 With the bill having cleared both legislative chambers, it now proceeds to the Governor for final approval. If signed into law, the effective dates for the various provisions would be established, signaling the start of a new regulatory era for online gambling in Kentucky.
 
 
-For more on this topic, see our **[BETANDYOU Casino](/casinos/betandyou-casino/)** guide.
-
-
-
-For more on this topic, see our **[Gamdom Casino](/casinos/gamdom-casino/)** guide.
-
-
 Beyond the immediate gaming changes, HB 904 also includes provisions for the Thoroughbred breeding industry, specifically prohibiting any restriction on the number of mares a stallion can breed in a calendar year. Additionally, the bill establishes a task force to study and potentially recommend further changes to charitable gaming regulations for the 2027 legislative session. The legislation also strengthens consumer protections, mandates anti-fraud safeguards, and requires robust identity and geolocation verification procedures for all online wagering services, aiming to ensure a secure and fair betting environment.
 
 ## Key Takeaways
@@ -88,12 +74,6 @@ Beyond the immediate gaming changes, HB 904 also includes provisions for the Tho
 *   Daily fantasy sports operators must obtain state licenses, bringing the industry under regulatory oversight.
 *   Fixed-odds wagering will be introduced for horse racing, offering a new betting format for players.
 
-
-For more on this topic, see our **[BETANDYOU Casino](/casinos/betandyou-casino/)** guide.
-
-
-
-For more on this topic, see our **[Crypto Games Casino](/casinos/crypto-games-casino/)** guide.
 
 *   The Kentucky Gaming Law Changes 2026 await the Governor's signature to become official law.
 

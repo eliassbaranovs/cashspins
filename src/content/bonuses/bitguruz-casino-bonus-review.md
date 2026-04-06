@@ -17,21 +17,21 @@ bonus_title: "100% up to $1,000 and 100 extra spins"
 wagering: "35x on bonus funds"
 bonuses: 
   - name: "Welcome Bonus"
-    type: "deposit"
-    amount: "up to $1,000"
-    free_spins: "100"
-    percentage: "100%"
+ type: "deposit"
+ amount: "up to $1,000"
+ free_spins: "100"
+ percentage: "100%"
 logo: "/images/logos/bitguruz-casino.webp"
 claim_url: "https://bitguruz.com"
 faqs: 
   - answer: "The welcome bonus carries a 35x wagering requirement on the bonus funds only. You must complete this within 7 days of activation."
-    question: "What is the wagering requirement at Bitguruz Casino?"
+ question: "What is the wagering requirement at Bitguruz Casino?"
   - answer: "Yes, it is a prominent crypto-friendly site. You can use various cryptocurrencies among the 17 available deposit methods."
-    question: "Does Bitguruz Casino support cryptocurrency?"
+ question: "Does Bitguruz Casino support cryptocurrency?"
   - answer: "The maximum bet is capped at €5 per spin or round while wagering the welcome bonus funds."
-    question: "What is the maximum bet allowed with an active bonus?"
+ question: "What is the maximum bet allowed with an active bonus?"
   - answer: "The 100 extra spins expire within 72 hours of being credited to your account."
-    question: "How long do I have to use the Bitguruz free spins?"
+ question: "How long do I have to use the Bitguruz free spins?"
 schemaJsonLd: "[{\"url\":\"https://cashspins.vercel.app/casino/bitguruz-casino-bonus-review/\",\"@type\":\"Review\",\"image\":{\"url\":\"/images/casinos/bitguruz-casino-bonus-review-v1.webp\",\"@type\":\"ImageObject\",\"width\":1792,\"height\":1024,\"caption\":\"Cover image for Bitguruz Casino Bonus Review: All Bonuses Explained\"},\"@context\":\"https://schema.org\",\"headline\":\"Bitguruz Casino Bonus Review: All Bonuses Explained\",\"keywords\":\"Bitguruz Casino Review, Bitguruz Casino bonus, Bitguruz Casino withdrawal, Bitguruz Casino crypto, Bitguruz Casino payment methods, Bitguruz Casino customer support\",\"publisher\":{\"url\":\"https://cashspins.vercel.app\",\"logo\":{\"url\":\"https://cashspins.vercel.app/favicon.svg\",\"@type\":\"ImageObject\"},\"name\":\"cashspins.vercel.app\",\"@type\":\"Organization\"},\"wordCount\":2097,\"description\":\"Our Bitguruz Casino Review for 2026 analyzes the $1,000 welcome bonus, 35x wagering requirements, and high withdrawal limits. See if this crypto-friendly offer is worth it.\",\"dateModified\":\"2026-04-06T11:33:18.261Z\",\"itemReviewed\":{\"url\":\"https://bitguruz.com\",\"name\":\"Bitguruz Casino\",\"@type\":\"Organization\"},\"reviewRating\":{\"@type\":\"Rating\",\"bestRating\":10,\"ratingValue\":8.2,\"worstRating\":0},\"timeRequired\":\"PT11M\",\"datePublished\":\"2026-04-06T11:33:18.261Z\",\"negativeNotes\":{\"@type\":\"ItemList\",\"itemListElement\":[{\"name\":\"Mixed User feedback score based on 8 user reviews\",\"@type\":\"ListItem\",\"position\":1},{\"name\":\"Classified as a small to average-sized online casino\",\"@type\":\"ListItem\",\"position\":2}]},\"positiveNotes\":{\"@type\":\"ItemList\",\"itemListElement\":[{\"name\":\"High Safety Index of 8.2\",\"@type\":\"ListItem\",\"position\":1},{\"name\":\"No unfair or exploitative rules in Terms and Conditions\",\"@type\":\"ListItem\",\"position\":2},{\"name\":\"Very low value of denied payouts in player complaints\",\"@type\":\"ListItem\",\"position\":3},{\"name\":\"Not featured on important casino blacklists\",\"@type\":\"ListItem\",\"position\":4},{\"name\":\"Supports 17 deposit methods, including various cryptocurrencies\",\"@type\":\"ListItem\",\"position\":5},{\"name\":\"High withdrawal limit of EUR 2,000,000 per month\",\"@type\":\"ListItem\",\"position\":6},{\"name\":\"No win limit mentioned\",\"@type\":\"ListItem\",\"position\":7},{\"name\":\"Good customer support with 24/7 live chat in English and Portuguese\",\"@type\":\"ListItem\",\"position\":8},{\"name\":\"Wide variety of casino games available\",\"@type\":\"ListItem\",\"position\":9},{\"name\":\"Games supplied by 20 different providers\",\"@type\":\"ListItem\",\"position\":10}]},\"mainEntityOfPage\":{\"@id\":\"https://cashspins.vercel.app/casino/bitguruz-casino-bonus-review/\",\"@type\":\"WebPage\"}},{\"name\":\"[\\\"Not available\\\",\\\"100% up to $1,000 and 100 extra spins\\\"]\",\"@type\":\"Offer\",\"price\":\"\",\"@context\":\"https://schema.org\",\"category\":\"Casino Bonus\",\"description\":\"Our Bitguruz Casino Review for 2026 analyzes the $1,000 welcome bonus, 35x wagering requirements, and high withdrawal limits. See if this crypto-friendly offer is worth it.\",\"availability\":\"https://schema.org/InStock\",\"priceCurrency\":\"USD\",\"termsOfService\":\"Wagering: 35x on bonus funds\",\"eligibleTransactionVolume\":{\"@type\":\"PriceSpecification\",\"price\":\"30\",\"priceCurrency\":\"USD\"}},{\"@type\":\"FAQPage\",\"@context\":\"https://schema.org\",\"mainEntity\":[{\"name\":\"What is the wagering requirement at Bitguruz Casino?\",\"@type\":\"Question\",\"acceptedAnswer\":{\"text\":\"The welcome bonus carries a 35x wagering requirement on the bonus funds only. You must complete this within 7 days of activation.\",\"@type\":\"Answer\"}},{\"name\":\"Does Bitguruz Casino support cryptocurrency?\",\"@type\":\"Question\",\"acceptedAnswer\":{\"text\":\"Yes, it is a prominent crypto-friendly site. You can use various cryptocurrencies among the 17 available deposit methods.\",\"@type\":\"Answer\"}},{\"name\":\"What is the maximum bet allowed with an active bonus?\",\"@type\":\"Question\",\"acceptedAnswer\":{\"text\":\"The maximum bet is capped at €5 per spin or round while wagering the welcome bonus funds.\",\"@type\":\"Answer\"}},{\"name\":\"How long do I have to use the Bitguruz free spins?\",\"@type\":\"Question\",\"acceptedAnswer\":{\"text\":\"The 100 extra spins expire within 72 hours of being credited to your account.\",\"@type\":\"Answer\"}}]},{\"@type\":\"BreadcrumbList\",\"@context\":\"https://schema.org\",\"itemListElement\":[{\"item\":\"https://cashspins.vercel.app\",\"name\":\"Home\",\"@type\":\"ListItem\",\"position\":1},{\"item\":\"https://cashspins.vercel.app/casino/\",\"name\":\"Casino Reviews\",\"@type\":\"ListItem\",\"position\":2},{\"item\":\"https://cashspins.vercel.app/casino/bitguruz-casino-bonus-review/\",\"name\":\"Bitguruz Casino Bonus Review: All Bonuses Explained\",\"@type\":\"ListItem\",\"position\":3}]},{\"url\":\"https://cashspins.vercel.app\",\"name\":\"cashspins.vercel.app\",\"@type\":\"WebSite\",\"@context\":\"https://schema.org\",\"potentialAction\":{\"@type\":\"SearchAction\",\"target\":{\"@type\":\"EntryPoint\",\"urlTemplate\":\"https://cashspins.vercel.app/search?q={search_term_string}\"},\"query-input\":\"required name=search_term_string\"}}]"
 seo_score: 100
 word_count: 2097
@@ -42,7 +42,6 @@ word_count: 2097
 A comprehensive Bitguruz Casino Review for 2026 reveals a platform that has carved out a specific niche within the competitive iGaming market by balancing high-limit withdrawals with a streamlined promotional structure. Since its establishment in 2025, the site has maintained a safety index of 8.2/10, which is a respectable figure for a mid-sized operator. This analysis focuses specifically on the financial mechanics of the Bitguruz Casino bonus program, assessing whether the headline numbers offer genuine value to the player or if the terms and conditions hide prohibitive hurdles.
 
 The casino operates under an Anjouan Gaming license from the Comoros. While this jurisdiction is often viewed as more accessible for operators than the Malta Gaming Authority, the lack of exploitative clauses in the terms and conditions suggests a commitment to transparency. For players prioritizing financial security, the most striking data point is the monthly withdrawal limit of EUR 2,000,000. This is an outlier in the industry, as most casinos of this size typically cap monthly payouts at much lower figures.
-
 
 
 ## Overview of All Bonuses
@@ -57,7 +56,7 @@ While the lack of a sprawling reload calendar might seem like a drawback, the qu
 
 The flagship offer at Bitguruz Casino is a 100% match up to $1,000. This is a "sticky" bonus in the sense that the funds are for wagering purposes, but the 35x requirement applies only to the bonus amount, not the combined deposit and bonus. This distinction is vital for calculating the actual cost of the promotion. A 35x requirement on the bonus alone is significantly more player-friendly than a 35x requirement on the "D+B" (Deposit + Bonus) total.
 
-To qualify for this offer, a minimum deposit of $30 is required. This is slightly higher than the industry average of $10 or $20, which suggests Bitguruz is positioning itself toward more serious players rather than casual "micro-depositors." For those seeking lower entry points, looking into **[Low Minimum Deposit Casinos](/casinos/)** might be more appropriate. However, for those who can meet the $30 threshold, the 100% match effectively doubles the starting bankroll, providing more runway to explore the 20 different game providers available on the site.
+To qualify for this offer, a minimum deposit of $30 is required. This is slightly higher than the industry average of $10 or $20, which suggests Bitguruz is positioning itself toward more serious players rather than casual "micro-depositors." For those seeking lower entry points, looking into **[our casino reviews](/casinos/)** might be more appropriate. However, for those who can meet the $30 threshold, the 100% match effectively doubles the starting bankroll, providing more runway to explore the 20 different game providers available on the site.
 
 The time limit is the most restrictive element of this package. Players have exactly 7 days to meet the wagering requirements for the bonus funds. If the requirements are not met within this window, the bonus balance and any associated winnings are forfeited. This requires a disciplined approach to play, as the €5 maximum bet limit means you cannot simply place a few large bets to clear the requirement quickly.
 
@@ -76,12 +75,9 @@ If a player deposits $1,000 to claim the full offer, the math becomes more deman
 4. Reality: The player must wager $35,000 in 7 days. With a maximum bet of €5, this requires a minimum of 7,000 spins. This averages out to 1,000 spins per day.
 
 
-For more on this topic, see our **[Bitguruz Casino](/casinos/bitguruz-casino/)** guide.
-
-
 ## Free Spins Analysis
 
-As part of the welcome incentive, Bitguruz Casino provides 100 extra spins. These spins are a significant secondary value add, but they come with a much tighter expiration window than the bonus funds. Players must use these spins within 72 hours of them being credited. In the context of 2026's **[Free Spins Casinos](/bonus/)**, 100 spins is a standard offering, but the value is often determined by the specific slot games they are tied to.
+As part of the welcome incentive, Bitguruz Casino provides 100 extra spins. These spins are a significant secondary value add, but they come with a much tighter expiration window than the bonus funds. Players must use these spins within 72 hours of them being credited. In the context of 2026's **[our bonus reviews](/bonus/)**, 100 spins is a standard offering, but the value is often determined by the specific slot games they are tied to.
 
 The winnings from these spins are typically converted into bonus money, which is then subject to the same 35x wagering requirement as the deposit match. It is important to note that Bitguruz does not list a specific win limit for these spins in their primary terms, which is a major positive. Many casinos cap free spin winnings at $50 or $100, effectively neutering the potential for a big hit.
 
@@ -93,7 +89,7 @@ As of April 2026, Bitguruz Casino focuses its promotional energy on the initial 
 
 The absence of a complex reload system often indicates a "cleaner" gaming experience. Many casinos that offer daily reloads also implement "max cashout" rules on those bonuses, which can frustrate players who hit a large jackpot. By sticking to a high-value welcome offer and maintaining a high safety index, Bitguruz prioritizes the integrity of the payout process over promotional fluff.
 
-Players should keep an eye on their email notifications, as many casinos of this size distribute "private" reload offers to active accounts rather than listing them publicly. Given the 17 different **[Bitguruz Casino payment methods](/guides/)**, including various cryptocurrencies, any future reload offers are likely to be highly accessible to the existing player base.
+Players should keep an eye on their email notifications, as many casinos of this size distribute "private" reload offers to active accounts rather than listing them publicly. Given the 17 different **[payment methods](/guides/)**, including various cryptocurrencies, any future reload offers are likely to be highly accessible to the existing player base.
 
 ## Bonus Codes and How to Claim
 
@@ -106,7 +102,7 @@ Claiming the bonus at Bitguruz Casino does not currently require a specific prom
 4. Ensure the deposit is at least $30 to trigger the welcome match.
 5. The 100% match and the first batch of 100 spins should appear in the "Bonus Balance" almost instantly.
 
-If the bonus does not appear, players should contact **[Bitguruz Casino customer support](/casinos/)** via the 24/7 live chat before placing any bets. Most casinos cannot retroactively apply a bonus if the original deposit has already been wagered. The support team is available in English and Portuguese, reflecting the casino's primary target markets.
+If the bonus does not appear, players should contact **[Bitguruz Casino](/casinos/bitguruz-casino/)** via the 24/7 live chat before placing any bets. Most casinos cannot retroactively apply a bonus if the original deposit has already been wagered. The support team is available in English and Portuguese, reflecting the casino's primary target markets.
 
 ## Wagering Requirements Breakdown
 
