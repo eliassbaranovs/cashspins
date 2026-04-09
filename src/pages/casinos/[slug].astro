@@ -24,11 +24,10 @@ const { casino } = Astro.props;
 const d = casino.data;
 const { Content } = await render(casino);
 
-// Parse pipe-delimited fields
-const depositArr = d.depositMethods?.split("|").map((s: string) => s.trim()).filter(Boolean) ?? [];
-const withdrawalArr = d.withdrawalMethods?.split("|").map((s: string) => s.trim()).filter(Boolean) ?? [];
-const providersArr = d.gameProviders?.split("|").map((s: string) => s.trim()).filter(Boolean) ?? [];
-const currenciesArr = d.currencies?.split("|").map((s: string) => s.trim()).filter(Boolean) ?? [];
+const depositArr = d.deposit_methods ?? [];
+const withdrawalArr = d.withdrawal_methods ?? [];
+const providersArr = d.game_providers ?? [];
+const currenciesArr = d.currencies ?? [];
 
 // Related casinos
 const allCasinos = await getCollection("casinos");
