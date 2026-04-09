@@ -14,7 +14,6 @@ export async function getStaticPaths() {
     return [];
   }
   return items
-    .filter((i: any) => !i.data.draft)
     .map((item: any) => ({ params: { slug: item.data.slug }, props: { item } }));
 }
 
@@ -31,14 +30,23 @@ try {
 }
 const related = getRelatedByTags(d.tags ?? [], allNews, d.slug, 3);
 
+// Resolve author
+let authorEntry: any = undefined;
+try {
+  if (d.author_slug) {
+    const authors = await getCollection("authors");
+    authorEntry = authors.find((a: any) => a.data.slug === d.author_slug);
+  }
+} catch {}
+const authorName = authorEntry?.data?.name ?? d.author_slug;
+
 // Schema
 const articleSchema = generateArticleSchema({
   title: d.title,
   description: d.description,
   image: d.image,
-  author: d.author,
-  publishedAt: d.publishedAt,
-  updatedAt: d.updatedAt,
+  author_name: authorName,
+  published_at: d.published_at,
 });
 
 const breadcrumbs = [
@@ -47,8 +55,8 @@ const breadcrumbs = [
   { label: d.title },
 ];
 
-const formattedDate = d.publishedAt
-  ? new Date(d.publishedAt).toLocaleDateString("en-US", {
+const formattedDate = d.published_at
+  ? new Date(d.published_at).toLocaleDateString("en-US", {
       year: "numeric",
       month: "long",
       day: "numeric",
@@ -58,14 +66,12 @@ const formattedDate = d.publishedAt
 
 <BaseLayout
   title={d.title}
-  seoTitle={d.seoTitle}
+  seoTitle={d.seo_title}
   description={d.description}
   image={d.image}
-  imageAlt={d.imageAlt}
-  canonical={d.canonical || buildCanonical(`news/${d.slug}`)}
-  robots={d.robots}
+  imageAlt={d.image_alt}
+  canonical={buildCanonical(`news/${d.slug}`)}
   schemaJsonLd={articleSchema}
-  noIndex={d.noIndex}
   ogType="article"
 >
   <div class="max-w-screen-2xl mx-auto px-8 pt-8 pb-20">
@@ -87,17 +93,17 @@ const formattedDate = d.publishedAt
         {/* Meta line */}
         <div class="flex items-center flex-wrap gap-3 text-sm font-label text-on-surface-variant mb-4">
           {formattedDate && (
-            <time datetime={d.publishedAt} class="flex items-center gap-1.5">
+            <time datetime={d.published_at} class="flex items-center gap-1.5">
               <span class="material-symbols-outlined text-sm">calendar_today</span>
               {formattedDate}
             </time>
           )}
-          {d.author && (
+          {authorName && (
             <>
               <span class="w-1 h-1 rounded-full bg-outline-variant"></span>
               <span class="flex items-center gap-1.5">
                 <span class="material-symbols-outlined text-sm">person</span>
-                {d.author}
+                {authorName}
               </span>
             </>
           )}
@@ -117,9 +123,9 @@ const formattedDate = d.publishedAt
         <div class="rounded-xl overflow-hidden mb-10">
           <img
             src={d.image}
-            alt={d.imageAlt || d.title}
-            width={d.imageWidth ?? 1792}
-            height={d.imageHeight ?? 1024}
+            alt={d.image_alt || d.title}
+            width={1792}
+            height={1024}
             class="w-full h-auto object-cover"
             loading="eager"
           />
@@ -151,17 +157,13 @@ const formattedDate = d.publishedAt
       )}
 
       {/* Source attribution */}
-      {(d.source_name || d.source_url) && (
+      {d.source_url && (
         <div class="bg-surface-container-low rounded-xl p-6 mb-12 flex items-center gap-3">
           <span class="material-symbols-outlined text-on-surface-variant">link</span>
           <p class="text-on-surface-variant text-sm">
-            Source: {d.source_url ? (
-              <a href={d.source_url} rel="noopener noreferrer nofollow" target="_blank" class="text-primary hover:underline">
-                {d.source_name || d.source_url}
-              </a>
-            ) : (
-              <span>{d.source_name}</span>
-            )}
+            Source: <a href={d.source_url} rel="noopener noreferrer nofollow" target="_blank" class="text-primary hover:underline">
+              {d.source_url}
+            </a>
           </p>
         </div>
       )}

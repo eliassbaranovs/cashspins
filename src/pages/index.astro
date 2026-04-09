@@ -8,27 +8,25 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 // ── Fetch collections ────────────────────────────────────────────────────────
 
 const allCasinos = (await getCollection("casinos"))
-  .filter((c) => !c.data.draft)
-  .sort((a, b) => (b.data.ourRating ?? 0) - (a.data.ourRating ?? 0));
+  .sort((a, b) => (b.data.rating ?? 0) - (a.data.rating ?? 0));
 
 const allBonuses = (await getCollection("bonuses"))
-  .filter((b) => !b.data.draft)
   .sort(
     (a, b) =>
-      new Date(b.data.publishedAt).getTime() -
-      new Date(a.data.publishedAt).getTime(),
+      new Date(b.data.published_at).getTime() -
+      new Date(a.data.published_at).getTime(),
   );
 
 let allNews: Awaited<ReturnType<typeof getCollection>>[] = [];
 try {
-  allNews = (await getCollection("news")).filter((n) => !n.data.draft);
+  allNews = await getCollection("news");
 } catch {
   /* collection may be empty or missing */
 }
 
 let allGuides: Awaited<ReturnType<typeof getCollection>>[] = [];
 try {
-  allGuides = (await getCollection("guides")).filter((g) => !g.data.draft);
+  allGuides = await getCollection("guides");
 } catch {
   /* collection may be empty or missing */
 }
@@ -42,8 +40,8 @@ const latestBonuses = allBonuses.slice(0, 3);
 const articles = [...allNews, ...allGuides]
   .sort(
     (a, b) =>
-      new Date(b.data.publishedAt).getTime() -
-      new Date(a.data.publishedAt).getTime(),
+      new Date(b.data.published_at).getTime() -
+      new Date(a.data.published_at).getTime(),
   )
   .slice(0, 4);
 
@@ -186,11 +184,11 @@ const seoLinks = [
               sponsored={true}
             />
             <div class="flex flex-col gap-1 ml-2">
-              {featured.data.bonus_title && (
-                <span class="text-secondary font-headline font-bold text-xl">{featured.data.bonus_title}</span>
+              {featured.data.bonus_value && (
+                <span class="text-secondary font-headline font-bold text-xl">{featured.data.bonus_value}</span>
               )}
               <span class="text-on-surface-variant text-xs font-label">
-                at {featured.data.casinoName || featured.data.slug}
+                at {featured.data.name || featured.data.slug}
               </span>
             </div>
           </div>
@@ -263,13 +261,13 @@ const seoLinks = [
               {latestBonuses.map((bonus) => (
                 <div class="p-4 bg-surface rounded-xl border border-outline-variant/10 hover:border-primary/20 transition-all group">
                   <p class="text-xs font-bold text-on-surface-variant font-label uppercase tracking-wider mb-2">
-                    {bonus.data.casinoName || bonus.data.casino || bonus.data.slug}
+                    {bonus.data.casino_name || bonus.data.casino_slug || bonus.data.slug}
                   </p>
-                  {bonus.data.bonus_title && (
-                    <p class="text-sm font-semibold text-on-surface mb-3">{bonus.data.bonus_title}</p>
+                  {bonus.data.bonus_value && (
+                    <p class="text-sm font-semibold text-on-surface mb-3">{bonus.data.bonus_value}</p>
                   )}
                   <a
-                    href={`/go/${bonus.data.casino || bonus.data.slug}/`}
+                    href={`/go/${bonus.data.casino_slug || bonus.data.slug}/`}
                     rel="nofollow sponsored"
                     target="_blank"
                     class="text-xs text-primary font-bold flex items-center gap-1 group-hover:gap-2 transition-all"

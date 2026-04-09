@@ -6,10 +6,11 @@ interface Props {
       slug: string;
       excerpt?: string;
       image?: string;
-      imageAlt?: string;
-      publishedAt?: string;
-      author?: string;
-      contentType?: string;
+      image_alt?: string;
+      published_at?: string;
+      author_slug?: string;
+      authorName?: string;
+      content_type?: string;
       category?: string;
       tags?: string[];
     };
@@ -21,8 +22,8 @@ const { article } = Astro.props;
 const d = article.data;
 const linkHref = `/${article.collection}/${d.slug}/`;
 
-const formattedDate = d.publishedAt
-  ? new Date(d.publishedAt).toLocaleDateString("en-US", {
+const formattedDate = d.published_at
+  ? new Date(d.published_at).toLocaleDateString("en-US", {
       year: "numeric",
       month: "short",
       day: "numeric",
@@ -36,7 +37,7 @@ const formattedDate = d.publishedAt
     <div class="aspect-video overflow-hidden relative">
       <img
         src={d.image}
-        alt={d.imageAlt || d.title}
+        alt={d.image_alt || d.title}
         class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
         loading="lazy"
       />
@@ -51,11 +52,11 @@ const formattedDate = d.publishedAt
   {/* Content */}
   <div class="p-5">
     {/* Meta line */}
-    {(formattedDate || d.author) && (
+    {(formattedDate || d.authorName) && (
       <div class="flex items-center gap-2 text-xs font-label text-on-surface-variant mb-2">
         {formattedDate && <time>{formattedDate}</time>}
-        {formattedDate && d.author && <span class="text-outline">·</span>}
-        {d.author && <span>{d.author}</span>}
+        {formattedDate && d.authorName && <span class="text-outline">·</span>}
+        {d.authorName && <span>{d.authorName}</span>}
       </div>
     )}
 

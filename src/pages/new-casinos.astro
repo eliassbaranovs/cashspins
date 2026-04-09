@@ -8,16 +8,14 @@ import FAQSection from "../components/FAQSection.astro";
 const allCasinos = await getCollection("casinos");
 const filtered = allCasinos
   .filter(
-    (c) =>
-      !c.data.draft &&
-      (c.data.categories?.includes("new-casino") || c.data.isNewCasino === true)
+    (c) => c.data.categories?.includes("new-casino")
   )
-  .sort((a, b) => (b.data.ourRating ?? 0) - (a.data.ourRating ?? 0));
+  .sort((a, b) => (b.data.rating ?? 0) - (a.data.rating ?? 0));
 
 const hasFiltered = filtered.length > 0;
 const casinos = hasFiltered
   ? filtered
-  : allCasinos.filter((c) => !c.data.draft).sort((a, b) => (b.data.ourRating ?? 0) - (a.data.ourRating ?? 0));
+  : allCasinos.sort((a, b) => (b.data.rating ?? 0) - (a.data.rating ?? 0));
 
 const itemListSchema = JSON.stringify({
   "@context": "https://schema.org",
@@ -27,7 +25,7 @@ const itemListSchema = JSON.stringify({
   "itemListElement": casinos.slice(0, 10).map((c: any, i: number) => ({
     "@type": "ListItem",
     "position": i + 1,
-    "name": c.data.casinoName ?? c.data.title,
+    "name": c.data.name ?? c.data.title,
     "url": `https://cashspins.online/casinos/${c.data.slug}/`,
   })),
 });

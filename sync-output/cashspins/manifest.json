@@ -2,16 +2,248 @@
   "siteId": "fe9df4e8-679f-4a00-a3a6-805ca9f02d1a",
   "siteName": "CashSpins",
   "domain": "cashspins.vercel.app",
-  "syncedAt": "2026-04-04T23:09:29.732Z",
+  "syncedAt": "2026-04-08T20:04:12.039Z",
   "counts": {
-    "casinoReviews": 1,
-    "bonusArticles": 0,
-    "news": 1,
-    "guides": 0,
-    "comparisons": 0,
+    "casinoReviews": 10,
+    "bonusArticles": 10,
+    "news": 6,
+    "guides": 15,
+    "comparisons": 5,
     "authors": 4,
     "taxonomy": 0,
     "icons": 0
   },
-  "totalPages": 2
+  "totalPages": 46,
+  "syncedItems": [
+    {
+      "id": "b1981830-d74d-4f4e-8b8a-6bfb51942aac",
+      "slug": "playbetio-casino",
+      "type": "casino"
+    },
+    {
+      "id": "89b5c326-fcff-4dc2-9cea-b9298f005706",
+      "slug": "riobet-casino",
+      "type": "casino"
+    },
+    {
+      "id": "fb97fb6b-320d-43ab-ac02-c634127181f2",
+      "slug": "betandyou-casino",
+      "type": "casino"
+    },
+    {
+      "id": "50490c46-8a13-493d-8034-74316a9e7af0",
+      "slug": "bitguruz-casino",
+      "type": "casino"
+    },
+    {
+      "id": "518a6bb6-2c91-4beb-bc19-fcbca342c052",
+      "slug": "gamdom-casino",
+      "type": "casino"
+    },
+    {
+      "id": "154a501f-fb56-4735-bdea-c1ab801fb2e5",
+      "slug": "snatch-casino",
+      "type": "casino"
+    },
+    {
+      "id": "69243c7d-bc24-4950-bc71-694d01a231a5",
+      "slug": "crypto-games-casino",
+      "type": "casino"
+    },
+    {
+      "id": "3570cd5e-cde6-42de-abdf-eb68259c3aaa",
+      "slug": "lamabet-casino",
+      "type": "casino"
+    },
+    {
+      "id": "29c582c3-4283-4d0a-b1c6-0adb082572ba",
+      "slug": "betcoinag-casino",
+      "type": "casino"
+    },
+    {
+      "id": "ea2b1557-dd83-4216-8498-2aa0ae38cc32",
+      "slug": "spinbetter-casino",
+      "type": "casino"
+    },
+    {
+      "id": "b1981830-d74d-4f4e-8b8a-6bfb51942aac",
+      "slug": "playbetio-casino-bonus",
+      "type": "bonus"
+    },
+    {
+      "id": "89b5c326-fcff-4dc2-9cea-b9298f005706",
+      "slug": "riobet-casino-bonus",
+      "type": "bonus"
+    },
+    {
+      "id": "fb97fb6b-320d-43ab-ac02-c634127181f2",
+      "slug": "betandyou-casino-bonus",
+      "type": "bonus"
+    },
+    {
+      "id": "50490c46-8a13-493d-8034-74316a9e7af0",
+      "slug": "bitguruz-casino-bonus",
+      "type": "bonus"
+    },
+    {
+      "id": "518a6bb6-2c91-4beb-bc19-fcbca342c052",
+      "slug": "gamdom-casino-bonus",
+      "type": "bonus"
+    },
+    {
+      "id": "154a501f-fb56-4735-bdea-c1ab801fb2e5",
+      "slug": "snatch-casino-bonus",
+      "type": "bonus"
+    },
+    {
+      "id": "69243c7d-bc24-4950-bc71-694d01a231a5",
+      "slug": "crypto-games-casino-bonus",
+      "type": "bonus"
+    },
+    {
+      "id": "3570cd5e-cde6-42de-abdf-eb68259c3aaa",
+      "slug": "lamabet-casino-bonus",
+      "type": "bonus"
+    },
+    {
+      "id": "29c582c3-4283-4d0a-b1c6-0adb082572ba",
+      "slug": "betcoinag-casino-bonus",
+      "type": "bonus"
+    },
+    {
+      "id": "ea2b1557-dd83-4216-8498-2aa0ae38cc32",
+      "slug": "spinbetter-casino-bonus",
+      "type": "bonus"
+    },
+    {
+      "id": "7f5a58ca-7837-4322-971c-c1e975c95de5",
+      "slug": "cancellation-of-authorisation-of-winzon-group-limited-c-89900",
+      "type": "news"
+    },
+    {
+      "id": "46dc853e-2141-470d-8aba-2a539afd8460",
+      "slug": "florida-attorney-general-intends-to-ramp-up-enforcement-against-illegal-gambling",
+      "type": "news"
+    },
+    {
+      "id": "54d9d892-2735-4f45-85ae-91a3c068510f",
+      "slug": "enhancements-to-maltas-vat-and-gaming-tax-frameworks-for-the-gaming-sector",
+      "type": "news"
+    },
+    {
+      "id": "4b032cb5-0bac-4012-9c41-f3ca68d61695",
+      "slug": "kansspelautoriteit-publishes-guide-on-operators-duty-of-care",
+      "type": "news"
+    },
+    {
+      "id": "5dac8805-a1c6-4d9d-8181-8c4bf93bbea8",
+      "slug": "massachusetts-lawmakers-seek-to-regulate-legal-igaming",
+      "type": "news"
+    },
+    {
+      "id": "623a9dc9-20ea-47ff-a9bc-5eb0768d7056",
+      "slug": "paysafe-rolls-out-crypto-payment-solution-for-us-igaming-operators-via-moonpay",
+      "type": "news"
+    },
+    {
+      "id": "0319bd4a-771e-4a66-a940-060d0ef08b88",
+      "slug": "how-casino-kyc-verification-works",
+      "type": "guide"
+    },
+    {
+      "id": "9b7b3c8a-d515-4ee9-883c-63570d42ad9c",
+      "slug": "games-of-chance-explained-rtp-house-edge-variance",
+      "type": "guide"
+    },
+    {
+      "id": "bfc4cb02-3ce4-4aee-a34b-fa05baeccd6c",
+      "slug": "casino-payment-methods-compared-crypto-vs-cards-vs-e-wallets",
+      "type": "guide"
+    },
+    {
+      "id": "a66ffe36-aa6b-4880-ab94-632322f2055a",
+      "slug": "how-online-slots-work-rtp-volatility-picking-the-right-slot",
+      "type": "guide"
+    },
+    {
+      "id": "ff48f5a6-ec89-49ba-ba4a-8a64f336e0aa",
+      "slug": "casino-loyalty-programs-vip-tiers-tournaments",
+      "type": "guide"
+    },
+    {
+      "id": "12f008c1-c8bd-4d0d-8d30-d9d097273b1e",
+      "slug": "casino-bonus-mathematics-understanding-clearing-bonuses",
+      "type": "guide"
+    },
+    {
+      "id": "de16d699-2d4e-468d-9b97-a5fed7fae63c",
+      "slug": "types-of-casino-bonuses-full-rundown-and-overview",
+      "type": "guide"
+    },
+    {
+      "id": "40c3e175-5473-4349-8a06-6105be38c287",
+      "slug": "fastest-casino-withdrawals-how-payout-speeds-work",
+      "type": "guide"
+    },
+    {
+      "id": "1de133b2-311b-41bb-8080-c249e57a129e",
+      "slug": "casino-wagering-requirements-the-complete-guide",
+      "type": "guide"
+    },
+    {
+      "id": "46e1713a-d8a6-433f-999d-6717595b41e1",
+      "slug": "no-deposit-casino-bonuses-explained",
+      "type": "guide"
+    },
+    {
+      "id": "77367fa1-f335-4d2c-93d1-82589d5aed66",
+      "slug": "how-to-choose-an-online-casino-in-2026",
+      "type": "guide"
+    },
+    {
+      "id": "57760742-a897-4412-8bb9-75b5077c0487",
+      "slug": "online-blackjack-guide-rules-basic-strategy-where-to-play",
+      "type": "guide"
+    },
+    {
+      "id": "37120e2d-8d5b-41ba-a225-ea048ce0f94e",
+      "slug": "how-to-play-in-crypto-casinos",
+      "type": "guide"
+    },
+    {
+      "id": "0930de03-8e68-426a-8d94-efaef68708af",
+      "slug": "claiming-casino-bonuses-all-ways-and-steps-explained",
+      "type": "guide"
+    },
+    {
+      "id": "29f32b6f-5c41-4f2f-b28e-1b0fd1fe3d1d",
+      "slug": "how-to-spot-a-rogue-casino-red-flags-and-blacklists",
+      "type": "guide"
+    },
+    {
+      "id": "5ffac4d3-c84a-4882-b65f-7ab8cab9bd24",
+      "slug": "playbetio-casino-vs-betandyou-casino",
+      "type": "comparison"
+    },
+    {
+      "id": "7fe4a03b-c609-4a73-ab52-f3fb44f9180f",
+      "slug": "spinbetter-casino-vs-bitguruz-casino",
+      "type": "comparison"
+    },
+    {
+      "id": "36448ecb-0c45-497d-8bd2-55ea00861d39",
+      "slug": "betcoinag-casino-vs-crypto-games-casino",
+      "type": "comparison"
+    },
+    {
+      "id": "9bfc8e73-1bfd-420c-9730-81b63f543634",
+      "slug": "gamdom-casino-vs-lamabet-casino",
+      "type": "comparison"
+    },
+    {
+      "id": "48db63d5-4251-4716-8d6c-921412a57a64",
+      "slug": "riobet-casino-vs-snatch-casino",
+      "type": "comparison"
+    }
+  ]
 }

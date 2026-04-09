@@ -6,8 +6,39 @@ import Breadcrumbs from "../../components/Breadcrumbs.astro";
 
 const allCasinos = await getCollection("casinos");
 const casinos = allCasinos
-  .filter((c) => !c.data.draft)
-  .sort((a, b) => (b.data.ourRating ?? 0) - (a.data.ourRating ?? 0));
+  .sort((a, b) => (b.data.rating ?? 0) - (a.data.rating ?? 0));
+
+// Collect unique categories from data, skip ones every casino has (redundant filters)
+const catCounts = new Map<string, number>();
+casinos.forEach((c) => {
+  (c.data.categories ?? []).forEach((cat: string) => {
+    catCounts.set(cat, (catCounts.get(cat) ?? 0) + 1);
+  });
+});
+// Remove categories shared by ALL casinos (useless as a filter)
+const uniqueCategories = [...catCounts.entries()]
+  .filter(([_, count]) => count < casinos.length)
+  .sort((a, b) => b[1] - a[1])
+  .map(([cat]) => cat);
+
+// Icon map for known categories
+const catIcons: Record<string, string> = {
+  "crypto-casino": "currency_bitcoin",
+  "bitcoin-casino": "currency_bitcoin",
+  "fast-withdrawal-casino": "bolt",
+  "no-deposit-bonus": "redeem",
+  "live-casino": "videocam",
+  "vip-program-casino": "workspace_premium",
+  "new-casino": "new_releases",
+  "licensed-casino": "verified",
+  "online-casino": "casino",
+  "mobile-casino": "smartphone",
+  "instant-withdrawal-casino": "bolt",
+};
+
+function catLabel(cat: string) {
+  return cat.replace(/-/g, " ").replace(/\b\w/g, (l) => l.toUpperCase());
+}
 ---
 
 <BaseLayout
@@ -51,44 +82,18 @@ const casinos = allCasinos
         />
       </div>
 
-      {/* Category filter chips — human-readable */}
+      {/* Category filter chips — auto-generated from data */}
       <div class="flex flex-wrap gap-2" id="filter-chips">
         <button type="button" data-category="all" class="filter-chip rounded-full px-5 py-2 text-sm font-label font-bold transition-all bg-primary text-on-primary">
           <span class="material-symbols-outlined text-sm mr-1 align-middle">apps</span>
           All Casinos
         </button>
-        <button type="button" data-category="crypto-casino" class="filter-chip rounded-full px-5 py-2 text-sm font-label font-bold transition-all bg-surface-container-high text-on-surface-variant hover:bg-surface-container-highest">
-          <span class="material-symbols-outlined text-sm mr-1 align-middle">currency_bitcoin</span>
-          Crypto
-        </button>
-        <button type="button" data-category="bitcoin-casino" class="filter-chip rounded-full px-5 py-2 text-sm font-label font-bold transition-all bg-surface-container-high text-on-surface-variant hover:bg-surface-container-highest">
-          <span class="material-symbols-outlined text-sm mr-1 align-middle">currency_bitcoin</span>
-          Bitcoin
-        </button>
-        <button type="button" data-category="fast-withdrawal-casino" class="filter-chip rounded-full px-5 py-2 text-sm font-label font-bold transition-all bg-surface-container-high text-on-surface-variant hover:bg-surface-container-highest">
-          <span class="material-symbols-outlined text-sm mr-1 align-middle">bolt</span>
-          Fast Withdrawal
-        </button>
-        <button type="button" data-category="no-deposit-bonus" class="filter-chip rounded-full px-5 py-2 text-sm font-label font-bold transition-all bg-surface-container-high text-on-surface-variant hover:bg-surface-container-highest">
-          <span class="material-symbols-outlined text-sm mr-1 align-middle">redeem</span>
-          No Deposit
-        </button>
-        <button type="button" data-category="live-casino" class="filter-chip rounded-full px-5 py-2 text-sm font-label font-bold transition-all bg-surface-container-high text-on-surface-variant hover:bg-surface-container-highest">
-          <span class="material-symbols-outlined text-sm mr-1 align-middle">videocam</span>
-          Live Casino
-        </button>
-        <button type="button" data-category="vip-program-casino" class="filter-chip rounded-full px-5 py-2 text-sm font-label font-bold transition-all bg-surface-container-high text-on-surface-variant hover:bg-surface-container-highest">
-          <span class="material-symbols-outlined text-sm mr-1 align-middle">workspace_premium</span>
-          VIP Program
-        </button>
-        <button type="button" data-category="new-casino" class="filter-chip rounded-full px-5 py-2 text-sm font-label font-bold transition-all bg-surface-container-high text-on-surface-variant hover:bg-surface-container-highest">
-          <span class="material-symbols-outlined text-sm mr-1 align-middle">new_releases</span>
-          New Casinos
-        </button>
-        <button type="button" data-category="licensed-casino" class="filter-chip rounded-full px-5 py-2 text-sm font-label font-bold transition-all bg-surface-container-high text-on-surface-variant hover:bg-surface-container-highest">
-          <span class="material-symbols-outlined text-sm mr-1 align-middle">verified</span>
-          Licensed
-        </button>
+        {uniqueCategories.map((cat) => (
+          <button type="button" data-category={cat} class="filter-chip rounded-full px-5 py-2 text-sm font-label font-bold transition-all bg-surface-container-high text-on-surface-variant hover:bg-surface-container-highest">
+            <span class="material-symbols-outlined text-sm mr-1 align-middle">{catIcons[cat] ?? "label"}</span>
+            {catLabel(cat)}
+          </button>
+        ))}
       </div>
     </div>
 
@@ -111,7 +116,7 @@ const casinos = allCasinos
             "casino-list-item rounded-xl",
             i % 2 === 0 ? "bg-surface" : "bg-surface-container-low",
           ]}
-          data-casino-name={casino.data.casinoName?.toLowerCase() ?? ""}
+          data-casino-name={casino.data.name?.toLowerCase() ?? ""}
           data-categories={JSON.stringify(casino.data.categories ?? [])}
         >
           <CasinoCard casino={casino} />

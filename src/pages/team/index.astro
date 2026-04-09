@@ -9,7 +9,7 @@ const allBonuses = await getCollection("bonuses");
 
 const articleCount = new Map<string, number>();
 for (const entry of [...allCasinos, ...allBonuses]) {
-  const slug = entry.data.authorSlug;
+  const slug = entry.data.author_slug;
   if (slug) articleCount.set(slug, (articleCount.get(slug) ?? 0) + 1);
 }
 ---

@@ -22,10 +22,10 @@ const [casinos, bonuses, guides, news, comparisons] = await Promise.all([
   getCollection("comparisons"),
 ]);
 
-const byAuthor = (p: any) => p.data.authorSlug === d.slug && !p.data.draft;
+const byAuthor = (p: any) => p.data.author_slug === d.slug;
 
 const authorCasinos = casinos.filter(byAuthor)
-  .sort((a, b) => (b.data.ourRating ?? 0) - (a.data.ourRating ?? 0));
+  .sort((a, b) => (b.data.rating ?? 0) - (a.data.rating ?? 0));
 const authorBonuses = bonuses.filter(byAuthor);
 const authorGuides = guides.filter(byAuthor);
 const authorNews = news.filter(byAuthor);
@@ -139,16 +139,11 @@ const personSchema = JSON.stringify({
               class="flex items-baseline gap-4 flex-wrap bg-surface-container-low rounded-lg px-5 py-4 ghost-border hover:border-primary/30 transition-all"
             >
               <span class="text-on-surface font-medium flex-1 min-w-[180px]">
-                {entry.data.casinoName ?? entry.data.title}
+                {entry.data.name ?? entry.data.title}
               </span>
-              {entry.data.ourRating && (
+              {entry.data.rating && (
                 <span class="text-xs text-primary font-semibold">
-                  Rating: {entry.data.ourRating}/10
-                </span>
-              )}
-              {entry.data.lastVerified && (
-                <span class="text-xs text-on-surface-variant ml-auto">
-                  Verified: {entry.data.lastVerified}
+                  Rating: {entry.data.rating}/10
                 </span>
               )}
             </a>
@@ -170,13 +165,8 @@ const personSchema = JSON.stringify({
               class="flex items-baseline gap-4 flex-wrap bg-surface-container-low rounded-lg px-5 py-4 ghost-border hover:border-primary/30 transition-all"
             >
               <span class="text-on-surface font-medium flex-1 min-w-[180px]">
-                {entry.data.bonus_title ?? entry.data.title}
+                {entry.data.bonus_value ?? entry.data.title}
               </span>
-              {entry.data.lastVerified && (
-                <span class="text-xs text-on-surface-variant ml-auto">
-                  Verified: {entry.data.lastVerified}
-                </span>
-              )}
             </a>
           ))}
         </div>

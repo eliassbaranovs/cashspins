@@ -96,18 +96,18 @@ const combinedSchema = `[${schemas.join(",")}]`;
         {/* Logo + heading group */}
         <div class="flex items-center gap-6 mb-6">
           {d.logo ? (
-            <div class="w-24 h-24 bg-surface-container-high rounded-xl flex items-center justify-center p-4 shadow-xl border border-outline-variant/20 overflow-hidden shrink-0">
+            <div class="w-40 h-40 bg-surface-container-high rounded-xl flex items-center justify-center p-4 shadow-xl border border-outline-variant/20 overflow-hidden shrink-0">
               <img
                 src={d.logo}
                 alt={`${d.casinoName} logo`}
                 class="w-full h-full object-contain"
                 loading="eager"
-                width="64"
-                height="64"
+                width="128"
+                height="128"
               />
             </div>
           ) : (
-            <div class="w-24 h-24 bg-surface-container-high rounded-xl flex items-center justify-center shrink-0">
+            <div class="w-40 h-40 bg-surface-container-high rounded-xl flex items-center justify-center shrink-0">
               <span class="material-symbols-outlined text-outline text-4xl">casino</span>
             </div>
           )}

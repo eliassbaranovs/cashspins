@@ -6,11 +6,10 @@ import Breadcrumbs from "../../components/Breadcrumbs.astro";
 
 const allBonuses = await getCollection("bonuses");
 const bonuses = allBonuses
-  .filter((b) => !b.data.draft)
   .sort(
     (a, b) =>
-      new Date(b.data.publishedAt).getTime() -
-      new Date(a.data.publishedAt).getTime()
+      new Date(b.data.published_at).getTime() -
+      new Date(a.data.published_at).getTime()
   );
 
 const breadcrumbs = [
@@ -49,7 +48,7 @@ const breadcrumbs = [
       </div>
       <div class="bg-surface-container-low rounded-xl p-5 text-center">
         <span class="material-symbols-outlined text-secondary text-2xl mb-2 block">casino</span>
-        <span class="text-2xl font-headline font-bold text-on-surface block">{new Set(bonuses.map(b => b.data.casino || b.data.slug)).size}</span>
+        <span class="text-2xl font-headline font-bold text-on-surface block">{new Set(bonuses.map(b => b.data.casino_slug || b.data.slug)).size}</span>
         <span class="text-xs text-on-surface-variant">Casinos</span>
       </div>
       <div class="bg-surface-container-low rounded-xl p-5 text-center">

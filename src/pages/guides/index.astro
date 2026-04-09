@@ -12,16 +12,23 @@ try {
 }
 
 const guides = allGuides
-  .filter((g: any) => !g.data.draft)
   .sort(
     (a: any, b: any) =>
-      new Date(b.data.publishedAt).getTime() -
-      new Date(a.data.publishedAt).getTime()
+      new Date(b.data.published_at).getTime() -
+      new Date(a.data.published_at).getTime()
   );
 
 // Derive category tags — normalize to lowercase to deduplicate across mixed-case tags
 const allTags = [...new Set(guides.flatMap((g: any) => (g.data.tags ?? []).map((t: string) => t.toLowerCase())))];
 const toTitleCase = (s: string) => s.replace(/\b\w/g, (c: string) => c.toUpperCase());
+
+// Build author lookup map
+let authorMap = new Map<string, string>();
+try {
+  const authors = await getCollection("authors");
+  authors.forEach((a: any) => authorMap.set(a.data.slug, a.data.name));
+} catch {}
+const resolveAuthor = (slug?: string) => slug ? (authorMap.get(slug) ?? slug) : undefined;
 
 const featured = guides[0];
 const rest = guides.slice(1);
@@ -86,7 +93,7 @@ const breadcrumbs = [
                   <div class="aspect-video md:aspect-auto md:min-h-[360px] overflow-hidden relative">
                     <img
                       src={featured.data.image}
-                      alt={featured.data.imageAlt || featured.data.title}
+                      alt={featured.data.image_alt || featured.data.title}
                       class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                       loading="eager"
                     />
@@ -100,13 +107,13 @@ const breadcrumbs = [
                 )}
                 <div class="p-8 md:p-10 flex flex-col justify-center">
                   <div class="flex items-center gap-3 text-xs font-label text-on-surface-variant mb-4">
-                    {featured.data.publishedAt && (
-                      <time>{new Date(featured.data.publishedAt).toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" })}</time>
+                    {featured.data.published_at && (
+                      <time>{new Date(featured.data.published_at).toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" })}</time>
                     )}
-                    {featured.data.author && (
+                    {featured.data.author_slug && (
                       <>
                         <span class="w-1 h-1 rounded-full bg-outline-variant"></span>
-                        <span>By {featured.data.author}</span>
+                        <span>By {resolveAuthor(featured.data.author_slug)}</span>
                       </>
                     )}
                   </div>
@@ -131,7 +138,7 @@ const breadcrumbs = [
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="guide-grid">
             {rest.map((guide: any) => (
               <div data-guide-tags={JSON.stringify((guide.data.tags ?? []).map((t: string) => t.toLowerCase()))} class="guide-card">
-                <ArticleCard article={{ ...guide, collection: "guides" }} />
+                <ArticleCard article={{ ...guide, data: { ...guide.data, authorName: resolveAuthor(guide.data.author_slug) }, collection: "guides" }} />
               </div>
             ))}
           </div>

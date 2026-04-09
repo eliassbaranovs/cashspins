@@ -15,7 +15,6 @@ export async function getStaticPaths() {
     return [];
   }
   return items
-    .filter((c: any) => !c.data.draft)
     .map((comp: any) => ({
       params: { slug: comp.data.slug },
       props: { comp },
@@ -23,17 +22,46 @@ export async function getStaticPaths() {
 }
 
 const { comp } = Astro.props;
-const d = comp.data;
 const { Content } = await render(comp);
+
+// Resolve casino data from the casinos collection
+const allCasinos = await getCollection("casinos");
+const casinoA = allCasinos.find((c: any) => c.data.slug === comp.data.casino_a_slug);
+const casinoB = allCasinos.find((c: any) => c.data.slug === comp.data.casino_b_slug);
+
+const d = {
+  ...comp.data,
+  casino_a_name: comp.data.casino_a_name || casinoA?.data?.name || comp.data.casino_a_slug,
+  casino_b_name: comp.data.casino_b_name || casinoB?.data?.name || comp.data.casino_b_slug,
+  casino_a_logo: comp.data.casino_a_logo || casinoA?.data?.logo || null,
+  casino_b_logo: comp.data.casino_b_logo || casinoB?.data?.logo || null,
+  casino_a_rating: comp.data.casino_a_rating ?? casinoA?.data?.rating ?? undefined,
+  casino_b_rating: comp.data.casino_b_rating ?? casinoB?.data?.rating ?? undefined,
+  casino_a_bonus_value: comp.data.casino_a_bonus_value || casinoA?.data?.bonus_value || null,
+  casino_b_bonus_value: comp.data.casino_b_bonus_value || casinoB?.data?.bonus_value || null,
+  casino_a_game_count: comp.data.casino_a_game_count || (casinoA?.data?.game_count ? `${casinoA.data.game_count.toLocaleString()}+` : null),
+  casino_b_game_count: comp.data.casino_b_game_count || (casinoB?.data?.game_count ? `${casinoB.data.game_count.toLocaleString()}+` : null),
+  casino_a_license: comp.data.casino_a_license || casinoA?.data?.license || null,
+  casino_b_license: comp.data.casino_b_license || casinoB?.data?.license || null,
+};
+
+// Resolve author
+let authorEntry: any = undefined;
+try {
+  if (d.author_slug) {
+    const authors = await getCollection("authors");
+    authorEntry = authors.find((a: any) => a.data.slug === d.author_slug);
+  }
+} catch {}
+const authorName = authorEntry?.data?.name ?? d.author_slug;
 
 // Schema
 const articleSchema = generateArticleSchema({
   title: d.title,
   description: d.description,
   image: d.image,
-  author: d.author,
-  publishedAt: d.publishedAt,
-  updatedAt: d.updatedAt,
+  author_name: authorName,
+  published_at: d.published_at,
 });
 
 const faqSchema =
@@ -49,16 +77,8 @@ const breadcrumbs = [
   { label: d.title },
 ];
 
-const formattedDate = d.publishedAt
-  ? new Date(d.publishedAt).toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    })
-  : null;
-
-const updatedDate = d.updatedAt
-  ? new Date(d.updatedAt).toLocaleDateString("en-US", {
+const formattedDate = d.published_at
+  ? new Date(d.published_at).toLocaleDateString("en-US", {
       year: "numeric",
       month: "long",
       day: "numeric",
@@ -73,14 +93,12 @@ const winnerSlug = isAWinner ? d.casino_a_slug : isBWinner ? d.casino_b_slug : n
 
 <BaseLayout
   title={d.title}
-  seoTitle={d.seoTitle}
+  seoTitle={d.seo_title}
   description={d.description}
   image={d.image}
-  imageAlt={d.imageAlt}
-  canonical={d.canonical || buildCanonical(`compare/${d.slug}`)}
-  robots={d.robots}
+  imageAlt={d.image_alt}
+  canonical={buildCanonical(`compare/${d.slug}`)}
   schemaJsonLd={combinedSchema}
-  noIndex={d.noIndex}
   ogType="article"
 >
   <div class="max-w-screen-2xl mx-auto px-4 md:px-8 pt-8 pb-20">
@@ -216,27 +234,18 @@ const winnerSlug = isAWinner ? d.casino_a_slug : isBWinner ? d.casino_b_slug : n
 
         {/* Meta line */}
         <div class="flex items-center justify-center flex-wrap gap-3 text-sm font-label text-on-surface-variant mt-6">
-          {d.author && (
+          {authorName && (
             <span class="flex items-center gap-1.5">
               <span class="material-symbols-outlined text-sm">person</span>
-              {d.author}
+              {authorName}
             </span>
           )}
           {formattedDate && (
             <>
               <span class="w-1 h-1 rounded-full bg-outline-variant"></span>
-              <time datetime={d.publishedAt} class="flex items-center gap-1.5">
+              <time datetime={d.published_at} class="flex items-center gap-1.5">
                 <span class="material-symbols-outlined text-sm">calendar_today</span>
                 {formattedDate}
-              </time>
-            </>
-          )}
-          {updatedDate && updatedDate !== formattedDate && (
-            <>
-              <span class="w-1 h-1 rounded-full bg-outline-variant"></span>
-              <time datetime={d.updatedAt} class="flex items-center gap-1.5">
-                <span class="material-symbols-outlined text-sm">update</span>
-                Updated {updatedDate}
               </time>
             </>
           )}
@@ -245,7 +254,7 @@ const winnerSlug = isAWinner ? d.casino_a_slug : isBWinner ? d.casino_b_slug : n
     </header>
 
     {/* Quick Comparison Grid */}
-    {(d.casino_a_bonus || d.casino_b_bonus || d.casino_a_games || d.casino_b_games || d.casino_a_payout_speed || d.casino_b_payout_speed || d.casino_a_license || d.casino_b_license) && (
+    {(d.casino_a_bonus_value || d.casino_b_bonus_value || d.casino_a_game_count || d.casino_b_game_count || d.casino_a_payout_speed || d.casino_b_payout_speed || d.casino_a_license || d.casino_b_license) && (
       <section class="mb-12">
         <h2 class="font-headline font-bold text-2xl text-on-surface mb-6">Quick Comparison</h2>
         <div class="bg-surface-container-low rounded-xl overflow-hidden ghost-border">
@@ -267,19 +276,19 @@ const winnerSlug = isAWinner ? d.casino_a_slug : isBWinner ? d.casino_b_slug : n
             </div>
           )}
 
-          {(d.casino_a_bonus || d.casino_b_bonus) && (
+          {(d.casino_a_bonus_value || d.casino_b_bonus_value) && (
             <div class="grid grid-cols-3 border-t border-outline-variant/20">
-              <div class="p-4 text-center text-on-surface text-sm">{d.casino_a_bonus || "—"}</div>
+              <div class="p-4 text-center text-on-surface text-sm">{d.casino_a_bonus_value || "—"}</div>
               <div class="p-4 text-center text-on-surface-variant text-sm font-semibold flex items-center justify-center">Welcome Bonus</div>
-              <div class="p-4 text-center text-on-surface text-sm">{d.casino_b_bonus || "—"}</div>
+              <div class="p-4 text-center text-on-surface text-sm">{d.casino_b_bonus_value || "—"}</div>
             </div>
           )}
 
-          {(d.casino_a_games || d.casino_b_games) && (
+          {(d.casino_a_game_count || d.casino_b_game_count) && (
             <div class="grid grid-cols-3 border-t border-outline-variant/20">
-              <div class="p-4 text-center text-on-surface text-sm">{d.casino_a_games || "—"}</div>
+              <div class="p-4 text-center text-on-surface text-sm">{d.casino_a_game_count || "—"}</div>
               <div class="p-4 text-center text-on-surface-variant text-sm font-semibold flex items-center justify-center">Games</div>
-              <div class="p-4 text-center text-on-surface text-sm">{d.casino_b_games || "—"}</div>
+              <div class="p-4 text-center text-on-surface text-sm">{d.casino_b_game_count || "—"}</div>
             </div>
           )}
 

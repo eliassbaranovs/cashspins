@@ -5,46 +5,52 @@ import Breadcrumbs from "../../components/Breadcrumbs.astro";
 import RatingBadge from "../../components/RatingBadge.astro";
 
 const allCasinos = (await getCollection("casinos"))
-  .filter((c: any) => !c.data.draft)
-  .sort((a: any, b: any) => (b.data.ourRating ?? 0) - (a.data.ourRating ?? 0));
+  .sort((a: any, b: any) => (b.data.rating ?? 0) - (a.data.rating ?? 0));
 
 // Also check for editorial comparisons
 let editorialComparisons: any[] = [];
 try {
-  editorialComparisons = (await getCollection("comparisons"))
-    .filter((c: any) => !c.data.draft)
-    .sort((a: any, b: any) => new Date(b.data.publishedAt).getTime() - new Date(a.data.publishedAt).getTime());
+  const rawComps = (await getCollection("comparisons"))
+    .sort((a: any, b: any) => new Date(b.data.published_at).getTime() - new Date(a.data.published_at).getTime());
+  // Resolve casino names/logos from the casinos collection
+  editorialComparisons = rawComps.map((comp: any) => {
+    const d = comp.data;
+    const casinoA = allCasinos.find((c: any) => c.data.slug === d.casino_a_slug);
+    const casinoB = allCasinos.find((c: any) => c.data.slug === d.casino_b_slug);
+    return {
+      ...comp,
+      data: {
+        ...d,
+        casino_a_name: d.casino_a_name || casinoA?.data?.name || d.casino_a_slug,
+        casino_b_name: d.casino_b_name || casinoB?.data?.name || d.casino_b_slug,
+        casino_a_logo: d.casino_a_logo || casinoA?.data?.logo || null,
+        casino_b_logo: d.casino_b_logo || casinoB?.data?.logo || null,
+      },
+    };
+  });
 } catch {}
 
 // Pre-build casino data for client-side comparison
 // Uses riobet-casino.md as the reference data model
 const casinoData = allCasinos.map((c: any) => ({
   slug: c.data.slug,
-  name: c.data.casinoName ?? c.data.title,
-  rating: c.data.ourRating ?? null,
+  name: c.data.name ?? c.data.title,
+  rating: c.data.rating ?? null,
   logo: c.data.logo ?? null,
-  bonus_title: c.data.bonus_title ?? null,
-  wagering: c.data.wagering ?? null,
-  wageringMultiplier: c.data.wageringMultiplier ?? null,
+  bonus_value: c.data.bonus_value ?? null,
+  bonus_wagering: c.data.bonus_wagering ?? null,
   min_deposit: c.data.bonus_min_deposit ?? c.data.min_deposit ?? null,
-  free_spins: c.data.free_spins ?? null,
-  bonus_percentage: c.data.bonus_percentage ?? null,
-  max_bonus: c.data.max_bonus ?? null,
   game_count: c.data.game_count ?? null,
-  gameProviders: c.data.gameProviders ?? null,
-  licences: c.data.licences ?? null,
+  game_providers: c.data.game_providers ?? [],
+  license: c.data.license ?? null,
   established: c.data.established ?? null,
-  company: c.data.company ?? null,
-  casino_type: c.data.casino_type ?? null,
-  cryptoWithdrawalSpeedMinutes: c.data.cryptoWithdrawalSpeedMinutes ?? null,
-  acceptedCryptos: c.data.acceptedCryptos ?? [],
-  currencies: c.data.currencies ?? null,
-  depositMethods: c.data.depositMethods ?? null,
-  withdrawalMethods: c.data.withdrawalMethods ?? null,
+  owner: c.data.owner ?? null,
+  payout_speed: c.data.payout_speed ?? null,
+  currencies: c.data.currencies ?? [],
+  deposit_methods: c.data.deposit_methods ?? [],
+  withdrawal_methods: c.data.withdrawal_methods ?? [],
   vip_program: c.data.vip_program ?? null,
-  kycRequired: c.data.kycRequired ?? null,
-  isNewCasino: c.data.isNewCasino ?? null,
-  lastVerified: c.data.lastVerified ?? null,
+  kyc_required: c.data.kyc_required ?? null,
   categories: c.data.categories ?? [],
   bonusCount: c.data.bonuses?.length ?? 0,
   pros: c.data.pros ?? [],
@@ -211,9 +217,15 @@ for (let i = 0; i < Math.min(allCasinos.length - 1, 3); i++) {
             return (
               <a href={`/compare/${d.slug}/`} class="group block bg-surface-container-low rounded-xl p-6 hover:bg-surface-container-high ghost-border transition-all">
                 <div class="flex items-center justify-between gap-3 mb-4">
-                  <p class="font-headline font-bold text-sm text-on-surface truncate">{d.casino_a_name}</p>
+                  <div class="flex-1 text-center min-w-0">
+                    {d.casino_a_logo && <img src={d.casino_a_logo} alt="" class="w-12 h-12 mx-auto rounded-lg bg-surface-container-lowest object-contain p-1 mb-2" loading="lazy" />}
+                    <p class="font-headline font-bold text-sm text-on-surface truncate">{d.casino_a_name}</p>
+                  </div>
                   <span class="text-secondary font-bold text-xs shrink-0">VS</span>
-                  <p class="font-headline font-bold text-sm text-on-surface truncate">{d.casino_b_name}</p>
+                  <div class="flex-1 text-center min-w-0">
+                    {d.casino_b_logo && <img src={d.casino_b_logo} alt="" class="w-12 h-12 mx-auto rounded-lg bg-surface-container-lowest object-contain p-1 mb-2" loading="lazy" />}
+                    <p class="font-headline font-bold text-sm text-on-surface truncate">{d.casino_b_name}</p>
+                  </div>
                 </div>
                 {d.winner && (
                   <div class="flex justify-center mb-3">
@@ -294,8 +306,6 @@ for (let i = 0; i < Math.min(allCasinos.length - 1, 3); i++) {
     }
 
     function buildTable(a, b) {
-      const provCount = (p) => p ? p.split('|').length : null;
-      const currCount = (c) => c ? c.split('|').map(s => s.trim()).filter(Boolean) : [];
       return `
         <div class="grid grid-cols-3 text-sm font-bold text-[#d0c5af] bg-[#2a2a2a]">
           <div class="p-4 text-center">${a.name}</div>
@@ -303,21 +313,18 @@ for (let i = 0; i < Math.min(allCasinos.length - 1, 3); i++) {
           <div class="p-4 text-center">${b.name}</div>
         </div>
         ${row('Our Rating', 'star', a.rating ? a.rating + '/10' : null, b.rating ? b.rating + '/10' : null)}
-        ${row('Welcome Bonus', 'redeem', a.bonus_title, b.bonus_title)}
+        ${row('Welcome Bonus', 'redeem', a.bonus_value, b.bonus_value)}
         ${row('Bonus Count', 'card_giftcard', a.bonusCount ? a.bonusCount + ' offers' : null, b.bonusCount ? b.bonusCount + ' offers' : null)}
-        ${row('Wagering', 'calculate', a.wagering, b.wagering)}
+        ${row('Wagering', 'calculate', a.bonus_wagering, b.bonus_wagering)}
         ${row('Min Deposit', 'savings', a.min_deposit, b.min_deposit)}
-        ${row('Game Providers', 'sports_esports', provCount(a.gameProviders) ? provCount(a.gameProviders) + ' providers' : null, provCount(b.gameProviders) ? provCount(b.gameProviders) + ' providers' : null)}
-        ${row('Payout Speed', 'speed', a.cryptoWithdrawalSpeedMinutes ? '~' + a.cryptoWithdrawalSpeedMinutes + ' min' : null, b.cryptoWithdrawalSpeedMinutes ? '~' + b.cryptoWithdrawalSpeedMinutes + ' min' : null)}
-        ${row('License', 'gavel', a.licences, b.licences)}
-        ${row('Operator', 'apartment', a.company, b.company)}
+        ${row('Game Providers', 'sports_esports', a.game_providers.length ? a.game_providers.length + ' providers' : null, b.game_providers.length ? b.game_providers.length + ' providers' : null)}
+        ${row('Payout Speed', 'speed', a.payout_speed, b.payout_speed)}
+        ${row('License', 'gavel', a.license, b.license)}
+        ${row('Operator', 'apartment', a.owner, b.owner)}
         ${row('Established', 'history', a.established, b.established)}
-        ${row('Type', 'category', a.casino_type, b.casino_type)}
         ${row('VIP Program', 'workspace_premium', a.vip_program != null ? (a.vip_program ? 'Yes' : 'No') : null, b.vip_program != null ? (b.vip_program ? 'Yes' : 'No') : null)}
-        ${row('KYC Required', 'badge', a.kycRequired != null ? (a.kycRequired ? 'Yes' : 'No') : null, b.kycRequired != null ? (b.kycRequired ? 'Yes' : 'No') : null)}
-        ${row('Accepted Crypto', 'currency_bitcoin', a.acceptedCryptos.length ? a.acceptedCryptos.join(', ') : null, b.acceptedCryptos.length ? b.acceptedCryptos.join(', ') : null)}
-        ${row('Currencies', 'payments', currCount(a.currencies).length ? currCount(a.currencies).length + ' currencies' : null, currCount(b.currencies).length ? currCount(b.currencies).length + ' currencies' : null)}
-        ${row('Last Verified', 'verified', a.lastVerified, b.lastVerified)}
+        ${row('KYC Required', 'badge', a.kyc_required != null ? (a.kyc_required ? 'Yes' : 'No') : null, b.kyc_required != null ? (b.kyc_required ? 'Yes' : 'No') : null)}
+        ${row('Currencies', 'payments', a.currencies.length ? a.currencies.length + ' currencies' : null, b.currencies.length ? b.currencies.length + ' currencies' : null)}
       `;
     }
 

@@ -1,4 +1,4 @@
-const SITE_URL = "https://cashspins.online";
+const SITE_URL = import.meta.env.SITE || "https://cashspins.online";
 
 /**
  * Build a canonical URL with a trailing slash.
@@ -15,10 +15,10 @@ export function buildCanonical(path: string): string {
 export function generateReviewSchema(casino: {
   title: string;
   description: string;
-  ourRating?: number;
+  rating?: number | null;
   image?: string;
-  author?: string;
-  publishedAt?: string;
+  author_name?: string;
+  published_at?: string;
   slug?: string;
 }): string {
   const schema: Record<string, unknown> = {
@@ -27,21 +27,21 @@ export function generateReviewSchema(casino: {
     headline: casino.title,
     description: casino.description,
     ...(casino.image && { image: casino.image }),
-    ...(casino.publishedAt && { datePublished: casino.publishedAt }),
-    ...(casino.author && {
-      author: { "@type": "Person", name: casino.author },
+    ...(casino.published_at && { datePublished: casino.published_at }),
+    ...(casino.author_name && {
+      author: { "@type": "Person", name: casino.author_name },
     }),
     ...(casino.slug && {
       itemReviewed: {
         "@type": "Organization",
         name: casino.title,
-        url: buildCanonical(`casino/${casino.slug}`),
+        url: buildCanonical(`casinos/${casino.slug}`),
       },
     }),
-    ...(casino.ourRating !== undefined && {
+    ...(casino.rating !== undefined && casino.rating !== null && {
       reviewRating: {
         "@type": "Rating",
-        ratingValue: casino.ourRating,
+        ratingValue: casino.rating,
         bestRating: 10,
         worstRating: 0,
       },
@@ -63,9 +63,8 @@ export function generateArticleSchema(article: {
   title: string;
   description: string;
   image?: string;
-  author?: string;
-  publishedAt?: string;
-  updatedAt?: string;
+  author_name?: string;
+  published_at?: string;
 }): string {
   const schema: Record<string, unknown> = {
     "@context": "https://schema.org",
@@ -73,10 +72,9 @@ export function generateArticleSchema(article: {
     headline: article.title,
     description: article.description,
     ...(article.image && { image: article.image }),
-    ...(article.publishedAt && { datePublished: article.publishedAt }),
-    ...(article.updatedAt && { dateModified: article.updatedAt }),
-    ...(article.author && {
-      author: { "@type": "Person", name: article.author },
+    ...(article.published_at && { datePublished: article.published_at }),
+    ...(article.author_name && {
+      author: { "@type": "Person", name: article.author_name },
     }),
     publisher: {
       "@type": "Organization",

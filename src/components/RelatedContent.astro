@@ -9,10 +9,10 @@ interface Props {
     data: {
       title: string;
       image?: string;
-      ourRating?: number;
+      rating?: number | null;
       excerpt?: string;
-      bonus_title?: string;
-      logo?: string;
+      bonus_value?: string | null;
+      logo?: string | null;
     };
   }>;
   type?: "casino" | "article";
@@ -50,11 +50,11 @@ const { title = "Related Content", items = [], type = "article" } = Astro.props;
                     <h3 class="font-headline font-bold text-on-surface group-hover:text-primary transition-colors truncate">
                       {d.title}
                     </h3>
-                    {d.ourRating != null && <RatingBadge rating={d.ourRating} size="sm" />}
+                    {d.rating != null && <RatingBadge rating={d.rating} size="sm" />}
                   </div>
                 </div>
-                {d.bonus_title && (
-                  <p class="text-primary font-headline font-bold text-sm mb-3">{d.bonus_title}</p>
+                {d.bonus_value && (
+                  <p class="text-primary font-headline font-bold text-sm mb-3">{d.bonus_value}</p>
                 )}
                 <span class="liquid-gradient text-on-primary-fixed-variant font-headline font-bold rounded-md px-4 py-2 text-sm text-center block hover:scale-105 transition-transform">
                   Claim Bonus

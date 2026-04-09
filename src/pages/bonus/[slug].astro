@@ -27,20 +27,20 @@ const related = getRelatedByTags(d.tags ?? [], allBonuses, d.slug, 3);
 // Author
 let authorEntry: any = undefined;
 try {
-  if (d.authorSlug) {
+  if (d.author_slug) {
     const authors = await getCollection("authors");
-    authorEntry = authors.find((a) => a.data.slug === d.authorSlug);
+    authorEntry = authors.find((a) => a.data.slug === d.author_slug);
   }
 } catch {}
 
 // Schema
+const authorName = authorEntry?.data?.name ?? d.author_slug;
 const articleSchema = generateArticleSchema({
   title: d.title,
   description: d.description,
   image: d.image,
-  author: d.author,
-  publishedAt: d.publishedAt,
-  updatedAt: d.updatedAt,
+  author_name: authorName,
+  published_at: d.published_at,
 });
 
 const faqSchema =
@@ -56,8 +56,8 @@ const breadcrumbs = [
   { label: d.title },
 ];
 
-const formattedDate = d.publishedAt
-  ? new Date(d.publishedAt).toLocaleDateString("en-US", {
+const formattedDate = d.published_at
+  ? new Date(d.published_at).toLocaleDateString("en-US", {
       year: "numeric",
       month: "long",
       day: "numeric",
@@ -65,20 +65,18 @@ const formattedDate = d.publishedAt
   : null;
 
 // Payment methods
-const depositArr = d.depositMethods?.split("|").map((s: string) => s.trim()) ?? [];
-const withdrawalArr = d.withdrawalMethods?.split("|").map((s: string) => s.trim()) ?? [];
+const depositArr = d.deposit_methods ?? [];
+const withdrawalArr = d.withdrawal_methods ?? [];
 ---
 
 <BaseLayout
   title={d.title}
-  seoTitle={d.seoTitle}
+  seoTitle={d.seo_title}
   description={d.description}
   image={d.image}
-  imageAlt={d.imageAlt}
-  canonical={d.canonical || buildCanonical(`bonus/${d.slug}`)}
-  robots={d.robots}
+  imageAlt={d.image_alt}
+  canonical={buildCanonical(`bonus/${d.slug}`)}
   schemaJsonLd={combinedSchema}
-  noIndex={d.noIndex}
   ogType="article"
 >
   <div class="max-w-screen-2xl mx-auto px-8 pt-8">
@@ -89,91 +87,62 @@ const withdrawalArr = d.withdrawalMethods?.split("|").map((s: string) => s.trim(
 
     <!-- Hero Section -->
     <div class="bg-surface-container-low rounded-xl p-6 md:p-10 mb-10">
-      <div class="flex flex-col md:flex-row gap-6 md:gap-10 items-start">
+      <div class="grid grid-cols-[auto_1fr_auto] gap-8 items-center">
         <!-- Casino Brand -->
-        <div class="flex flex-col items-center gap-3 shrink-0">
+        <div class="flex flex-col items-center gap-2 shrink-0">
           {d.logo ? (
             <img
               src={d.logo}
-              alt={`${d.casinoName} logo`}
-              width="80"
-              height="80"
-              class="w-20 h-20 rounded-xl bg-surface-container-lowest object-contain p-2"
+              alt={`${d.casino_name} logo`}
+              width="128"
+              height="128"
+              class="w-32 h-32 rounded-xl bg-surface-container-lowest object-contain p-3 shadow-lg border border-outline-variant/10"
             />
           ) : (
-            <div class="w-20 h-20 rounded-xl bg-surface-container-lowest flex items-center justify-center">
-              <span class="material-symbols-outlined text-outline text-3xl">redeem</span>
+            <div class="w-32 h-32 rounded-xl bg-surface-container-lowest flex items-center justify-center">
+              <span class="material-symbols-outlined text-outline text-5xl">redeem</span>
             </div>
           )}
-          {d.casinoName && (
-            <span class="text-on-surface-variant text-sm font-label text-center">{d.casinoName}</span>
+          {d.casino_name && (
+            <span class="text-on-surface-variant text-sm font-label font-bold text-center">{d.casino_name}</span>
           )}
         </div>
 
         <!-- Bonus Details -->
         <div class="flex-1 min-w-0">
-          <h1 class="font-headline text-2xl md:text-4xl font-extrabold text-primary mb-4 tracking-tight leading-tight">
-            {d.bonus_title ?? d.title}
+          <h1 class="font-headline text-2xl md:text-4xl font-extrabold text-primary mb-5 tracking-tight leading-tight">
+            {d.bonus_value ?? d.title}
           </h1>
 
-          <!-- Key Terms -->
-          <div class="flex flex-wrap gap-4 md:gap-6 mb-6">
-            {d.bonus_percentage && (
-              <div class="text-center">
-                <span class="material-symbols-outlined text-primary text-lg mb-1 block">percent</span>
-                <span class="block text-xs font-label text-on-surface-variant uppercase tracking-wider">Match</span>
-                <span class="block text-lg font-bold text-on-surface">{d.bonus_percentage}%</span>
+          <!-- Key Terms as pills -->
+          <div class="flex flex-wrap gap-3 mb-5">
+            {d.bonus_wagering && (
+              <div class="bg-surface-container rounded-lg px-4 py-2.5 text-center max-w-xs">
+                <span class="block text-[10px] font-label text-on-surface-variant uppercase tracking-widest">Wagering</span>
+                <span class="block text-lg font-bold text-on-surface line-clamp-1">{d.bonus_wagering}</span>
               </div>
             )}
-            {d.max_bonus && (
-              <div class="text-center">
-                <span class="material-symbols-outlined text-primary text-lg mb-1 block">savings</span>
-                <span class="block text-xs font-label text-on-surface-variant uppercase tracking-wider">Max Bonus</span>
-                <span class="block text-lg font-bold text-on-surface">{d.max_bonus}</span>
-              </div>
-            )}
-            {d.wagering && (
-              <div class="text-center">
-                <span class="material-symbols-outlined text-primary text-lg mb-1 block">calculate</span>
-                <span class="block text-xs font-label text-on-surface-variant uppercase tracking-wider">Wagering</span>
-                <span class="block text-lg font-bold text-on-surface">{d.wagering}</span>
-              </div>
-            )}
-            {(d.min_deposit || d.bonus_min_deposit) && (
-              <div class="text-center">
-                <span class="material-symbols-outlined text-primary text-lg mb-1 block">account_balance_wallet</span>
-                <span class="block text-xs font-label text-on-surface-variant uppercase tracking-wider">Min Deposit</span>
-                <span class="block text-lg font-bold text-on-surface">{d.bonus_min_deposit ?? d.min_deposit}</span>
-              </div>
-            )}
-            {d.free_spins && (
-              <div class="text-center">
-                <span class="material-symbols-outlined text-primary text-lg mb-1 block">confirmation_number</span>
-                <span class="block text-xs font-label text-on-surface-variant uppercase tracking-wider">Free Spins</span>
-                <span class="block text-lg font-bold text-on-surface">{d.free_spins}</span>
+            {d.bonus_min_deposit && (
+              <div class="bg-surface-container rounded-lg px-4 py-2.5 text-center">
+                <span class="block text-[10px] font-label text-on-surface-variant uppercase tracking-widest">Min Deposit</span>
+                <span class="block text-lg font-bold text-on-surface">{d.bonus_min_deposit}</span>
               </div>
             )}
           </div>
 
           {/* Meta */}
-          {(formattedDate || d.author) && (
-            <div class="flex flex-wrap items-center gap-2 text-xs font-label text-on-surface-variant">
+          {(formattedDate || authorEntry) && (
+            <div class="flex flex-wrap items-center gap-3 text-xs font-label text-on-surface-variant">
               {formattedDate && (
                 <div class="flex items-center gap-1">
                   <span class="material-symbols-outlined text-sm">calendar_today</span>
-                  <time datetime={d.publishedAt}>{formattedDate}</time>
+                  <time datetime={d.published_at}>{formattedDate}</time>
                 </div>
               )}
-              {d.updatedAt && d.updatedAt !== d.publishedAt && (
-                <div class="flex items-center gap-1">
-                  <span class="material-symbols-outlined text-sm">update</span>
-                  <span>Updated: {new Date(d.updatedAt).toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" })}</span>
-                </div>
-              )}
-              {d.author && (
+              {authorEntry && (
                 <div class="flex items-center gap-1">
                   <span class="material-symbols-outlined text-sm">person</span>
-                  <span>{d.author}</span>
+                  <span>{authorEntry.data?.name ?? d.author_slug}</span>
                 </div>
               )}
             </div>
@@ -181,13 +150,13 @@ const withdrawalArr = d.withdrawalMethods?.split("|").map((s: string) => s.trim(
         </div>
 
         <!-- CTA -->
-        <div class="flex flex-col gap-3 shrink-0 w-full md:w-auto">
-          {d.casino && (
-            <CTAButton href={`/go/${d.casino}/`} label="Claim Bonus" size="lg" sponsored />
+        <div class="flex flex-col gap-3 shrink-0">
+          {d.casino_slug && (
+            <CTAButton href={`/go/${d.casino_slug}/`} label="Claim Bonus" size="lg" sponsored />
           )}
-          {d.casino && (
+          {d.casino_slug && (
             <a
-              href={`/casinos/${d.casino}/`}
+              href={`/casinos/${d.casino_slug}/`}
               class="text-on-surface-variant text-sm text-center hover:text-primary transition-colors"
             >
               Full Casino Review
@@ -213,9 +182,7 @@ const withdrawalArr = d.withdrawalMethods?.split("|").map((s: string) => s.trim(
           <div class="rounded-xl overflow-hidden">
             <img
               src={d.image}
-              alt={d.imageAlt ?? `${d.casinoName} bonus`}
-              width={d.imageWidth ?? 1792}
-              height={d.imageHeight ?? 1024}
+              alt={d.image_alt ?? `${d.casino_name} bonus`}
               class="w-full h-auto object-cover"
               loading="eager"
             />
@@ -242,12 +209,12 @@ const withdrawalArr = d.withdrawalMethods?.split("|").map((s: string) => s.trim(
         <FAQSection faqs={d.faqs} />
 
         {/* Author Card — E-E-A-T signal */}
-        {(d.author || authorEntry) && (
+        {authorEntry && (
           <section class="bg-surface-container-low rounded-xl p-6 flex flex-col sm:flex-row gap-5 items-start">
             {authorEntry?.data?.avatar && (
               <img
                 src={authorEntry.data.avatar}
-                alt={authorEntry.data.name ?? d.author}
+                alt={authorEntry.data.name ?? d.author_slug}
                 class="w-16 h-16 rounded-full object-cover shrink-0"
                 loading="lazy"
                 width="64"
@@ -257,9 +224,7 @@ const withdrawalArr = d.withdrawalMethods?.split("|").map((s: string) => s.trim(
             <div>
               <p class="text-xs font-label text-on-surface-variant uppercase tracking-wider mb-1">Reviewed by</p>
               <p class="font-headline font-bold text-on-surface text-lg">
-                {authorEntry ? (
-                  <a href={`/team/${authorEntry.data.slug}/`} class="hover:text-primary transition-colors">{authorEntry.data.name}</a>
-                ) : d.author}
+                <a href={`/team/${authorEntry.data.slug}/`} class="hover:text-primary transition-colors">{authorEntry.data.name}</a>
               </p>
               {authorEntry?.data?.role && (
                 <p class="text-secondary text-xs font-bold mt-0.5">{authorEntry.data.role}</p>
@@ -334,9 +299,9 @@ const withdrawalArr = d.withdrawalMethods?.split("|").map((s: string) => s.trim(
                       <div class="flex justify-between"><span>Expiry</span><span class="text-on-surface font-semibold">{bonus.expiry}</span></div>
                     )}
                   </div>
-                  {d.casino && (
+                  {d.casino_slug && (
                     <div class="mt-3">
-                      <CTAButton href={`/go/${d.casino}/`} label="Claim" size="sm" sponsored />
+                      <CTAButton href={`/go/${d.casino_slug}/`} label="Claim" size="sm" sponsored />
                     </div>
                   )}
                 </div>
@@ -382,10 +347,10 @@ const withdrawalArr = d.withdrawalMethods?.split("|").map((s: string) => s.trim(
             Quick Info
           </h3>
           <dl class="space-y-3 text-sm">
-            {d.casinoName && (
+            {d.casino_name && (
               <div class="flex justify-between">
                 <dt class="text-on-surface-variant">Casino</dt>
-                <dd class="text-on-surface font-semibold">{d.casinoName}</dd>
+                <dd class="text-on-surface font-semibold">{d.casino_name}</dd>
               </div>
             )}
             {d.bonus_code && (
@@ -394,16 +359,16 @@ const withdrawalArr = d.withdrawalMethods?.split("|").map((s: string) => s.trim(
                 <dd class="text-primary font-bold">{d.bonus_code}</dd>
               </div>
             )}
-            {d.wagering && (
+            {d.bonus_wagering && (
               <div class="flex justify-between">
                 <dt class="text-on-surface-variant">Wagering</dt>
-                <dd class="text-on-surface font-semibold">{d.wagering}</dd>
+                <dd class="text-on-surface font-semibold">{d.bonus_wagering}</dd>
               </div>
             )}
-            {d.ourRating != null && (
+            {d.rating != null && (
               <div class="flex justify-between">
                 <dt class="text-on-surface-variant">Our Rating</dt>
-                <dd class="text-primary font-bold">{d.ourRating}/10</dd>
+                <dd class="text-primary font-bold">{d.rating}/10</dd>
               </div>
             )}
           </dl>
