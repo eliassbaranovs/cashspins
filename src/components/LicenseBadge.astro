@@ -1,0 +1,52 @@
+---
+interface Props {
+  license?: string | null;
+  licenseStatus?: string | null;
+  size?: "sm" | "lg";
+}
+
+const { license, licenseStatus, size = "lg" } = Astro.props;
+
+if (!license) return;
+
+// Normalize status — some values are verbose paragraphs, treat those as unknown
+const rawStatus = (licenseStatus ?? "").trim().toLowerCase();
+const isActive = rawStatus === "active";
+const statusLabel = isActive ? "Active" : null;
+
+// Extract short authority name from license text for compact display
+function shortAuthority(lic: string): string {
+  if (lic.toLowerCase().includes("curacao") || lic.toLowerCase().includes("curaçao")) return "Curaçao";
+  if (lic.toLowerCase().includes("malta") || lic.toLowerCase().includes("mga")) return "Malta (MGA)";
+  if (lic.toLowerCase().includes("ukgc") || lic.toLowerCase().includes("uk gambling")) return "UKGC";
+  if (lic.toLowerCase().includes("anjouan") || lic.toLowerCase().includes("comoros")) return "Anjouan";
+  if (lic.toLowerCase().includes("kahnawake")) return "Kahnawake";
+  if (lic.toLowerCase().includes("gibraltar")) return "Gibraltar";
+  return lic.length > 30 ? lic.slice(0, 28) + "…" : lic;
+}
+
+const authority = shortAuthority(license);
+---
+
+{size === "lg" ? (
+  <div class="flex items-center gap-2.5 bg-primary/5 border border-primary/15 rounded-lg px-3.5 py-2">
+    <span
+      class="material-symbols-outlined text-primary text-lg"
+      style="font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;"
+    >verified_user</span>
+    <div class="min-w-0">
+      <p class="text-xs font-bold text-on-surface leading-tight">{authority}</p>
+      {statusLabel && (
+        <p class="text-[10px] text-primary font-bold uppercase tracking-widest">{statusLabel}</p>
+      )}
+    </div>
+  </div>
+) : (
+  <span class="inline-flex items-center gap-1 bg-primary/10 text-primary text-[10px] font-bold px-2 py-0.5 rounded-sm whitespace-nowrap">
+    <span
+      class="material-symbols-outlined text-[11px]"
+      style="font-variation-settings: 'FILL' 1;"
+    >verified_user</span>
+    {authority}
+  </span>
+)}

@@ -44,7 +44,7 @@ const breadcrumbs = [
   seoTitle="Casino Guides & Strategy 2026 — Expert Tips | CashSpins"
   description="In-depth casino guides covering game strategies, bonus optimization, responsible gambling, and everything you need to play smarter. Written by CashSpins experts."
 >
-  <div class="max-w-screen-2xl mx-auto px-8 pt-8 pb-20">
+  <div class="max-w-screen-2xl mx-auto px-4 sm:px-8 pt-8 pb-20">
     <!-- Breadcrumbs -->
     <div class="mb-8">
       <Breadcrumbs items={breadcrumbs} />
@@ -89,22 +89,17 @@ const breadcrumbs = [
           <div data-guide-tags={JSON.stringify((featured.data.tags ?? []).map((t: string) => t.toLowerCase()))} class="guide-card mb-10">
             <a href={`/guides/${featured.data.slug}/`} class="group block bg-surface-container-low rounded-xl overflow-hidden hover:bg-surface-container-high ghost-border transition-all">
               <div class="grid grid-cols-1 md:grid-cols-2">
-                {featured.data.image && (
-                  <div class="aspect-video md:aspect-auto md:min-h-[360px] overflow-hidden relative">
-                    <img
-                      src={featured.data.image}
-                      alt={featured.data.image_alt || featured.data.title}
-                      class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                      loading="eager"
-                    />
-                    <div class="absolute top-4 left-4 flex gap-2">
-                      <span class="bg-secondary/90 text-on-secondary text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-sm backdrop-blur-md">Featured Guide</span>
-                      {featured.data.category && (
-                        <span class="bg-surface/80 text-on-surface text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-sm backdrop-blur-md">{featured.data.category}</span>
-                      )}
+                <div class="bg-surface-container p-6 md:p-10 flex items-center justify-center">
+                    <div class="flex flex-col items-center gap-3">
+                      <span class="material-symbols-outlined text-primary text-5xl">menu_book</span>
+                      <div class="flex gap-2">
+                        <span class="bg-secondary/90 text-on-secondary text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-sm">Featured Guide</span>
+                        {featured.data.category && (
+                          <span class="bg-surface-container-high text-on-surface text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-sm">{featured.data.category}</span>
+                        )}
+                      </div>
                     </div>
                   </div>
-                )}
                 <div class="p-8 md:p-10 flex flex-col justify-center">
                   <div class="flex items-center gap-3 text-xs font-label text-on-surface-variant mb-4">
                     {featured.data.published_at && (
@@ -138,7 +133,7 @@ const breadcrumbs = [
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="guide-grid">
             {rest.map((guide: any) => (
               <div data-guide-tags={JSON.stringify((guide.data.tags ?? []).map((t: string) => t.toLowerCase()))} class="guide-card">
-                <ArticleCard article={{ ...guide, data: { ...guide.data, authorName: resolveAuthor(guide.data.author_slug) }, collection: "guides" }} />
+                <ArticleCard article={{ ...guide, data: { ...guide.data, image: undefined, authorName: resolveAuthor(guide.data.author_slug) }, collection: "guides" }} />
               </div>
             ))}
           </div>

@@ -165,7 +165,7 @@ const seoLinks = [
           <span class="text-secondary font-label text-xs font-bold tracking-widest uppercase">Editor's Choice 2026</span>
         </div>
 
-        <h1 class="text-5xl md:text-7xl font-headline font-extrabold text-on-surface mb-6 tracking-tighter leading-[0.9]">
+        <h1 class="text-4xl sm:text-5xl md:text-7xl font-headline font-extrabold text-on-surface mb-6 tracking-tighter leading-[0.9]">
           Your Guide to the Best <span class="text-primary">Online Casinos</span>
         </h1>
 
@@ -300,7 +300,7 @@ const seoLinks = [
           {articles.length > 0 ? (
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
               {articles.map((article) => (
-                <ArticleCard article={article} />
+                <ArticleCard article={article.collection === "guides" ? { ...article, data: { ...article.data, image: undefined } } : article} />
               ))}
             </div>
           ) : (

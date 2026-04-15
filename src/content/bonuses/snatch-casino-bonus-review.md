@@ -3,7 +3,7 @@ title: "Snatch Casino Bonus Review: All Bonuses Explained for 2026"
 slug: "snatch-casino-bonus-review"
 description: "An in-depth Snatch Casino Bonus Review for 2026. Explore welcome bonuses, free spins, cashback offers, and understand wagering requirements with real..."
 seo_title: "Snatch Casino Bonus Review: 2026 Welcome & Free Spins"
-published_at: "2026-04-09"
+published_at: "2026-04-15"
 author_slug: "jake-morrison"
 content_type: "bonus-review"
 image: "/images/covers/casino/snatch-casino.webp"
@@ -20,7 +20,7 @@ bonuses:
     expiry: "10 days"
     wagering: "30x (Deposit + Bonus)"
     bonus_code: "NOT_FOUND"
-    free_spins: 100
+    free_spins: "100"
     percentage: "200%"
     max_cashout: "5x bonus amount"
     min_deposit: "€20"
@@ -31,7 +31,7 @@ bonuses:
     expiry: "NOT_FOUND"
     wagering: "35x (Deposit + Bonus)"
     bonus_code: "NOT_FOUND"
-    free_spins: 75
+    free_spins: "75"
     percentage: "100%"
     max_cashout: "NOT_FOUND"
     min_deposit: "NOT_FOUND"
@@ -42,7 +42,7 @@ bonuses:
     expiry: "NOT_FOUND"
     wagering: "NOT_FOUND"
     bonus_code: "NOT_FOUND"
-    free_spins: 50
+    free_spins: "50"
     percentage: "50%"
     max_cashout: "NOT_FOUND"
     min_deposit: "NOT_FOUND"
@@ -53,7 +53,7 @@ bonuses:
     expiry: "NOT_FOUND"
     wagering: "NOT_FOUND"
     bonus_code: "NOT_FOUND"
-    free_spins: 100
+    free_spins: "100"
     percentage: "100%"
     max_cashout: "NOT_FOUND"
     min_deposit: "NOT_FOUND"
@@ -64,7 +64,7 @@ bonuses:
     expiry: "Every 24 hours"
     wagering: "NOT_FOUND"
     bonus_code: "NOT_FOUND"
-    free_spins: 0
+    free_spins: "0"
     percentage: "10%"
     max_cashout: "No limit"
     min_deposit: "NOT_FOUND"
@@ -74,7 +74,7 @@ bonuses:
     expiry: "Weekly"
     wagering: "NOT_FOUND"
     bonus_code: "NOT_FOUND"
-    free_spins: 0
+    free_spins: "0"
     percentage: "10%"
     max_cashout: "No limit"
     min_deposit: "NOT_FOUND"
@@ -84,7 +84,7 @@ bonuses:
     expiry: "NOT_FOUND"
     wagering: "NOT_FOUND"
     bonus_code: "NOT_FOUND"
-    free_spins: 20
+    free_spins: "20"
     percentage: "NOT_FOUND"
     max_cashout: "NOT_FOUND"
     min_deposit: "NOT_FOUND"

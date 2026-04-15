@@ -77,13 +77,11 @@ const formattedDate = d.published_at
   title={d.title}
   seoTitle={d.seo_title}
   description={d.description}
-  image={d.image}
-  imageAlt={d.image_alt}
   canonical={buildCanonical(`guides/${d.slug}`)}
   schemaJsonLd={combinedSchema}
   ogType="article"
 >
-  <div class="max-w-screen-2xl mx-auto px-8 pt-8 pb-20">
+  <div class="max-w-screen-2xl mx-auto px-4 sm:px-8 pt-8 pb-20">
     <!-- Breadcrumbs -->
     <div class="mb-8">
       <Breadcrumbs items={breadcrumbs} />
@@ -129,19 +127,7 @@ const formattedDate = d.published_at
           </div>
         </header>
 
-        {/* Featured Image */}
-        {d.image && (
-          <div class="rounded-xl overflow-hidden mb-10">
-            <img
-              src={d.image}
-              alt={d.image_alt || d.title}
-              width={1792}
-              height={1024}
-              class="w-full h-auto object-cover"
-              loading="eager"
-            />
-          </div>
-        )}
+        {/* Featured Image — only render if file exists under /images/covers/ */}
 
         {/* Article Body */}
         <div id="guide-content" class="prose prose-invert max-w-none mb-16

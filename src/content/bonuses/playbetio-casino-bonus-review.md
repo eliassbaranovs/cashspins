@@ -3,7 +3,7 @@ title: "PlayBet.io Casino Bonus Review 2026: A Deep Dive into Promotions & Wager
 slug: "playbetio-casino-bonus-review"
 description: "An in-depth PlayBet.io Casino Bonus Review for 2026. Explore the welcome bonus, free spins, cashback, and sportsbook offers with detailed wagering analysis..."
 seo_title: "PlayBet.io Casino Bonus Review 2026 | Promotions & Wagering"
-published_at: "2026-04-09"
+published_at: "2026-04-15"
 author_slug: "jake-morrison"
 content_type: "bonus-review"
 image: "/images/covers/casino/playbetio-casino.webp"
@@ -20,7 +20,7 @@ bonuses:
     amount: "130% up to 2,500 USDT"
     expiry: "NOT_FOUND"
     wagering: "NOT_FOUND"
-    free_spins: 200
+    free_spins: "200"
     percentage: "130%"
     max_cashout: "NOT_FOUND"
     min_deposit: "NOT_FOUND"
@@ -29,7 +29,7 @@ bonuses:
     amount: "up to 150,000 USDT"
     expiry: "4 weeks"
     wagering: "wager-free"
-    free_spins: 0
+    free_spins: "0"
     percentage: "20%"
     max_cashout: "NOT_FOUND"
     min_deposit: "Two consecutive deposits within 7 days"
@@ -39,7 +39,7 @@ bonuses:
     expiry: "NOT_FOUND"
     wagering: "NOT_FOUND"
     bonus_code: "HUNTING"
-    free_spins: 0
+    free_spins: "0"
     percentage: "200%"
     max_cashout: "NOT_FOUND"
     min_deposit: "NOT_FOUND"

@@ -3,7 +3,7 @@ title: "RioBet Casino Bonus Review 2026: A Comprehensive Analysis of All Offers"
 slug: "riobet-casino-bonus-review"
 description: "An in-depth RioBet Casino Bonus Review for 2026, breaking down welcome offers, free spins, wagering requirements, and ongoing promotions. Get real math..."
 seo_title: "RioBet Casino Bonus Review 2026: Offers & Wagering"
-published_at: "2026-04-09"
+published_at: "2026-04-15"
 author_slug: "nina-petrova"
 content_type: "bonus-review"
 image: "/images/covers/casino/riobet-casino.webp"
@@ -21,7 +21,7 @@ bonuses:
     expiry: "7 days to activate and wager"
     wagering: "30x"
     bonus_code: "FREEGAMBLE or JBVIP or gamblineers"
-    free_spins: 70
+    free_spins: "70"
     percentage: "N/A"
     max_cashout: "No limit stated (winnings must be wagered with a deposit)"
     min_deposit: "0 (winnings require deposit to wager)"
@@ -32,7 +32,7 @@ bonuses:
     expiry: "30 days"
     wagering: "35x"
     bonus_code: "JBVIP"
-    free_spins: 0
+    free_spins: "0"
     percentage: "100%"
     max_cashout: "10x bonus amount"
     min_deposit: "$5"
@@ -42,7 +42,7 @@ bonuses:
     expiry: "30 days"
     wagering: "35x"
     bonus_code: "JBVIP"
-    free_spins: 0
+    free_spins: "0"
     percentage: "75%"
     max_cashout: "10x bonus amount"
     min_deposit: "NOT_FOUND"
@@ -52,7 +52,7 @@ bonuses:
     expiry: "30 days"
     wagering: "35x"
     bonus_code: "JBVIP"
-    free_spins: 0
+    free_spins: "0"
     percentage: "50%"
     max_cashout: "10x bonus amount"
     min_deposit: "NOT_FOUND"
@@ -61,7 +61,7 @@ bonuses:
     amount: "$10 - $250"
     expiry: "NOT_FOUND"
     wagering: "NOT_FOUND"
-    free_spins: 0
+    free_spins: "0"
     percentage: "N/A"
     max_cashout: "NOT_FOUND"
     min_deposit: "NOT_FOUND (requires previous deposits)"
@@ -71,7 +71,7 @@ bonuses:
     expiry: "Weekly"
     wagering: "35x"
     bonus_code: "NOT_FOUND"
-    free_spins: 0
+    free_spins: "0"
     percentage: "50%"
     max_cashout: "NOT_FOUND"
     min_deposit: "$10"
@@ -81,7 +81,7 @@ bonuses:
     expiry: "Weekly"
     wagering: "35x"
     bonus_code: "NOT_FOUND"
-    free_spins: 0
+    free_spins: "0"
     percentage: "100%"
     max_cashout: "NOT_FOUND"
     min_deposit: "NOT_FOUND"
@@ -90,7 +90,7 @@ bonuses:
     amount: "5% cashback"
     expiry: "Monthly"
     wagering: "1x"
-    free_spins: 0
+    free_spins: "0"
     percentage: "5%"
     max_cashout: "NOT_FOUND"
     min_deposit: "NOT_FOUND"
@@ -99,7 +99,7 @@ bonuses:
     amount: "8% cashback"
     expiry: "Monthly"
     wagering: "1x"
-    free_spins: 0
+    free_spins: "0"
     percentage: "8%"
     max_cashout: "NOT_FOUND"
     min_deposit: "NOT_FOUND"
@@ -109,7 +109,7 @@ bonuses:
     expiry: "1 day"
     wagering: "NOT_FOUND"
     bonus_code: "lrkw26c"
-    free_spins: 20
+    free_spins: "20"
     percentage: "N/A"
     max_cashout: "NOT_FOUND"
     min_deposit: "Requires at least 1 previous deposit"
@@ -120,7 +120,7 @@ bonuses:
     expiry: "1 day"
     wagering: "NOT_FOUND"
     bonus_code: "lrkw26g"
-    free_spins: 40
+    free_spins: "40"
     percentage: "N/A"
     max_cashout: "NOT_FOUND"
     min_deposit: "Requires at least 1 previous deposit"
@@ -131,7 +131,7 @@ bonuses:
     expiry: "1 day"
     wagering: "NOT_FOUND"
     bonus_code: "lrkw26v"
-    free_spins: 60
+    free_spins: "60"
     percentage: "N/A"
     max_cashout: "NOT_FOUND"
     min_deposit: "Requires at least 1 previous deposit"
@@ -142,7 +142,7 @@ bonuses:
     expiry: "NOT_FOUND"
     wagering: "NOT_FOUND"
     bonus_code: "NOT_FOUND"
-    free_spins: 20
+    free_spins: "20"
     percentage: "N/A"
     max_cashout: "NOT_FOUND"
     min_deposit: "NOT_FOUND"

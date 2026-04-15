@@ -3,7 +3,7 @@ title: "Crypto Games Casino Review 2026: A Deep Dive into Crypto Gaming"
 slug: "crypto-games-casino"
 description: "Explore our expert Crypto Games Casino Review for 2026. Discover bonuses, payment speeds, game selection, security, and whether Crypto Games Casino is legit..."
 seo_title: "Crypto Games Casino Review 2026 | Bonuses & Payouts"
-published_at: "2026-04-09"
+published_at: "2026-04-15"
 author_slug: "jake-morrison"
 content_type: "casino-review"
 image: "/images/covers/casino/crypto-games-casino.webp"
@@ -52,7 +52,7 @@ bonuses:
     amount: "100% up to 10,000 USDT"
     expiry: "NOT_FOUND"
     wagering: "40x"
-    free_spins: 0
+    free_spins: "0"
     percentage: "100"
     max_cashout: "NOT_FOUND"
     min_deposit: "NOT_FOUND"
@@ -61,7 +61,7 @@ bonuses:
     amount: "50% up to 5,000 USDT"
     expiry: "NOT_FOUND"
     wagering: "35x"
-    free_spins: 0
+    free_spins: "0"
     percentage: "50"
     max_cashout: "NOT_FOUND"
     min_deposit: "NOT_FOUND"
@@ -70,7 +70,7 @@ bonuses:
     amount: "50% up to 5,000 USDT"
     expiry: "NOT_FOUND"
     wagering: "25x"
-    free_spins: 0
+    free_spins: "0"
     percentage: "50"
     max_cashout: "NOT_FOUND"
     min_deposit: "NOT_FOUND"
@@ -79,7 +79,7 @@ bonuses:
     amount: "NOT_FOUND"
     expiry: "NOT_FOUND"
     wagering: "NOT_FOUND"
-    free_spins: 100
+    free_spins: "100"
     percentage: "NOT_FOUND"
     max_cashout: "NOT_FOUND"
     min_deposit: "$20"
@@ -89,7 +89,7 @@ bonuses:
     amount: "10%"
     expiry: "Weekly"
     wagering: "NOT_FOUND"
-    free_spins: 0
+    free_spins: "0"
     percentage: "10"
     max_cashout: "NOT_FOUND"
     min_deposit: "NOT_FOUND"
@@ -98,7 +98,7 @@ bonuses:
     amount: "1 BTC"
     expiry: "NOT_FOUND"
     wagering: "NOT_FOUND"
-    free_spins: 0
+    free_spins: "0"
     percentage: "NOT_FOUND"
     max_cashout: "NOT_FOUND"
     min_deposit: "NOT_FOUND"
@@ -107,7 +107,7 @@ bonuses:
     amount: "NOT_FOUND"
     expiry: "NOT_FOUND"
     wagering: "NOT_FOUND"
-    free_spins: 0
+    free_spins: "0"
     percentage: "NOT_FOUND"
     max_cashout: "NOT_FOUND"
     min_deposit: "NOT_FOUND"

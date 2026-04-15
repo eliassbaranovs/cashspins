@@ -3,7 +3,7 @@ title: "Lamabet Casino Bonus Review"
 slug: "lamabet-casino-bonus-review"
 description: "Lamabet Casino bonus review."
 seo_title: "Lamabet Casino Bonus Review"
-published_at: "2026-04-09"
+published_at: "2026-04-15"
 author_slug: "jake-morrison"
 content_type: "bonus-review"
 image: "/images/covers/casino/lamabet-casino.webp"
@@ -20,7 +20,7 @@ bonuses:
     expiry: "NOT_FOUND"
     wagering: "35x (cash bonus) / 40x (free spins)"
     bonus_code: "No code required"
-    free_spins: 300
+    free_spins: "300"
     percentage: "100%"
     max_cashout: "C$16,000"
     min_deposit: "C$30"
@@ -31,7 +31,7 @@ bonuses:
     expiry: "NOT_FOUND"
     wagering: "NOT_FOUND"
     bonus_code: "NOT_FOUND"
-    free_spins: 200
+    free_spins: "200"
     percentage: "100%"
     max_cashout: "NOT_FOUND"
     min_deposit: "NOT_FOUND"
@@ -42,7 +42,7 @@ bonuses:
     expiry: "NOT_FOUND"
     wagering: "NOT_FOUND"
     bonus_code: "NOT_FOUND"
-    free_spins: 200
+    free_spins: "200"
     percentage: "100%"
     max_cashout: "NOT_FOUND"
     min_deposit: "NOT_FOUND"
@@ -53,7 +53,7 @@ bonuses:
     expiry: "NOT_FOUND"
     wagering: "NOT_FOUND"
     bonus_code: "NOT_FOUND"
-    free_spins: 0
+    free_spins: "0"
     percentage: "Up to 15%"
     max_cashout: "NOT_FOUND"
     min_deposit: "NOT_FOUND"
@@ -64,7 +64,7 @@ bonuses:
     expiry: "NOT_FOUND"
     wagering: "NOT_FOUND"
     bonus_code: "NOT_FOUND"
-    free_spins: 0
+    free_spins: "0"
     percentage: "NOT_FOUND"
     max_cashout: "NOT_FOUND"
     min_deposit: "NOT_FOUND"
@@ -97,7 +97,7 @@ bonuses:
     expiry: "NOT_FOUND"
     wagering: "NOT_FOUND"
     bonus_code: "NOT_FOUND"
-    free_spins: 0
+    free_spins: "0"
     percentage: "NOT_FOUND"
     max_cashout: "NOT_FOUND"
     min_deposit: "NOT_FOUND"
@@ -108,7 +108,7 @@ bonuses:
     expiry: "NOT_FOUND"
     wagering: "NOT_FOUND"
     bonus_code: "NOT_FOUND"
-    free_spins: 0
+    free_spins: "0"
     percentage: "NOT_FOUND"
     max_cashout: "NOT_FOUND"
     min_deposit: "NOT_FOUND"

@@ -1,0 +1,92 @@
+---
+interface Props {
+  wagering?: string | null;
+  minDeposit?: string | null;
+  maxBet?: string | null;
+  timeLimit?: string | null;
+  bonusCode?: string | null;
+}
+
+const { wagering, minDeposit, maxBet, timeLimit, bonusCode } = Astro.props;
+
+// Detect garbage paragraph values — skip anything that reads like a sentence
+const isUsable = (v?: string | null) => {
+  if (!v) return false;
+  // Sentences start with a capital word followed by more words, or are very long
+  if (v.length > 80) return false;
+  if (/^[A-Z][a-z]+ [A-Z]?[a-z]+('s)? /.test(v)) return false;
+  return true;
+};
+
+const cleanWagering = isUsable(wagering) ? wagering : null;
+const cleanMinDeposit = isUsable(minDeposit) ? minDeposit : null;
+const cleanMaxBet = isUsable(maxBet) ? maxBet : null;
+const cleanTimeLimit = isUsable(timeLimit) ? timeLimit : null;
+const cleanBonusCode = bonusCode && bonusCode !== "None required" && bonusCode.length < 30 ? bonusCode : null;
+
+// Don't render if no usable data
+const hasData = cleanWagering || cleanMinDeposit || cleanMaxBet || cleanTimeLimit || cleanBonusCode;
+---
+
+{hasData && (
+  <div class="bg-surface-container-low rounded-xl p-6">
+    <h3 class="font-headline font-bold text-lg text-on-surface mb-5 flex items-center gap-2">
+      <span class="material-symbols-outlined text-secondary">gavel</span>
+      Terms at a Glance
+    </h3>
+
+    <div class="space-y-3">
+      {cleanWagering && (
+        <div class="flex items-start gap-3">
+          <span class="material-symbols-outlined text-primary text-base mt-0.5 shrink-0">calculate</span>
+          <div class="min-w-0">
+            <p class="text-[10px] font-label text-on-surface-variant uppercase tracking-widest">Wagering</p>
+            <p class="text-sm font-semibold text-on-surface">{cleanWagering}</p>
+          </div>
+        </div>
+      )}
+
+      {cleanMinDeposit && (
+        <div class="flex items-start gap-3">
+          <span class="material-symbols-outlined text-primary text-base mt-0.5 shrink-0">savings</span>
+          <div class="min-w-0">
+            <p class="text-[10px] font-label text-on-surface-variant uppercase tracking-widest">Min Deposit</p>
+            <p class="text-sm font-semibold text-on-surface">{cleanMinDeposit}</p>
+          </div>
+        </div>
+      )}
+
+      {cleanMaxBet && (
+        <div class="flex items-start gap-3">
+          <span class="material-symbols-outlined text-primary text-base mt-0.5 shrink-0">do_not_disturb</span>
+          <div class="min-w-0">
+            <p class="text-[10px] font-label text-on-surface-variant uppercase tracking-widest">Max Bet</p>
+            <p class="text-sm font-semibold text-on-surface">{cleanMaxBet}</p>
+          </div>
+        </div>
+      )}
+
+      {cleanTimeLimit && (
+        <div class="flex items-start gap-3">
+          <span class="material-symbols-outlined text-primary text-base mt-0.5 shrink-0">schedule</span>
+          <div class="min-w-0">
+            <p class="text-[10px] font-label text-on-surface-variant uppercase tracking-widest">Time Limit</p>
+            <p class="text-sm font-semibold text-on-surface">{cleanTimeLimit}</p>
+          </div>
+        </div>
+      )}
+
+      {cleanBonusCode && (
+        <div class="flex items-start gap-3">
+          <span class="material-symbols-outlined text-primary text-base mt-0.5 shrink-0">confirmation_number</span>
+          <div class="min-w-0">
+            <p class="text-[10px] font-label text-on-surface-variant uppercase tracking-widest">Bonus Code</p>
+            <p class="text-sm font-mono font-bold text-secondary tracking-wider">{cleanBonusCode}</p>
+          </div>
+        </div>
+      )}
+    </div>
+
+    <p class="text-[10px] text-outline mt-4">T&Cs apply. 18+ only.</p>
+  </div>
+)}

@@ -1,4 +1,5 @@
 ---
+import LicenseBadge from "./LicenseBadge.astro";
 import RatingBadge from "./RatingBadge.astro";
 
 interface Props {
@@ -15,6 +16,8 @@ interface Props {
       claim_url?: string | null;
       website_url?: string | null;
       categories?: string[];
+      license?: string | null;
+      license_status?: string | null;
     };
   };
 }
@@ -25,7 +28,7 @@ const name = d.name || d.slug;
 const topPros = d.pros?.slice(0, 2) || [];
 ---
 
-<div class="group relative bg-surface-container-low rounded-xl p-6 hover:bg-surface-container-high ghost-border transition-all overflow-hidden">
+<div class="group relative bg-surface-container-low rounded-xl p-4 sm:p-6 hover:bg-surface-container-high ghost-border transition-all overflow-hidden">
   {/* Green accent bar on hover */}
   <div class="absolute left-0 top-1/2 -translate-y-1/2 w-1.5 h-16 bg-primary rounded-r-full opacity-0 group-hover:opacity-100 transition-opacity duration-300" aria-hidden="true"></div>
 
@@ -53,7 +56,12 @@ const topPros = d.pros?.slice(0, 2) || [];
         {d.rating != null && <RatingBadge rating={d.rating} size="sm" />}
       </div>
       {d.best_for && (
-        <p class="text-on-surface-variant text-sm mb-3">{d.best_for}</p>
+        <p class="text-on-surface-variant text-sm mb-2">{d.best_for}</p>
+      )}
+      {d.license && (
+        <div class="mb-2">
+          <LicenseBadge license={d.license} licenseStatus={d.license_status} size="sm" />
+        </div>
       )}
       {topPros.length > 0 && (
         <ul class="space-y-1">
@@ -76,20 +84,20 @@ const topPros = d.pros?.slice(0, 2) || [];
     )}
 
     {/* CTA buttons */}
-    <div class="flex flex-row lg:flex-col gap-3 shrink-0">
+    <div class="flex flex-col sm:flex-row lg:flex-col gap-3 shrink-0 w-full lg:w-auto">
       {(d.claim_url || d.website_url) && (
         <a
           href={`/go/${d.slug}/`}
           rel="nofollow sponsored"
           target="_blank"
-          class="liquid-gradient text-on-primary-fixed-variant font-headline font-bold rounded-md px-6 py-3 text-center shadow-lg shadow-primary/20 hover:scale-105 active:scale-95 transition-transform whitespace-nowrap"
+          class="liquid-gradient text-on-primary-fixed-variant font-headline font-bold rounded-md px-6 py-3 text-center shadow-lg shadow-primary/20 hover:scale-105 active:scale-95 transition-transform whitespace-nowrap flex-1 lg:flex-none"
         >
           Claim Bonus
         </a>
       )}
       <a
         href={`/casinos/${d.slug}/`}
-        class="border border-outline-variant/30 text-on-surface-variant rounded-md px-6 py-3 text-center hover:bg-surface-container-highest transition-all whitespace-nowrap"
+        class="border border-outline-variant/30 text-on-surface-variant rounded-md px-6 py-3 text-center hover:bg-surface-container-highest transition-all whitespace-nowrap flex-1 lg:flex-none"
       >
         Read Review
       </a>

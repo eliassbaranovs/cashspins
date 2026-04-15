@@ -3,7 +3,7 @@ title: "Lamabet Casino Review 2026: A Deep Dive into Bonuses, Payments, and Play
 slug: "lamabet-casino"
 description: "Our expert Lamabet Casino Review for 2026 covers bonuses, withdrawal times, KYC, and player complaints. Is Lamabet Casino legit? Find out here."
 seo_title: "Lamabet Casino Review 2026: Bonuses & Payouts"
-published_at: "2026-04-09"
+published_at: "2026-04-15"
 author_slug: "jake-morrison"
 content_type: "casino-review"
 image: "/images/covers/casino/lamabet-casino.webp"
@@ -196,7 +196,7 @@ bonuses:
     expiry: "NOT_FOUND"
     wagering: "35x (cash bonus) / 40x (free spins)"
     bonus_code: "No code required"
-    free_spins: 300
+    free_spins: "300"
     percentage: "100%"
     max_cashout: "C$16,000"
     min_deposit: "C$30"
@@ -207,7 +207,7 @@ bonuses:
     expiry: "NOT_FOUND"
     wagering: "NOT_FOUND"
     bonus_code: "NOT_FOUND"
-    free_spins: 200
+    free_spins: "200"
     percentage: "100%"
     max_cashout: "NOT_FOUND"
     min_deposit: "NOT_FOUND"
@@ -218,7 +218,7 @@ bonuses:
     expiry: "NOT_FOUND"
     wagering: "NOT_FOUND"
     bonus_code: "NOT_FOUND"
-    free_spins: 200
+    free_spins: "200"
     percentage: "100%"
     max_cashout: "NOT_FOUND"
     min_deposit: "NOT_FOUND"
@@ -229,7 +229,7 @@ bonuses:
     expiry: "NOT_FOUND"
     wagering: "NOT_FOUND"
     bonus_code: "NOT_FOUND"
-    free_spins: 0
+    free_spins: "0"
     percentage: "Up to 15%"
     max_cashout: "NOT_FOUND"
     min_deposit: "NOT_FOUND"
@@ -240,7 +240,7 @@ bonuses:
     expiry: "NOT_FOUND"
     wagering: "NOT_FOUND"
     bonus_code: "NOT_FOUND"
-    free_spins: 0
+    free_spins: "0"
     percentage: "NOT_FOUND"
     max_cashout: "NOT_FOUND"
     min_deposit: "NOT_FOUND"
@@ -273,7 +273,7 @@ bonuses:
     expiry: "NOT_FOUND"
     wagering: "NOT_FOUND"
     bonus_code: "NOT_FOUND"
-    free_spins: 0
+    free_spins: "0"
     percentage: "NOT_FOUND"
     max_cashout: "NOT_FOUND"
     min_deposit: "NOT_FOUND"
@@ -284,7 +284,7 @@ bonuses:
     expiry: "NOT_FOUND"
     wagering: "NOT_FOUND"
     bonus_code: "NOT_FOUND"
-    free_spins: 0
+    free_spins: "0"
     percentage: "NOT_FOUND"
     max_cashout: "NOT_FOUND"
     min_deposit: "NOT_FOUND"

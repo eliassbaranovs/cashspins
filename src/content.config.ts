@@ -100,6 +100,9 @@ const casinoFields = {
   game_count: z.number().nullable().optional(),
 
   // Trust
+  trustpilot_score: z.string().nullable().optional(),
+  askgamblers_score: z.string().nullable().optional(),
+  complaints_count: z.number().nullable().optional(),
   kyc_required: z.boolean().nullable().optional(),
   tc_fairness: z.string().nullable().optional(),
 

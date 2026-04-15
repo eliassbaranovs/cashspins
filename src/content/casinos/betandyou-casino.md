@@ -3,7 +3,7 @@ title: "Betandyou Casino Review 2026: An In-Depth Look at its Offerings"
 slug: "betandyou-casino"
 description: "Our comprehensive Betandyou Casino Review for 2026 examines its licensing, bonuses (up to €1500 + 150 FS), payment methods, and player support. Discover if..."
 seo_title: "Betandyou Casino Review 2026 | Legit or Not?"
-published_at: "2026-04-09"
+published_at: "2026-04-15"
 author_slug: "nina-petrova"
 content_type: "casino-review"
 image: "/images/covers/casino/betandyou-casino.webp"
@@ -340,7 +340,7 @@ bonuses:
     expiry: "NOT_FOUND"
     wagering: "35x"
     bonus_code: "MAXBONUS"
-    free_spins: 30
+    free_spins: "30"
     percentage: "100%"
     max_cashout: "NOT_FOUND"
     min_deposit: "1 EUR"
@@ -351,7 +351,7 @@ bonuses:
     expiry: "NOT_FOUND"
     wagering: "35x"
     bonus_code: "MAXBONUS"
-    free_spins: 35
+    free_spins: "35"
     percentage: "50%"
     max_cashout: "NOT_FOUND"
     min_deposit: "1 EUR"
@@ -362,7 +362,7 @@ bonuses:
     expiry: "NOT_FOUND"
     wagering: "35x"
     bonus_code: "MAXBONUS"
-    free_spins: 40
+    free_spins: "40"
     percentage: "25%"
     max_cashout: "NOT_FOUND"
     min_deposit: "1 EUR"
@@ -373,7 +373,7 @@ bonuses:
     expiry: "NOT_FOUND"
     wagering: "35x"
     bonus_code: "MAXBONUS"
-    free_spins: 45
+    free_spins: "45"
     percentage: "25%"
     max_cashout: "NOT_FOUND"
     min_deposit: "1 EUR"
@@ -383,7 +383,7 @@ bonuses:
     amount: "50% up to €260"
     expiry: "Available every Tuesday"
     wagering: "35x"
-    free_spins: 0
+    free_spins: "0"
     percentage: "50%"
     max_cashout: "NOT_FOUND"
     min_deposit: "5 EUR"
@@ -392,7 +392,7 @@ bonuses:
     amount: "20% bonus up to €47"
     expiry: "Available once per day"
     wagering: "25x"
-    free_spins: 0
+    free_spins: "0"
     percentage: "20%"
     max_cashout: "NOT_FOUND"
     min_deposit: "10 EUR"
@@ -401,7 +401,7 @@ bonuses:
     amount: "Up to 11%"
     expiry: "NOT_FOUND"
     wagering: "NOT_FOUND"
-    free_spins: 0
+    free_spins: "0"
     percentage: "Up to 11%"
     max_cashout: "NOT_FOUND"
     min_deposit: "NOT_FOUND"
@@ -410,7 +410,7 @@ bonuses:
     amount: "NOT_FOUND"
     expiry: "NOT_FOUND"
     wagering: "NOT_FOUND"
-    free_spins: 0
+    free_spins: "0"
     percentage: "100%"
     max_cashout: "NOT_FOUND"
     min_deposit: "NOT_FOUND"
@@ -419,7 +419,7 @@ bonuses:
     amount: "40% up to 300 EUR + 100 FS"
     expiry: "NOT_FOUND"
     wagering: "NOT_FOUND (100 FS with no wagering requirement)"
-    free_spins: 100
+    free_spins: "100"
     percentage: "40%"
     max_cashout: "NOT_FOUND"
     min_deposit: "NOT_FOUND"
@@ -428,7 +428,7 @@ bonuses:
     amount: "20% extra"
     expiry: "NOT_FOUND"
     wagering: "NOT_FOUND"
-    free_spins: 0
+    free_spins: "0"
     percentage: "20%"
     max_cashout: "NOT_FOUND"
     min_deposit: "NOT_FOUND"
@@ -438,7 +438,7 @@ bonuses:
     expiry: "NOT_FOUND"
     wagering: "5x in accumulator bets"
     bonus_code: "MAXBONUS"
-    free_spins: 0
+    free_spins: "0"
     percentage: "100%"
     max_cashout: "NOT_FOUND"
     min_deposit: "1.15 USD"
@@ -447,7 +447,7 @@ bonuses:
     amount: "30%"
     expiry: "NOT_FOUND"
     wagering: "NOT_FOUND"
-    free_spins: 0
+    free_spins: "0"
     percentage: "30%"
     max_cashout: "NOT_FOUND"
     min_deposit: "NOT_FOUND"
@@ -456,7 +456,7 @@ bonuses:
     amount: "NOT_FOUND"
     expiry: "NOT_FOUND"
     wagering: "NOT_FOUND"
-    free_spins: 0
+    free_spins: "0"
     percentage: "NOT_FOUND"
     max_cashout: "NOT_FOUND"
     min_deposit: "NOT_FOUND"
@@ -466,7 +466,7 @@ bonuses:
     amount: "NOT_FOUND"
     expiry: "NOT_FOUND"
     wagering: "NOT_FOUND"
-    free_spins: 0
+    free_spins: "0"
     percentage: "NOT_FOUND"
     max_cashout: "NOT_FOUND"
     min_deposit: "NOT_FOUND"
@@ -475,7 +475,7 @@ bonuses:
     amount: "NOT_FOUND"
     expiry: "NOT_FOUND"
     wagering: "NOT_FOUND"
-    free_spins: 0
+    free_spins: "0"
     percentage: "NOT_FOUND"
     max_cashout: "NOT_FOUND"
     min_deposit: "NOT_FOUND"
@@ -484,7 +484,7 @@ bonuses:
     amount: "NOT_FOUND"
     expiry: "NOT_FOUND"
     wagering: "NOT_FOUND"
-    free_spins: 0
+    free_spins: "0"
     percentage: "NOT_FOUND"
     max_cashout: "NOT_FOUND"
     min_deposit: "NOT_FOUND"
@@ -493,7 +493,7 @@ bonuses:
     amount: "10%"
     expiry: "NOT_FOUND"
     wagering: "NOT_FOUND"
-    free_spins: 0
+    free_spins: "0"
     percentage: "10%"
     max_cashout: "NOT_FOUND"
     min_deposit: "NOT_FOUND"
@@ -502,7 +502,7 @@ bonuses:
     amount: "Up to 30 EUR"
     expiry: "NOT_FOUND"
     wagering: "NOT_FOUND"
-    free_spins: 0
+    free_spins: "0"
     percentage: "NOT_FOUND"
     max_cashout: "NOT_FOUND"
     min_deposit: "NOT_FOUND"
@@ -511,7 +511,7 @@ bonuses:
     amount: "NOT_FOUND"
     expiry: "NOT_FOUND"
     wagering: "NOT_FOUND"
-    free_spins: 0
+    free_spins: "0"
     percentage: "NOT_FOUND"
     max_cashout: "NOT_FOUND"
     min_deposit: "NOT_FOUND"
@@ -520,7 +520,7 @@ bonuses:
     amount: "NOT_FOUND"
     expiry: "NOT_FOUND"
     wagering: "NOT_FOUND"
-    free_spins: 0
+    free_spins: "0"
     percentage: "NOT_FOUND"
     max_cashout: "NOT_FOUND"
     min_deposit: "NOT_FOUND"
@@ -529,7 +529,7 @@ bonuses:
     amount: "NOT_FOUND"
     expiry: "NOT_FOUND"
     wagering: "NOT_FOUND"
-    free_spins: 0
+    free_spins: "0"
     percentage: "NOT_FOUND"
     max_cashout: "NOT_FOUND"
     min_deposit: "NOT_FOUND"
@@ -538,7 +538,7 @@ bonuses:
     amount: "NOT_FOUND"
     expiry: "NOT_FOUND"
     wagering: "NOT_FOUND"
-    free_spins: 0
+    free_spins: "0"
     percentage: "NOT_FOUND"
     max_cashout: "NOT_FOUND"
     min_deposit: "NOT_FOUND"
@@ -547,7 +547,7 @@ bonuses:
     amount: "NOT_FOUND"
     expiry: "NOT_FOUND"
     wagering: "NOT_FOUND"
-    free_spins: 0
+    free_spins: "0"
     percentage: "NOT_FOUND"
     max_cashout: "NOT_FOUND"
     min_deposit: "NOT_FOUND"
@@ -556,7 +556,7 @@ bonuses:
     amount: "NOT_FOUND"
     expiry: "NOT_FOUND"
     wagering: "NOT_FOUND"
-    free_spins: 0
+    free_spins: "0"
     percentage: "NOT_FOUND"
     max_cashout: "NOT_FOUND"
     min_deposit: "NOT_FOUND"
@@ -565,7 +565,7 @@ bonuses:
     amount: "NOT_FOUND"
     expiry: "NOT_FOUND"
     wagering: "NOT_FOUND"
-    free_spins: 0
+    free_spins: "0"
     percentage: "NOT_FOUND"
     max_cashout: "NOT_FOUND"
     min_deposit: "NOT_FOUND"

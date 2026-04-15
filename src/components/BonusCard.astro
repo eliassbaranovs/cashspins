@@ -19,29 +19,38 @@ const name = d.casino_name || d.casino_slug || d.slug;
 const casinoSlug = d.casino_slug || d.slug;
 ---
 
-<div class="bg-surface-container-low rounded-xl p-6 hover:bg-surface-container-high ghost-border transition-all">
-  <div class="grid grid-cols-[auto_1fr_auto] gap-6 items-center">
+<div class="bg-surface-container-low rounded-xl p-4 sm:p-6 hover:bg-surface-container-high ghost-border transition-all">
+  <div class="flex flex-col sm:grid sm:grid-cols-[auto_1fr_auto] gap-4 sm:gap-6 sm:items-center">
 
-    {/* Logo — large to give the card height */}
-    <div class="shrink-0">
-      {d.logo ? (
-        <img
-          src={d.logo}
-          alt={`${name} logo`}
-          class="w-28 h-28 rounded-xl bg-surface-container-lowest object-contain p-3"
-          loading="lazy"
-        />
-      ) : (
-        <div class="w-28 h-28 rounded-xl bg-surface-container-lowest flex items-center justify-center">
-          <span class="material-symbols-outlined text-outline text-4xl">redeem</span>
-        </div>
-      )}
+    {/* Logo + Name on mobile (horizontal), Logo only on desktop */}
+    <div class="flex items-center gap-4 sm:block">
+      <div class="shrink-0">
+        {d.logo ? (
+          <img
+            src={d.logo}
+            alt={`${name} logo`}
+            class="w-16 h-16 sm:w-28 sm:h-28 rounded-xl bg-surface-container-lowest object-contain p-2 sm:p-3"
+            loading="lazy"
+          />
+        ) : (
+          <div class="w-16 h-16 sm:w-28 sm:h-28 rounded-xl bg-surface-container-lowest flex items-center justify-center">
+            <span class="material-symbols-outlined text-outline text-2xl sm:text-4xl">redeem</span>
+          </div>
+        )}
+      </div>
+      {/* Name visible on mobile next to logo */}
+      <div class="sm:hidden min-w-0">
+        <p class="text-on-surface-variant text-xs font-label tracking-wide">{name}</p>
+        {d.bonus_value && (
+          <h3 class="font-headline font-bold text-base text-primary mt-0.5 line-clamp-2">{d.bonus_value}</h3>
+        )}
+      </div>
     </div>
 
     {/* Content — stacked: title on top, stats below */}
     <div class="min-w-0 flex flex-col justify-center gap-3">
-      {/* Name + bonus title */}
-      <div class="min-w-0">
+      {/* Name + bonus title (hidden on mobile, shown on desktop) */}
+      <div class="min-w-0 hidden sm:block">
         <p class="text-on-surface-variant text-xs font-label tracking-wide">{name}</p>
         {d.bonus_value && (
           <h3 class="font-headline font-bold text-lg text-primary mt-0.5 line-clamp-2">{d.bonus_value}</h3>
@@ -66,18 +75,18 @@ const casinoSlug = d.casino_slug || d.slug;
     </div>
 
     {/* CTAs */}
-    <div class="flex flex-col gap-2 shrink-0">
+    <div class="flex flex-row sm:flex-col gap-2 shrink-0">
       <a
         href={`/go/${casinoSlug}/`}
         rel="nofollow sponsored"
         target="_blank"
-        class="liquid-gradient text-on-primary-fixed-variant font-headline font-bold rounded-md px-5 py-2.5 text-center shadow-lg shadow-primary/20 hover:scale-105 transition-transform whitespace-nowrap text-sm"
+        class="liquid-gradient text-on-primary-fixed-variant font-headline font-bold rounded-md px-5 py-2.5 text-center shadow-lg shadow-primary/20 hover:scale-105 transition-transform whitespace-nowrap text-sm flex-1 sm:flex-none"
       >
         Claim Bonus
       </a>
       <a
         href={`/bonus/${d.slug}/`}
-        class="border border-outline-variant/30 text-on-surface-variant rounded-md px-5 py-2.5 text-center hover:bg-surface-container-highest transition-all whitespace-nowrap text-sm"
+        class="border border-outline-variant/30 text-on-surface-variant rounded-md px-5 py-2.5 text-center hover:bg-surface-container-highest transition-all whitespace-nowrap text-sm flex-1 sm:flex-none"
       >
         Read Review
       </a>

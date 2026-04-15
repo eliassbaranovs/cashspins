@@ -36,7 +36,7 @@ try {
 // Uses riobet-casino.md as the reference data model
 const casinoData = allCasinos.map((c: any) => ({
   slug: c.data.slug,
-  name: c.data.casinoName ?? c.data.title,
+  name: c.data.casinoName ?? c.data.name ?? c.data.slug,
   rating: c.data.ourRating ?? null,
   logo: c.data.logo ?? null,
   bonus_title: c.data.bonus_title ?? null,
@@ -316,8 +316,8 @@ for (let i = 0; i < Math.min(allCasinos.length - 1, 3); i++) {
     }
 
     function buildTable(a, b) {
-      const provCount = (p) => p ? p.split('|').length : null;
-      const currCount = (c) => c ? c.split('|').map(s => s.trim()).filter(Boolean) : [];
+      const provCount = (p) => p ? (Array.isArray(p) ? p.length : p.split('|').length) : null;
+      const currCount = (c) => c ? (Array.isArray(c) ? c : c.split('|').map(s => s.trim()).filter(Boolean)) : [];
       return `
         <div class="grid grid-cols-3 text-sm font-bold text-[#d0c5af] bg-[#2a2a2a]">
           <div class="p-4 text-center">${a.name}</div>
