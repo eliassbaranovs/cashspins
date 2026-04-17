@@ -2,4 +2,16 @@ User-agent: *
 Allow: /
 Disallow: /go/
 
+User-agent: GPTBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
 Sitemap: https://cashspins.online/sitemap-index.xml
