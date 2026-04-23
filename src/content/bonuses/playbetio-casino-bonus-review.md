@@ -3,7 +3,7 @@ title: "PlayBet.io Casino Bonus Review 2026: A Deep Dive into Promotions & Wager
 slug: "playbetio-casino-bonus-review"
 description: "An in-depth PlayBet.io Casino Bonus Review for 2026. Explore the welcome bonus, free spins, cashback, and sportsbook offers with detailed wagering analysis..."
 seo_title: "PlayBet.io Casino Bonus Review 2026 | Promotions & Wagering"
-published_at: "2026-04-17"
+published_at: "2026-04-23"
 author_slug: "jake-morrison"
 content_type: "bonus-review"
 image: "/images/covers/casino/playbetio-casino.webp"

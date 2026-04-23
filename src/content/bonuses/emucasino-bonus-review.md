@@ -3,7 +3,7 @@ title: "EmuCasino Bonus Review: Unpacking Welcome Offers, Free Spins & More in 2
 slug: "emucasino-bonus-review"
 description: "Our EmuCasino Review unpacks 2026 bonuses, including a $1,200 welcome package and free spins. Beware of 45x wagering and short 3-day expiry periods."
 seo_title: "EmuCasino Review: Bonuses, Free Spins & Offers 2026"
-published_at: "2026-04-17"
+published_at: "2026-04-23"
 author_slug: "jake-morrison"
 content_type: "bonus-review"
 image: "/images/covers/casino/emucasino.webp"
