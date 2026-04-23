@@ -12,6 +12,31 @@ const bonuses = allBonuses
       new Date(a.data.published_at).getTime()
   );
 
+// Bonus-type taxonomy — maps normalized tag keywords to user-facing filter labels.
+// Order matters: higher-priority types (rarer / more differentiating) appear first.
+const BONUS_TYPES: { key: string; label: string; matchers: string[] }[] = [
+  { key: "no-deposit", label: "No Deposit", matchers: ["no deposit", "no-deposit"] },
+  { key: "free-spins", label: "Free Spins", matchers: ["free spins"] },
+  { key: "cashback",   label: "Cashback",   matchers: ["cashback"] },
+  { key: "rakeback",   label: "Rakeback",   matchers: ["rakeback"] },
+  { key: "vip",        label: "VIP / Loyalty", matchers: ["loyalty", "vip"] },
+  { key: "welcome",    label: "Welcome",    matchers: ["welcome"] },
+  { key: "crypto",     label: "Crypto",     matchers: ["crypto"] },
+];
+
+function typesForBonus(tags: string[] = []): string[] {
+  const norm = tags.map(t => t.toLowerCase());
+  const keys = new Set<string>();
+  for (const t of BONUS_TYPES) {
+    if (t.matchers.some(m => norm.some(n => n.includes(m)))) keys.add(t.key);
+  }
+  return [...keys];
+}
+
+// Only surface filter pills for types that at least one bonus matches.
+const presentTypeKeys = new Set(bonuses.flatMap(b => typesForBonus(b.data.tags ?? [])));
+const activeTypes = BONUS_TYPES.filter(t => presentTypeKeys.has(t.key));
+
 const breadcrumbs = [
   { label: "Home", href: "/" },
   { label: "Bonuses" },
@@ -39,45 +64,50 @@ const breadcrumbs = [
       </p>
     </header>
 
-    {/* Quick Stats */}
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
-      <div class="bg-surface-container-low rounded-xl p-5 text-center">
-        <span class="material-symbols-outlined text-primary text-2xl mb-2 block">redeem</span>
-        <span class="text-2xl font-headline font-bold text-on-surface block">{bonuses.length}</span>
-        <span class="text-xs text-on-surface-variant">Active Bonuses</span>
-      </div>
-      <div class="bg-surface-container-low rounded-xl p-5 text-center">
-        <span class="material-symbols-outlined text-secondary text-2xl mb-2 block">casino</span>
-        <span class="text-2xl font-headline font-bold text-on-surface block">{new Set(bonuses.map(b => b.data.casino_slug || b.data.slug)).size}</span>
-        <span class="text-xs text-on-surface-variant">Casinos</span>
-      </div>
-      <div class="bg-surface-container-low rounded-xl p-5 text-center">
-        <span class="material-symbols-outlined text-tertiary text-2xl mb-2 block">new_releases</span>
-        <span class="text-2xl font-headline font-bold text-on-surface block">Daily</span>
-        <span class="text-xs text-on-surface-variant">Updated</span>
-      </div>
-      <div class="bg-surface-container-low rounded-xl p-5 text-center">
-        <span class="material-symbols-outlined text-primary text-2xl mb-2 block">verified</span>
-        <span class="text-2xl font-headline font-bold text-on-surface block">100%</span>
-        <span class="text-xs text-on-surface-variant">Verified Offers</span>
-      </div>
-    </div>
+    {/* Summary line */}
+    {bonuses.length > 0 && (
+      <p class="text-sm text-on-surface-variant mb-6">
+        <span class="text-on-surface font-semibold">{bonuses.length}</span> verified offers across
+        <span class="text-on-surface font-semibold"> {new Set(bonuses.map(b => b.data.casino_slug || b.data.slug)).size}</span> casinos — independently reviewed, terms transparent.
+      </p>
+    )}
 
-    <!-- Category Links -->
-    <div class="flex flex-wrap gap-3 mb-10">
-      <a href="/bonus/" class="px-5 py-2 rounded-full text-sm font-bold bg-primary text-on-primary shadow-md no-underline">All Bonuses</a>
-      <a href="/casinos/" class="px-5 py-2 rounded-full text-sm font-bold bg-surface-container-high text-on-surface-variant hover:text-on-surface no-underline transition-all">Casino Reviews</a>
-      <a href="/crypto-casinos/" class="px-5 py-2 rounded-full text-sm font-bold bg-surface-container-high text-on-surface-variant hover:text-on-surface no-underline transition-all">Crypto Casinos</a>
-      <a href="/compare/" class="px-5 py-2 rounded-full text-sm font-bold bg-surface-container-high text-on-surface-variant hover:text-on-surface no-underline transition-all">Comparisons</a>
-    </div>
+    {/* Bonus-type Filter Pills */}
+    {activeTypes.length > 0 && (
+      <div class="flex flex-wrap gap-3 mb-10" id="bonus-filters">
+        <button
+          type="button"
+          data-type="all"
+          class="filter-pill px-5 py-2 rounded-full text-sm font-bold bg-primary text-on-primary shadow-md transition-all"
+        >
+          All Bonuses
+        </button>
+        {activeTypes.map(t => (
+          <button
+            type="button"
+            data-type={t.key}
+            class="filter-pill px-5 py-2 rounded-full text-sm font-bold bg-surface-container-high text-on-surface-variant hover:text-on-surface transition-all"
+          >
+            {t.label}
+          </button>
+        ))}
+      </div>
+    )}
 
     <!-- Bonus List -->
     {bonuses.length > 0 ? (
-      <div class="space-y-5 mb-16">
+      <>
+      <div class="space-y-5 mb-4" id="bonus-list">
         {bonuses.map((bonus) => (
-          <BonusCard bonus={bonus} />
+          <div data-bonus-types={JSON.stringify(typesForBonus(bonus.data.tags ?? []))} class="bonus-card-wrap">
+            <BonusCard bonus={bonus} />
+          </div>
         ))}
       </div>
+      <p id="no-bonus-msg" class="hidden text-center text-on-surface-variant py-12 text-lg mb-12">
+        No bonuses found for this category.
+      </p>
+      </>
     ) : (
       <div class="bg-surface-container-low rounded-xl p-12 text-center mb-16">
         <span class="material-symbols-outlined text-outline text-4xl mb-4 block">redeem</span>
@@ -111,3 +141,39 @@ const breadcrumbs = [
     </div>
   </div>
 </BaseLayout>
+
+<script>
+  const pills = document.querySelectorAll<HTMLButtonElement>('#bonus-filters .filter-pill');
+  const cards = document.querySelectorAll<HTMLElement>('.bonus-card-wrap');
+  const noMsg = document.getElementById('no-bonus-msg');
+
+  function setActive(type: string) {
+    pills.forEach(p => {
+      const active = p.dataset.type === type;
+      p.classList.toggle('bg-primary', active);
+      p.classList.toggle('text-on-primary', active);
+      p.classList.toggle('shadow-md', active);
+      p.classList.toggle('bg-surface-container-high', !active);
+      p.classList.toggle('text-on-surface-variant', !active);
+    });
+
+    let visible = 0;
+    cards.forEach(card => {
+      if (type === 'all') {
+        card.style.display = '';
+        visible++;
+        return;
+      }
+      const types: string[] = JSON.parse(card.dataset.bonusTypes ?? '[]');
+      const show = types.includes(type);
+      card.style.display = show ? '' : 'none';
+      if (show) visible++;
+    });
+
+    if (noMsg) noMsg.classList.toggle('hidden', visible > 0);
+  }
+
+  pills.forEach(pill => {
+    pill.addEventListener('click', () => setActive(pill.dataset.type ?? 'all'));
+  });
+</script>

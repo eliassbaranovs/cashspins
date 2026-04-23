@@ -10,6 +10,7 @@ interface Props {
       rating?: number | null;
       best_for?: string | null;
       bonus_value?: string | null;
+      bonus_wagering?: string | null;
       logo?: string | null;
       excerpt?: string;
       pros?: string[];
@@ -20,26 +21,58 @@ interface Props {
       license_status?: string | null;
     };
   };
+  rank?: number;
 }
 
-const { casino } = Astro.props;
+const { casino, rank } = Astro.props;
 const d = casino.data;
 const name = d.name || d.slug;
 const topPros = d.pros?.slice(0, 2) || [];
+
+// Top 3 get medal styling; everything else gets a muted numeric chip.
+const rankStyle = rank === 1
+  ? "bg-yellow-400 text-neutral-900"
+  : rank === 2
+  ? "bg-slate-300 text-neutral-900"
+  : rank === 3
+  ? "bg-amber-600 text-white"
+  : "bg-surface-container-highest text-on-surface-variant";
+
+// #1 earns an Editor's Pick accent ring + eyebrow label.
+const featured = rank === 1;
+
+// Wagering is sometimes a full sentence; cap it for the card.
+const wagering = d.bonus_wagering
+  ? (d.bonus_wagering.length > 48 ? d.bonus_wagering.slice(0, 45).trimEnd() + "…" : d.bonus_wagering)
+  : null;
 ---
 
-<div class="group relative bg-surface-container-low rounded-xl p-4 sm:p-6 hover:bg-surface-container-high ghost-border transition-all overflow-hidden">
+<div class:list={[
+  "group relative bg-surface-container-low rounded-xl p-4 sm:p-6 hover:bg-surface-container-high ghost-border transition-all overflow-hidden min-h-44",
+  featured && "ring-1 ring-yellow-400/40",
+]}>
   {/* Green accent bar on hover */}
   <div class="absolute left-0 top-1/2 -translate-y-1/2 w-1.5 h-16 bg-primary rounded-r-full opacity-0 group-hover:opacity-100 transition-opacity duration-300" aria-hidden="true"></div>
 
+  {featured && (
+    <span class="absolute top-0 right-6 bg-yellow-400 text-neutral-900 text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-b-sm">
+      Editor's Pick
+    </span>
+  )}
+
   <div class="flex flex-col lg:flex-row gap-6 items-start lg:items-center">
-    {/* Logo */}
-    <div class="shrink-0">
+    {/* Logo + Rank */}
+    <div class="shrink-0 relative">
+      {rank != null && (
+        <span class={`absolute -top-2 -left-2 z-10 w-8 h-8 rounded-full flex items-center justify-center text-xs font-headline font-black shadow-md ${rankStyle}`}>
+          {rank}
+        </span>
+      )}
       {d.logo ? (
         <img
           src={d.logo}
           alt={`${name} logo`}
-          class="w-28 h-28 rounded-xl bg-surface-container-lowest object-contain p-3 grayscale group-hover:grayscale-0 transition-all duration-300"
+          class="w-28 h-28 rounded-xl bg-surface-container-lowest object-contain p-3"
           loading="lazy"
         />
       ) : (
@@ -80,6 +113,12 @@ const topPros = d.pros?.slice(0, 2) || [];
       <div class="shrink-0 text-center lg:text-right max-w-56">
         <span class="text-xs font-label text-on-surface-variant uppercase tracking-wider block mb-1">Welcome Package</span>
         <span class="text-primary font-headline font-extrabold text-lg leading-tight block line-clamp-2">{d.bonus_value}</span>
+        {wagering && (
+          <span class="text-xs font-label text-on-surface-variant block mt-1">
+            <span class="uppercase tracking-wider">Wagering:</span>
+            <span class="text-on-surface font-bold ml-1">{wagering}</span>
+          </span>
+        )}
       </div>
     )}
 

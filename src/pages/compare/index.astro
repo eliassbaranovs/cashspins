@@ -2,19 +2,20 @@
 import { getCollection } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import Breadcrumbs from "../../components/Breadcrumbs.astro";
-import RatingBadge from "../../components/RatingBadge.astro";
+
+const currentYear = new Date().getFullYear();
 
 const allCasinos = (await getCollection("casinos"))
-  .filter((c: any) => !c.data.draft)
-  .sort((a: any, b: any) => (b.data.ourRating ?? 0) - (a.data.ourRating ?? 0));
+  .sort((a: any, b: any) => (b.data.rating ?? 0) - (a.data.rating ?? 0));
 
-// Also check for editorial comparisons
+// Editorial comparisons (pre-written head-to-heads in src/content/comparisons)
 let editorialComparisons: any[] = [];
 try {
   const rawComps = (await getCollection("comparisons"))
-    .filter((c: any) => !c.data.draft)
-    .sort((a: any, b: any) => new Date(b.data.publishedAt).getTime() - new Date(a.data.publishedAt).getTime());
-  // Resolve casino names/logos from the casinos collection
+    .sort((a: any, b: any) =>
+      new Date(b.data.published_at).getTime() - new Date(a.data.published_at).getTime()
+    );
+  // Resolve casino names/logos from the casinos collection where the comparison frontmatter omitted them
   editorialComparisons = rawComps.map((comp: any) => {
     const d = comp.data;
     const casinoA = allCasinos.find((c: any) => c.data.slug === d.casino_a_slug);
@@ -23,8 +24,8 @@ try {
       ...comp,
       data: {
         ...d,
-        casino_a_name: d.casino_a_name || casinoA?.data?.casinoName || d.casino_a_slug,
-        casino_b_name: d.casino_b_name || casinoB?.data?.casinoName || d.casino_b_slug,
+        casino_a_name: d.casino_a_name || casinoA?.data?.name || d.casino_a_slug,
+        casino_b_name: d.casino_b_name || casinoB?.data?.name || d.casino_b_slug,
         casino_a_logo: d.casino_a_logo || casinoA?.data?.logo || null,
         casino_b_logo: d.casino_b_logo || casinoB?.data?.logo || null,
       },
@@ -32,59 +33,83 @@ try {
   });
 } catch {}
 
-// Pre-build casino data for client-side comparison
-// Uses riobet-casino.md as the reference data model
+// Helper: some string fields (like bonus_wagering) are free-text sentences.
+// Cap anything destined for a comparison cell so the table stays readable.
+const cap = (s: any, max = 60): string | null => {
+  if (s == null) return null;
+  const str = String(s);
+  return str.length > max ? str.slice(0, max - 1).trimEnd() + "…" : str;
+};
+
+// Pre-build the client-side comparison data using the actual content schema.
+// Field names below must match `casinoFields` in src/content.config.ts — earlier
+// code referenced camelCase keys that never existed, so the table was mostly blank.
 const casinoData = allCasinos.map((c: any) => ({
   slug: c.data.slug,
-  name: c.data.casinoName ?? c.data.name ?? c.data.slug,
-  rating: c.data.ourRating ?? null,
+  name: c.data.name ?? c.data.slug,
+  rating: c.data.rating ?? null,
   logo: c.data.logo ?? null,
-  bonus_title: c.data.bonus_title ?? null,
-  wagering: c.data.wagering ?? null,
-  wageringMultiplier: c.data.wageringMultiplier ?? null,
-  min_deposit: c.data.bonus_min_deposit ?? c.data.min_deposit ?? null,
-  free_spins: c.data.free_spins ?? null,
-  bonus_percentage: c.data.bonus_percentage ?? null,
-  max_bonus: c.data.max_bonus ?? null,
+  bonus_value: c.data.bonus_value ?? null,
+  bonus_wagering: cap(c.data.bonus_wagering, 60),
+  bonus_min_deposit: c.data.bonus_min_deposit ?? null,
+  bonus_code: c.data.bonus_code ?? null,
+  min_deposit: c.data.min_deposit ?? null,
+  payout_speed: cap(c.data.payout_speed, 60),
   game_count: c.data.game_count ?? null,
-  gameProviders: c.data.gameProviders ?? null,
-  licences: c.data.licences ?? null,
+  game_providers: c.data.game_providers ?? null,
+  license: cap(c.data.license, 80),
+  license_status: c.data.license_status ?? null,
   established: c.data.established ?? null,
-  company: c.data.company ?? null,
-  casino_type: c.data.casino_type ?? null,
-  cryptoWithdrawalSpeedMinutes: c.data.cryptoWithdrawalSpeedMinutes ?? null,
-  acceptedCryptos: c.data.acceptedCryptos ?? [],
-  currencies: c.data.currencies ?? null,
-  depositMethods: c.data.depositMethods ?? null,
-  withdrawalMethods: c.data.withdrawalMethods ?? null,
+  owner: c.data.owner ?? null,
   vip_program: c.data.vip_program ?? null,
-  kycRequired: c.data.kycRequired ?? null,
-  isNewCasino: c.data.isNewCasino ?? null,
-  lastVerified: c.data.lastVerified ?? null,
+  kyc_required: c.data.kyc_required ?? null,
+  trustpilot_score: c.data.trustpilot_score ?? null,
+  askgamblers_score: c.data.askgamblers_score ?? null,
+  best_for: c.data.best_for ?? null,
+  currencies: c.data.currencies ?? [],
+  payment_methods: c.data.payment_methods ?? [],
+  deposit_methods: c.data.deposit_methods ?? [],
+  withdrawal_methods: c.data.withdrawal_methods ?? [],
   categories: c.data.categories ?? [],
-  bonusCount: c.data.bonuses?.length ?? 0,
+  bonus_count: c.data.bonuses?.length ?? 0,
   pros: c.data.pros ?? [],
   cons: c.data.cons ?? [],
-  faqCount: c.data.faqs?.length ?? 0,
-  screenshotCount: c.data.screenshots?.length ?? 0,
 }));
 
-// Featured matchups from top casinos
+// Featured matchups: pair adjacent entries by rating so the #1 vs #2, #3 vs #4, etc.
+// show "elite tier" head-to-heads rather than lopsided top-vs-bottom matches.
 const featured = [];
-for (let i = 0; i < Math.min(allCasinos.length - 1, 3); i++) {
-  if (allCasinos[i] && allCasinos[i + 1]) {
-    featured.push({
-      a: casinoData[i],
-      b: casinoData[i + 1],
-    });
+for (let i = 0; i < Math.min(casinoData.length - 1, 6); i += 2) {
+  if (casinoData[i] && casinoData[i + 1]) {
+    featured.push({ a: casinoData[i], b: casinoData[i + 1] });
   }
 }
+
+// SEO: ItemList schema over the editorial comparisons (these are the real indexable
+// long-form pages; the interactive tool itself is client-side and not indexable).
+const siteBase = (Astro.site ?? Astro.url.origin).toString().replace(/\/$/, "");
+const itemListSchema = editorialComparisons.length > 0
+  ? JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "ItemList",
+      name: `Casino Comparisons ${currentYear}`,
+      description: "Head-to-head casino comparisons reviewed by CashSpins editors.",
+      numberOfItems: editorialComparisons.length,
+      itemListElement: editorialComparisons.map((c: any, i: number) => ({
+        "@type": "ListItem",
+        position: i + 1,
+        url: `${siteBase}/compare/${c.data.slug}/`,
+        name: c.data.title || `${c.data.casino_a_name} vs ${c.data.casino_b_name}`,
+      })),
+    })
+  : undefined;
 ---
 
 <BaseLayout
-  title="Compare Online Casinos Side by Side | CashSpins"
-  seoTitle="Compare Casinos 2026 — Side-by-Side Analysis | CashSpins"
-  description="Compare any two online casinos head-to-head. See ratings, bonuses, game counts, payout speeds, and more — all from our verified review data."
+  title={`Compare Online Casinos Side-by-Side | CashSpins`}
+  seoTitle={`Compare Online Casinos ${currentYear} — Side-by-Side Casino Comparison Tool`}
+  description={`Compare any two online casinos head-to-head in ${currentYear}. Ratings, bonuses, wagering, payout speeds, licenses, and more — pulled from our verified review data.`}
+  schemaJsonLd={itemListSchema}
 >
   <div class="max-w-screen-2xl mx-auto px-4 md:px-8 pt-8 pb-20">
     <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Compare Casinos" }]} />
@@ -92,15 +117,15 @@ for (let i = 0; i < Math.min(allCasinos.length - 1, 3); i++) {
     <!-- Header -->
     <header class="mt-8 mb-12">
       <h1 class="font-headline text-4xl md:text-6xl font-extrabold tracking-tighter text-on-surface mb-4">
-        Compare <span class="text-primary">Casinos</span>
+        Compare Online Casinos <span class="text-primary">Side-by-Side</span>
       </h1>
       <p class="text-on-surface-variant text-lg max-w-2xl leading-relaxed">
-        Pick any two casinos and see how they stack up. All data comes from our verified reviews — ratings, bonuses, games, payouts, and more.
+        Pick any two casinos and see how they stack up — ratings, bonuses, wagering, payouts, licenses, and pros & cons, all pulled from our verified {currentYear} reviews.
       </p>
     </header>
 
     <!-- Casino Selector -->
-    <section class="bg-surface-container-low rounded-xl p-6 md:p-10 mb-12" id="compare-tool">
+    <section class="bg-surface-container-low rounded-xl p-6 md:p-8 mb-12 max-w-4xl mx-auto" id="compare-tool">
       <div class="grid grid-cols-1 md:grid-cols-[1fr_auto_1fr] gap-6 md:gap-4 items-end">
         <!-- Casino A selector -->
         <div>
@@ -119,11 +144,18 @@ for (let i = 0; i < Math.min(allCasinos.length - 1, 3); i++) {
           </select>
         </div>
 
-        <!-- VS badge -->
+        <!-- Swap button (doubles as VS badge) -->
         <div class="flex items-center justify-center">
-          <span class="inline-flex items-center justify-center w-14 h-14 rounded-full bg-secondary/10 text-secondary font-black text-lg font-headline">
-            VS
-          </span>
+          <button
+            id="compare-swap"
+            type="button"
+            title="Swap casinos"
+            aria-label="Swap casinos"
+            class="group relative inline-flex items-center justify-center w-14 h-14 rounded-full bg-secondary/10 text-secondary font-black text-lg font-headline hover:bg-secondary/20 transition-colors"
+          >
+            <span class="group-hover:opacity-0 transition-opacity">VS</span>
+            <span class="material-symbols-outlined absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity" style="font-size:28px">swap_horiz</span>
+          </button>
         </div>
 
         <!-- Casino B selector -->
@@ -179,34 +211,41 @@ for (let i = 0; i < Math.min(allCasinos.length - 1, 3); i++) {
     <!-- Featured Matchups -->
     {featured.length > 0 && (
       <section class="mb-16">
-        <h2 class="font-headline font-bold text-2xl text-on-surface mb-6 flex items-center gap-2">
-          <span class="material-symbols-outlined text-secondary">local_fire_department</span>
-          Featured Matchups
-        </h2>
+        <div class="flex items-end justify-between mb-6">
+          <h2 class="font-headline font-bold text-2xl text-on-surface flex items-center gap-2">
+            <span class="material-symbols-outlined text-secondary">local_fire_department</span>
+            Featured Matchups
+          </h2>
+          <p class="hidden sm:block text-xs text-on-surface-variant">Click to compare instantly using the tool above.</p>
+        </div>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
           {featured.map(({ a, b }: any) => (
             <button
               type="button"
-              class="featured-matchup group bg-surface-container-low rounded-xl p-6 ghost-border hover:bg-surface-container-high transition-all text-left"
+              class="featured-matchup group relative bg-surface-container-low rounded-xl p-6 ghost-border hover:bg-surface-container-high transition-all text-left"
               data-a={a.slug}
               data-b={b.slug}
             >
-              <div class="flex items-center justify-between gap-3 mb-4">
+              <span class="absolute top-3 right-3 inline-flex items-center gap-1 bg-secondary/15 text-secondary text-[10px] font-black uppercase tracking-widest px-2 py-0.5 rounded-sm">
+                <span class="material-symbols-outlined" style="font-size:12px">bolt</span>
+                Quick Tool
+              </span>
+              <div class="flex items-center justify-between gap-3 mb-4 mt-4">
                 <div class="flex-1 text-center min-w-0">
-                  {a.logo && <img src={a.logo} alt="" class="w-12 h-12 mx-auto rounded-lg bg-surface-container-lowest object-contain p-1 mb-2" loading="lazy" />}
+                  {a.logo && <img src={a.logo} alt="" class="w-20 h-20 mx-auto rounded-xl bg-surface-container-lowest object-contain p-3 mb-2" loading="lazy" />}
                   <p class="font-headline font-bold text-sm text-on-surface truncate">{a.name}</p>
                   {a.rating && <p class="text-primary text-xs font-bold mt-1">{a.rating}/10</p>}
                 </div>
                 <span class="text-secondary font-bold text-xs font-headline shrink-0">VS</span>
                 <div class="flex-1 text-center min-w-0">
-                  {b.logo && <img src={b.logo} alt="" class="w-12 h-12 mx-auto rounded-lg bg-surface-container-lowest object-contain p-1 mb-2" loading="lazy" />}
+                  {b.logo && <img src={b.logo} alt="" class="w-20 h-20 mx-auto rounded-xl bg-surface-container-lowest object-contain p-3 mb-2" loading="lazy" />}
                   <p class="font-headline font-bold text-sm text-on-surface truncate">{b.name}</p>
                   {b.rating && <p class="text-primary text-xs font-bold mt-1">{b.rating}/10</p>}
                 </div>
               </div>
-              <div class="text-center text-primary text-xs font-bold group-hover:underline">
-                Compare Now
-                <span class="material-symbols-outlined text-xs align-middle ml-1">arrow_forward</span>
+              <div class="text-center text-secondary text-xs font-bold group-hover:underline">
+                <span class="material-symbols-outlined text-xs align-middle mr-1">compare_arrows</span>
+                Compare Instantly
               </div>
             </button>
           ))}
@@ -217,40 +256,64 @@ for (let i = 0; i < Math.min(allCasinos.length - 1, 3); i++) {
     <!-- Editorial Comparisons (from content collection) -->
     {editorialComparisons.length > 0 && (
       <section class="mb-16">
-        <h2 class="font-headline font-bold text-2xl text-on-surface mb-6 flex items-center gap-2">
-          <span class="material-symbols-outlined text-secondary">article</span>
-          In-Depth Comparisons
-        </h2>
+        <div class="flex items-end justify-between mb-6">
+          <h2 class="font-headline font-bold text-2xl text-on-surface flex items-center gap-2">
+            <span class="material-symbols-outlined text-primary">article</span>
+            In-Depth Comparisons
+          </h2>
+          <p class="hidden sm:block text-xs text-on-surface-variant">Long-form head-to-heads by our editors.</p>
+        </div>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {editorialComparisons.map((comp: any) => {
+          {editorialComparisons.map((comp: any, i: number) => {
             const d = comp.data;
+            const winnerName = (() => {
+              if (!d.winner) return null;
+              const norm = (s: string) => (s ?? "").replace(/-/g, "").toLowerCase();
+              if (norm(d.winner) === norm(d.casino_a_slug)) return d.casino_a_name;
+              if (norm(d.winner) === norm(d.casino_b_slug)) return d.casino_b_name;
+              return d.winner;
+            })();
+            const isHero = i === 0;
             return (
-              <a href={`/compare/${d.slug}/`} class="group block bg-surface-container-low rounded-xl p-6 hover:bg-surface-container-high ghost-border transition-all">
-                <div class="flex items-center justify-between gap-3 mb-4">
+              <a
+                href={`/compare/${d.slug}/`}
+                class:list={[
+                  "group relative block bg-surface-container-low rounded-xl p-6 hover:bg-surface-container-high ghost-border transition-all",
+                  isHero && "md:col-span-2 lg:col-span-2 md:p-8",
+                ]}
+              >
+                <span class="absolute top-3 right-3 inline-flex items-center gap-1 bg-primary/15 text-primary text-[10px] font-black uppercase tracking-widest px-2 py-0.5 rounded-sm">
+                  <span class="material-symbols-outlined" style="font-size:12px">menu_book</span>
+                  Full Review
+                </span>
+                <div class="flex items-center justify-between gap-3 mb-4 mt-4">
                   <div class="flex-1 text-center min-w-0">
-                    {d.casino_a_logo && <img src={d.casino_a_logo} alt="" class="w-12 h-12 mx-auto rounded-lg bg-surface-container-lowest object-contain p-1 mb-2" loading="lazy" />}
-                    <p class="font-headline font-bold text-sm text-on-surface truncate">{d.casino_a_name}</p>
+                    {d.casino_a_logo && <img src={d.casino_a_logo} alt="" class:list={["mx-auto rounded-xl bg-surface-container-lowest object-contain p-3 mb-2", isHero ? "w-28 h-28" : "w-20 h-20"]} loading="lazy" />}
+                    <p class:list={["font-headline font-bold text-on-surface truncate", isHero ? "text-base" : "text-sm"]}>{d.casino_a_name}</p>
+                    {d.casino_a_rating != null && <p class="text-primary text-xs font-bold mt-1">{d.casino_a_rating}/10</p>}
                   </div>
                   <span class="text-secondary font-bold text-xs shrink-0">VS</span>
                   <div class="flex-1 text-center min-w-0">
-                    {d.casino_b_logo && <img src={d.casino_b_logo} alt="" class="w-12 h-12 mx-auto rounded-lg bg-surface-container-lowest object-contain p-1 mb-2" loading="lazy" />}
-                    <p class="font-headline font-bold text-sm text-on-surface truncate">{d.casino_b_name}</p>
+                    {d.casino_b_logo && <img src={d.casino_b_logo} alt="" class:list={["mx-auto rounded-xl bg-surface-container-lowest object-contain p-3 mb-2", isHero ? "w-28 h-28" : "w-20 h-20"]} loading="lazy" />}
+                    <p class:list={["font-headline font-bold text-on-surface truncate", isHero ? "text-base" : "text-sm"]}>{d.casino_b_name}</p>
+                    {d.casino_b_rating != null && <p class="text-primary text-xs font-bold mt-1">{d.casino_b_rating}/10</p>}
                   </div>
                 </div>
-                {d.winner && (
+                {winnerName && (
                   <div class="flex justify-center mb-3">
                     <span class="inline-flex items-center gap-1 bg-primary/10 text-primary text-xs font-bold px-2 py-0.5 rounded-full">
                       <span class="material-symbols-outlined text-xs" style="font-variation-settings: 'FILL' 1;">emoji_events</span>
-                      {(() => {
-                        const norm = (s: string) => s.replace(/-/g, '').toLowerCase();
-                        if (norm(d.winner) === norm(d.casino_a_slug)) return d.casino_a_name;
-                        if (norm(d.winner) === norm(d.casino_b_slug)) return d.casino_b_name;
-                        return d.winner;
-                      })()}
+                      Winner: {winnerName}
                     </span>
                   </div>
                 )}
-                <div class="text-center text-primary text-xs font-bold group-hover:underline">Read Full Comparison</div>
+                {d.excerpt && (
+                  <p class:list={["text-on-surface-variant text-sm leading-snug mb-3", isHero ? "line-clamp-4" : "line-clamp-2"]}>{d.excerpt}</p>
+                )}
+                <div class="text-primary text-xs font-bold group-hover:gap-2 transition-all flex items-center gap-1">
+                  Read Full Comparison
+                  <span class="material-symbols-outlined text-xs">arrow_forward</span>
+                </div>
               </a>
             );
           })}
@@ -279,11 +342,11 @@ for (let i = 0; i < Math.min(allCasinos.length - 1, 3); i++) {
   <!-- Casino data for client-side comparison -->
   <script define:vars={{ casinoData }}>
     const casinos = casinoData;
+    const getCasino = (slug) => casinos.find(c => c.slug === slug);
 
-    function getCasino(slug) {
-      return casinos.find(c => c.slug === slug);
-    }
-
+    // Rating color tiers align with the site's dark theme (green for strong, amber
+    // for mid, muted red for weak). Kept as raw values because Astro can't compile
+    // dynamic Tailwind classes inside a template string.
     function ratingColor(r) {
       if (r >= 8) return { bg: "rgba(71,235,113,0.1)", text: "#47eb71" };
       if (r >= 6) return { bg: "rgba(242,204,0,0.1)", text: "#f2cc00" };
@@ -291,23 +354,31 @@ for (let i = 0; i < Math.min(allCasinos.length - 1, 3); i++) {
     }
 
     function buildHeader(c) {
-      const logo = c.logo ? `<img src="${c.logo}" alt="${c.name}" class="w-16 h-16 mx-auto rounded-xl bg-[#0e0e0e] object-contain p-2 mb-3" />` : '';
+      const logo = c.logo
+        ? `<img src="${c.logo}" alt="${c.name}" class="w-16 h-16 mx-auto rounded-xl bg-[#0e0e0e] object-contain p-2 mb-3" />`
+        : '';
       const rc = c.rating ? ratingColor(c.rating) : null;
-      const badge = c.rating ? `<span style="background:${rc.bg};color:${rc.text}" class="inline-flex items-center font-bold rounded-full text-sm px-3 py-1 gap-1"><span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>${c.rating}/10</span>` : '';
+      const badge = c.rating
+        ? `<span style="background:${rc.bg};color:${rc.text}" class="inline-flex items-center font-bold rounded-full text-sm px-3 py-1 gap-1"><span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>${c.rating}/10</span>`
+        : '';
       return `${logo}<h3 class="font-headline font-bold text-xl text-[#e5e2e1] mb-2">${c.name}</h3>${badge}`;
     }
 
+    // Render a single comparison row. Hides the whole row if neither side has data,
+    // and highlights the numerically larger value in primary-green when both are
+    // comparable (e.g. ratings, game counts, provider counts).
     function row(label, icon, valA, valB) {
-      if (!valA && !valB) return '';
+      if (valA == null && valB == null) return '';
       const better = (a, b) => {
-        if (!a || !b) return '';
-        const na = parseFloat(a), nb = parseFloat(b);
+        if (a == null || b == null) return '';
+        const na = parseFloat(String(a).replace(/[^\d.-]/g, ''));
+        const nb = parseFloat(String(b).replace(/[^\d.-]/g, ''));
         if (isNaN(na) || isNaN(nb)) return '';
         return na > nb ? 'a' : nb > na ? 'b' : '';
       };
       const win = better(valA, valB);
-      const cellA = `<div class="p-4 text-center text-sm ${win === 'a' ? 'text-[#47eb71] font-bold' : 'text-[#d0c5af]'}">${valA || '—'}</div>`;
-      const cellB = `<div class="p-4 text-center text-sm ${win === 'b' ? 'text-[#47eb71] font-bold' : 'text-[#d0c5af]'}">${valB || '—'}</div>`;
+      const cellA = `<div class="p-4 text-center text-sm ${win === 'a' ? 'text-[#47eb71] font-bold' : 'text-[#d0c5af]'}">${valA ?? '—'}</div>`;
+      const cellB = `<div class="p-4 text-center text-sm ${win === 'b' ? 'text-[#47eb71] font-bold' : 'text-[#d0c5af]'}">${valB ?? '—'}</div>`;
       return `<div class="grid grid-cols-3 border-t border-[#4d4635]/20">
         ${cellA}
         <div class="p-4 text-center text-[#d0c5af] text-xs font-bold flex items-center justify-center gap-1.5"><span class="material-symbols-outlined text-sm">${icon}</span>${label}</div>
@@ -315,63 +386,57 @@ for (let i = 0; i < Math.min(allCasinos.length - 1, 3); i++) {
       </div>`;
     }
 
+    const yn = (v) => v == null ? null : (v ? 'Yes' : 'No');
+    const count = (arr, noun) => Array.isArray(arr) && arr.length ? `${arr.length} ${noun}` : null;
+
     function buildTable(a, b) {
-      const provCount = (p) => p ? (Array.isArray(p) ? p.length : p.split('|').length) : null;
-      const currCount = (c) => c ? (Array.isArray(c) ? c : c.split('|').map(s => s.trim()).filter(Boolean)) : [];
       return `
         <div class="grid grid-cols-3 text-sm font-bold text-[#d0c5af] bg-[#2a2a2a]">
           <div class="p-4 text-center">${a.name}</div>
           <div class="p-4 text-center">Category</div>
           <div class="p-4 text-center">${b.name}</div>
         </div>
-        ${row('Our Rating', 'star', a.rating ? a.rating + '/10' : null, b.rating ? b.rating + '/10' : null)}
-        ${row('Welcome Bonus', 'redeem', a.bonus_title, b.bonus_title)}
-        ${row('Bonus Count', 'card_giftcard', a.bonusCount ? a.bonusCount + ' offers' : null, b.bonusCount ? b.bonusCount + ' offers' : null)}
-        ${row('Wagering', 'calculate', a.wagering, b.wagering)}
-        ${row('Min Deposit', 'savings', a.min_deposit, b.min_deposit)}
-        ${row('Game Providers', 'sports_esports', provCount(a.gameProviders) ? provCount(a.gameProviders) + ' providers' : null, provCount(b.gameProviders) ? provCount(b.gameProviders) + ' providers' : null)}
-        ${row('Payout Speed', 'speed', a.cryptoWithdrawalSpeedMinutes ? '~' + a.cryptoWithdrawalSpeedMinutes + ' min' : null, b.cryptoWithdrawalSpeedMinutes ? '~' + b.cryptoWithdrawalSpeedMinutes + ' min' : null)}
-        ${row('License', 'gavel', a.licences, b.licences)}
-        ${row('Operator', 'apartment', a.company, b.company)}
-        ${row('Established', 'history', a.established, b.established)}
-        ${row('Type', 'category', a.casino_type, b.casino_type)}
-        ${row('VIP Program', 'workspace_premium', a.vip_program != null ? (a.vip_program ? 'Yes' : 'No') : null, b.vip_program != null ? (b.vip_program ? 'Yes' : 'No') : null)}
-        ${row('KYC Required', 'badge', a.kycRequired != null ? (a.kycRequired ? 'Yes' : 'No') : null, b.kycRequired != null ? (b.kycRequired ? 'Yes' : 'No') : null)}
-        ${row('Accepted Crypto', 'currency_bitcoin', a.acceptedCryptos.length ? a.acceptedCryptos.join(', ') : null, b.acceptedCryptos.length ? b.acceptedCryptos.join(', ') : null)}
-        ${row('Currencies', 'payments', currCount(a.currencies).length ? currCount(a.currencies).length + ' currencies' : null, currCount(b.currencies).length ? currCount(b.currencies).length + ' currencies' : null)}
-        ${row('Last Verified', 'verified', a.lastVerified, b.lastVerified)}
+        ${row('Our Rating',        'star',             a.rating != null ? a.rating + '/10' : null, b.rating != null ? b.rating + '/10' : null)}
+        ${row('Best For',          'favorite',         a.best_for, b.best_for)}
+        ${row('Welcome Bonus',     'redeem',           a.bonus_value, b.bonus_value)}
+        ${row('Wagering',          'calculate',        a.bonus_wagering, b.bonus_wagering)}
+        ${row('Bonus Code',        'qr_code_2',        a.bonus_code, b.bonus_code)}
+        ${row('Bonus Min Deposit', 'savings',          a.bonus_min_deposit, b.bonus_min_deposit)}
+        ${row('Active Bonuses',    'card_giftcard',    a.bonus_count ? a.bonus_count + ' offers' : null, b.bonus_count ? b.bonus_count + ' offers' : null)}
+        ${row('Game Count',        'casino',           a.game_count ? a.game_count.toLocaleString() : null, b.game_count ? b.game_count.toLocaleString() : null)}
+        ${row('Game Providers',    'sports_esports',   count(a.game_providers, 'providers'), count(b.game_providers, 'providers'))}
+        ${row('Payout Speed',      'speed',            a.payout_speed, b.payout_speed)}
+        ${row('Min Deposit',       'payments',         a.min_deposit, b.min_deposit)}
+        ${row('License',           'gavel',            a.license, b.license)}
+        ${row('Operator',          'apartment',        a.owner, b.owner)}
+        ${row('Established',       'history',          a.established, b.established)}
+        ${row('VIP Program',       'workspace_premium', yn(a.vip_program), yn(b.vip_program))}
+        ${row('KYC Required',      'badge',            yn(a.kyc_required), yn(b.kyc_required))}
+        ${row('Trustpilot',        'reviews',          a.trustpilot_score, b.trustpilot_score)}
+        ${row('AskGamblers',       'forum',            a.askgamblers_score, b.askgamblers_score)}
+        ${row('Payment Methods',   'credit_card',      count(a.payment_methods, 'methods'), count(b.payment_methods, 'methods'))}
+        ${row('Currencies',        'attach_money',     count(a.currencies, 'currencies'), count(b.currencies, 'currencies'))}
       `;
     }
 
     function buildProsCons(a, b) {
-      const list = (items, icon, color) => items.length ? items.map(i =>
-        `<li class="flex items-start gap-2 text-sm text-[#d0c5af]"><span class="material-symbols-outlined ${color} text-base mt-0.5">${icon}</span>${i}</li>`
-      ).join('') : '<li class="text-sm text-[#99907c]">No data available</li>';
+      const list = (items, icon, color) => items.length
+        ? items.map(i => `<li class="flex items-start gap-2 text-sm text-[#d0c5af]"><span class="material-symbols-outlined ${color} text-base mt-0.5">${icon}</span>${i}</li>`).join('')
+        : '<li class="text-sm text-[#99907c]">No data available</li>';
 
-      return `
+      const pane = (c) => `
         <div class="bg-[#1c1b1b] rounded-xl p-6">
-          <h3 class="font-headline font-bold text-lg text-[#e5e2e1] mb-4">${a.name}</h3>
+          <h3 class="font-headline font-bold text-lg text-[#e5e2e1] mb-4">${c.name}</h3>
           <div class="mb-4">
             <p class="text-xs font-bold text-[#47eb71] uppercase tracking-wider mb-2 flex items-center gap-1"><span class="material-symbols-outlined text-sm">add_circle</span>Pros</p>
-            <ul class="space-y-2">${list(a.pros, 'check', 'text-[#47eb71]')}</ul>
+            <ul class="space-y-2">${list(c.pros, 'check', 'text-[#47eb71]')}</ul>
           </div>
           <div>
             <p class="text-xs font-bold text-[#ffb4ab] uppercase tracking-wider mb-2 flex items-center gap-1"><span class="material-symbols-outlined text-sm">remove_circle</span>Cons</p>
-            <ul class="space-y-2">${list(a.cons, 'close', 'text-[#ffb4ab]')}</ul>
+            <ul class="space-y-2">${list(c.cons, 'close', 'text-[#ffb4ab]')}</ul>
           </div>
-        </div>
-        <div class="bg-[#1c1b1b] rounded-xl p-6">
-          <h3 class="font-headline font-bold text-lg text-[#e5e2e1] mb-4">${b.name}</h3>
-          <div class="mb-4">
-            <p class="text-xs font-bold text-[#47eb71] uppercase tracking-wider mb-2 flex items-center gap-1"><span class="material-symbols-outlined text-sm">add_circle</span>Pros</p>
-            <ul class="space-y-2">${list(b.pros, 'check', 'text-[#47eb71]')}</ul>
-          </div>
-          <div>
-            <p class="text-xs font-bold text-[#ffb4ab] uppercase tracking-wider mb-2 flex items-center gap-1"><span class="material-symbols-outlined text-sm">remove_circle</span>Cons</p>
-            <ul class="space-y-2">${list(b.cons, 'close', 'text-[#ffb4ab]')}</ul>
-          </div>
-        </div>
-      `;
+        </div>`;
+      return pane(a) + pane(b);
     }
 
     function buildCTAs(a, b) {
@@ -381,7 +446,7 @@ for (let i = 0; i < Math.min(allCasinos.length - 1, 3); i++) {
       `;
     }
 
-    function runComparison(slugA, slugB) {
+    function runComparison(slugA, slugB, { scroll = true, updateUrl = true } = {}) {
       const a = getCasino(slugA);
       const b = getCasino(slugB);
       if (!a || !b) return;
@@ -391,26 +456,43 @@ for (let i = 0; i < Math.min(allCasinos.length - 1, 3); i++) {
       document.getElementById('compare-table').innerHTML = buildTable(a, b);
       document.getElementById('compare-proscons').innerHTML = buildProsCons(a, b);
       document.getElementById('compare-ctas').innerHTML = buildCTAs(a, b);
-      document.getElementById('compare-results').classList.remove('hidden');
-      document.getElementById('compare-results').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      const results = document.getElementById('compare-results');
+      results.classList.remove('hidden');
+      if (scroll) results.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+      if (updateUrl) {
+        const url = new URL(window.location.href);
+        url.searchParams.set('a', slugA);
+        url.searchParams.set('b', slugB);
+        history.replaceState(null, '', url.toString());
+      }
     }
 
-    // Wire up selectors
     document.addEventListener('DOMContentLoaded', () => {
       const selA = document.getElementById('casino-a');
       const selB = document.getElementById('casino-b');
-      const btn = document.getElementById('compare-btn');
+      const btn  = document.getElementById('compare-btn');
+      const swap = document.getElementById('compare-swap');
 
-      function updateBtn() {
-        btn.disabled = !selA.value || !selB.value || selA.value === selB.value;
-      }
+      const canCompare = () => selA.value && selB.value && selA.value !== selB.value;
+      const updateBtn  = () => { btn.disabled = !canCompare(); };
 
       selA.addEventListener('change', updateBtn);
       selB.addEventListener('change', updateBtn);
 
       btn.addEventListener('click', () => {
-        if (selA.value && selB.value && selA.value !== selB.value) {
-          runComparison(selA.value, selB.value);
+        if (canCompare()) runComparison(selA.value, selB.value);
+      });
+
+      // Swap button — mirrors selector values, and also swaps the rendered
+      // comparison in place if one is already visible.
+      swap.addEventListener('click', () => {
+        const prevA = selA.value, prevB = selB.value;
+        selA.value = prevB;
+        selB.value = prevA;
+        updateBtn();
+        if (canCompare() && !document.getElementById('compare-results').classList.contains('hidden')) {
+          runComparison(selA.value, selB.value, { scroll: false });
         }
       });
 
@@ -425,6 +507,17 @@ for (let i = 0; i < Math.min(allCasinos.length - 1, 3); i++) {
           runComparison(a, b);
         });
       });
+
+      // URL state: hydrate ?a=slug&b=slug on page load so shared compare links work.
+      const params = new URLSearchParams(window.location.search);
+      const urlA = params.get('a');
+      const urlB = params.get('b');
+      if (urlA && urlB && getCasino(urlA) && getCasino(urlB) && urlA !== urlB) {
+        selA.value = urlA;
+        selB.value = urlB;
+        updateBtn();
+        runComparison(urlA, urlB, { scroll: false, updateUrl: false });
+      }
     });
   </script>
 </BaseLayout>

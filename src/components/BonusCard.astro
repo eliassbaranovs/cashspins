@@ -8,7 +8,10 @@ interface Props {
       bonus_value?: string | null;
       bonus_wagering?: string | null;
       bonus_min_deposit?: string | null;
+      bonus_code?: string | null;
       logo?: string | null;
+      excerpt?: string;
+      tags?: string[];
     };
   };
 }
@@ -17,6 +20,35 @@ const { bonus } = Astro.props;
 const d = bonus.data;
 const name = d.casino_name || d.casino_slug || d.slug;
 const casinoSlug = d.casino_slug || d.slug;
+
+// Derive 1-2 bonus-type badges from the tag list. Priority favors the more
+// differentiating types so a "welcome + free spins" bonus highlights free spins.
+const BADGE_PRIORITY: { match: string; label: string; tone: string }[] = [
+  { match: "no deposit", label: "No Deposit", tone: "bg-tertiary/15 text-tertiary" },
+  { match: "free spins", label: "Free Spins", tone: "bg-secondary/15 text-secondary" },
+  { match: "cashback",   label: "Cashback",   tone: "bg-primary/15 text-primary" },
+  { match: "rakeback",   label: "Rakeback",   tone: "bg-primary/15 text-primary" },
+  { match: "vip",        label: "VIP",        tone: "bg-tertiary/15 text-tertiary" },
+  { match: "loyalty",    label: "VIP",        tone: "bg-tertiary/15 text-tertiary" },
+  { match: "welcome",    label: "Welcome",    tone: "bg-surface-container-highest text-on-surface" },
+  { match: "crypto",     label: "Crypto",     tone: "bg-secondary/15 text-secondary" },
+];
+
+const normTags = (d.tags ?? []).map(t => t.toLowerCase());
+const badges: { label: string; tone: string }[] = [];
+const seen = new Set<string>();
+for (const b of BADGE_PRIORITY) {
+  if (normTags.some(t => t.includes(b.match)) && !seen.has(b.label)) {
+    badges.push({ label: b.label, tone: b.tone });
+    seen.add(b.label);
+    if (badges.length >= 2) break;
+  }
+}
+
+// Truncate excerpt to ~one-line summary for the card
+const summary = d.excerpt
+  ? (d.excerpt.length > 160 ? d.excerpt.slice(0, 157).trimEnd() + "…" : d.excerpt)
+  : null;
 ---
 
 <div class="bg-surface-container-low rounded-xl p-4 sm:p-6 hover:bg-surface-container-high ghost-border transition-all">
@@ -29,16 +61,16 @@ const casinoSlug = d.casino_slug || d.slug;
           <img
             src={d.logo}
             alt={`${name} logo`}
-            class="w-16 h-16 sm:w-28 sm:h-28 rounded-xl bg-surface-container-lowest object-contain p-2 sm:p-3"
+            class="w-16 h-16 sm:w-24 sm:h-24 rounded-xl bg-surface-container-lowest object-contain p-2"
             loading="lazy"
           />
         ) : (
-          <div class="w-16 h-16 sm:w-28 sm:h-28 rounded-xl bg-surface-container-lowest flex items-center justify-center">
+          <div class="w-16 h-16 sm:w-24 sm:h-24 rounded-xl bg-surface-container-lowest flex items-center justify-center">
             <span class="material-symbols-outlined text-outline text-2xl sm:text-4xl">redeem</span>
           </div>
         )}
       </div>
-      {/* Name visible on mobile next to logo */}
+      {/* Name + value visible on mobile next to logo */}
       <div class="sm:hidden min-w-0">
         <p class="text-on-surface-variant text-xs font-label tracking-wide">{name}</p>
         {d.bonus_value && (
@@ -47,20 +79,43 @@ const casinoSlug = d.casino_slug || d.slug;
       </div>
     </div>
 
-    {/* Content — stacked: title on top, stats below */}
+    {/* Content */}
     <div class="min-w-0 flex flex-col justify-center gap-3">
-      {/* Name + bonus title (hidden on mobile, shown on desktop) */}
+      {/* Badges + casino name + bonus value (desktop) */}
       <div class="min-w-0 hidden sm:block">
+        {badges.length > 0 && (
+          <div class="flex flex-wrap gap-1.5 mb-2">
+            {badges.map(b => (
+              <span class={`${b.tone} text-[10px] font-black uppercase tracking-widest px-2.5 py-1 rounded-sm`}>
+                {b.label}
+              </span>
+            ))}
+          </div>
+        )}
         <p class="text-on-surface-variant text-xs font-label tracking-wide">{name}</p>
         {d.bonus_value && (
-          <h3 class="font-headline font-bold text-lg text-primary mt-0.5 line-clamp-2">{d.bonus_value}</h3>
+          <h3 class="font-headline font-bold text-lg text-primary mt-0.5 line-clamp-1">{d.bonus_value}</h3>
+        )}
+        {summary && (
+          <p class="text-on-surface-variant text-sm mt-1 line-clamp-2 leading-snug">{summary}</p>
         )}
       </div>
 
+      {/* Mobile badges (shown under the logo/name row) */}
+      {badges.length > 0 && (
+        <div class="flex flex-wrap gap-1.5 sm:hidden">
+          {badges.map(b => (
+            <span class={`${b.tone} text-[10px] font-black uppercase tracking-widest px-2.5 py-1 rounded-sm`}>
+              {b.label}
+            </span>
+          ))}
+        </div>
+      )}
+
       {/* Stats pills row */}
-      <div class="flex flex-wrap gap-2.5 items-center">
+      <div class="flex flex-wrap gap-2 items-center">
         {d.bonus_wagering && (
-          <div class="bg-surface-container rounded-lg px-4 py-2 text-center max-w-sm">
+          <div class="bg-surface-container rounded-lg px-3.5 py-2 text-center max-w-xs">
             <span class="block text-[10px] font-label text-on-surface-variant uppercase tracking-widest">Wagering</span>
             <span class="block text-sm font-bold text-on-surface line-clamp-1">{d.bonus_wagering}</span>
           </div>
@@ -69,6 +124,12 @@ const casinoSlug = d.casino_slug || d.slug;
           <div class="bg-surface-container rounded-lg px-3.5 py-2 text-center">
             <span class="block text-[10px] font-label text-on-surface-variant uppercase tracking-widest">Min Deposit</span>
             <span class="block text-sm font-bold text-on-surface">{d.bonus_min_deposit}</span>
+          </div>
+        )}
+        {d.bonus_code && d.bonus_code.toLowerCase() !== "none required" && d.bonus_code.toLowerCase() !== "not_found" && (
+          <div class="bg-surface-container rounded-lg px-3.5 py-2 text-center">
+            <span class="block text-[10px] font-label text-on-surface-variant uppercase tracking-widest">Code</span>
+            <span class="block text-sm font-bold text-primary font-mono">{d.bonus_code}</span>
           </div>
         )}
       </div>

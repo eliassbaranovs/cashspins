@@ -14,16 +14,14 @@ import { buildCanonical, generateFAQSchema, generateReviewSchema } from "../../l
 
 export async function getStaticPaths() {
   const casinos = await getCollection("casinos");
-  return casinos
-    .filter((c) => !c.data.draft)
-    .map((casino) => ({
-      params: { slug: casino.data.slug },
-      props: { casino },
-    }));
+  return casinos.map((casino) => ({
+    params: { slug: casino.data.slug },
+    props: { casino },
+  }));
 }
 
 const { casino } = Astro.props;
-const d = casino.data;
+const d: any = casino.data;
 const { Content } = await render(casino);
 
 const depositArr = d.deposit_methods ?? [];
@@ -33,26 +31,35 @@ const currenciesArr = d.currencies ?? [];
 
 // Related casinos
 const allCasinos = await getCollection("casinos");
-const related = getRelatedByTags(d.tags ?? [], allCasinos.filter((c) => !c.data.draft), d.slug, 3);
+const related = getRelatedByTags(d.tags ?? [], allCasinos, d.slug, 3);
 
-// Author
+// Author — schema uses snake_case `author_slug`.
 let authorEntry: any = undefined;
 try {
-  if (d.authorSlug) {
+  if (d.author_slug) {
     const authors = await getCollection("authors");
-    authorEntry = authors.find((a) => a.data.slug === d.authorSlug);
+    authorEntry = authors.find((a) => a.data.slug === d.author_slug);
   }
 } catch {}
+const authorName = authorEntry?.data?.name ?? d.author_slug;
+
+// Casino display name — H1 should be the brand, not the full article title.
+const displayName = d.name ?? d.title;
+
+// Formatted publish date for the hero meta row.
+const publishedDate = d.published_at
+  ? new Date(d.published_at).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })
+  : null;
 
 // SEO schemas
 const canonical = buildCanonical(`casinos/${d.slug}`);
 const reviewSchema = generateReviewSchema({
-  title: d.title,
+  title: displayName,
   description: d.description ?? "",
-  ourRating: d.ourRating,
+  rating: d.rating,
   image: d.image,
-  author: d.author,
-  publishedAt: d.publishedAt,
+  author_name: authorName,
+  published_at: d.published_at,
   slug: d.slug,
 });
 
@@ -66,104 +73,92 @@ const combinedSchema = `[${schemas.join(",")}]`;
 
 <BaseLayout
   title={d.title}
-  seoTitle={d.seoTitle}
+  seoTitle={d.seo_title}
   description={d.description}
   image={d.image}
-  imageAlt={d.imageAlt}
+  imageAlt={d.image_alt}
   canonical={canonical}
-  robots={d.robots}
-  schemaJsonLd={d.schemaJsonLd || combinedSchema}
-  noIndex={d.noIndex}
+  schemaJsonLd={combinedSchema}
   ogType="article"
 >
   <div class="max-w-screen-2xl mx-auto px-4 md:px-8 pt-8 pb-20">
 
     {/* ───────────────── HERO HEADER ───────────────── */}
+    <div class="mb-6">
+      <Breadcrumbs
+        items={[
+          { label: "Home", href: "/" },
+          { label: "Casino Reviews", href: "/casinos/" },
+          { label: displayName },
+        ]}
+      />
+    </div>
+
     <header class="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-16">
 
-      {/* Left column */}
+      {/* Left column — identity + meta */}
       <div class="lg:col-span-8 flex flex-col justify-center">
-        {/* Breadcrumbs */}
-        <div class="mb-6">
-          <Breadcrumbs
-            items={[
-              { label: "Home", href: "/" },
-              { label: "Casino Reviews", href: "/casinos/" },
-              { label: d.casinoName ?? d.title },
-            ]}
-          />
-        </div>
-
-        {/* Logo + heading group */}
-        <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6 mb-6">
+        <div class="flex flex-col sm:flex-row items-start gap-5 sm:gap-6">
+          {/* Logo tile — matches the standardized pattern used across lists */}
           {d.logo ? (
-            <div class="w-24 h-24 sm:w-40 sm:h-40 bg-surface-container-high rounded-xl flex items-center justify-center p-3 sm:p-4 shadow-xl border border-outline-variant/20 overflow-hidden shrink-0">
-              <img
-                src={d.logo}
-                alt={`${d.casinoName} logo`}
-                class="w-full h-full object-contain"
-                loading="eager"
-                width="128"
-                height="128"
-              />
-            </div>
+            <img
+              src={d.logo}
+              alt={`${displayName} logo`}
+              class="w-24 h-24 sm:w-32 sm:h-32 rounded-xl bg-surface-container-lowest object-contain p-3 shrink-0"
+              loading="eager"
+              width="128"
+              height="128"
+            />
           ) : (
-            <div class="w-24 h-24 sm:w-40 sm:h-40 bg-surface-container-high rounded-xl flex items-center justify-center shrink-0">
+            <div class="w-24 h-24 sm:w-32 sm:h-32 rounded-xl bg-surface-container-lowest flex items-center justify-center shrink-0">
               <span class="material-symbols-outlined text-outline text-4xl">casino</span>
             </div>
           )}
-          <div>
-            {/* Verified badge */}
-            {d.ourRating != null && d.ourRating >= 8 && (
-              <div class="flex items-center gap-3 mb-2">
-                <span class="bg-secondary-container/20 text-secondary text-[10px] font-bold tracking-widest uppercase px-2 py-0.5 rounded-sm flex items-center gap-1">
-                  <span class="material-symbols-outlined text-[12px]" style="font-variation-settings: 'FILL' 1;">verified</span> Verified Expert Choice
+
+          <div class="min-w-0 flex-1">
+            {/* Eyebrow row — editorial badges grouped together */}
+            <div class="flex flex-wrap items-center gap-2 mb-3">
+              {d.rating != null && d.rating >= 8 && (
+                <span class="inline-flex items-center gap-1 bg-secondary/15 text-secondary text-[10px] font-black tracking-widest uppercase px-2 py-1 rounded-sm">
+                  <span class="material-symbols-outlined" style="font-size:12px; font-variation-settings: 'FILL' 1;">verified</span>
+                  Verified Expert Choice
                 </span>
-              </div>
-            )}
-            {d.lastVerified && (
-              <div class="flex items-center gap-1.5 mt-1">
-                <span class="material-symbols-outlined text-primary text-sm" style="font-variation-settings: 'FILL' 1;">verified</span>
-                <span class="text-xs text-on-surface-variant">Last verified: {new Date(d.lastVerified).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })}</span>
-              </div>
-            )}
-
-            <h1 class="text-3xl sm:text-4xl md:text-6xl font-headline font-extrabold tracking-tighter text-on-surface mb-2">
-              {d.casinoName ?? d.title}
-            </h1>
-
-            {/* Rating row */}
-            <div class="flex items-center gap-4 text-on-surface-variant flex-wrap">
-              {d.ourRating != null && (
-                <>
-                  <RatingStars rating={d.ourRating} />
-                  <span class="font-semibold text-lg text-on-surface">{d.ourRating.toFixed(1)} / 10</span>
-                  <span class="text-outline-variant">|</span>
-                  <span class="text-sm">Based on expert review</span>
-                </>
+              )}
+              {d.license && (
+                <LicenseBadge license={d.license} licenseStatus={d.license_status} size="sm" />
               )}
             </div>
 
-            {/* License badge */}
-            {d.license && (
-              <div class="mt-3">
-                <LicenseBadge license={d.license} licenseStatus={d.license_status} size="lg" />
-              </div>
-            )}
+            {/* H1 — the casino brand, NOT the article title */}
+            <h1 class="text-3xl sm:text-4xl md:text-5xl font-headline font-extrabold tracking-tighter text-on-surface leading-tight mb-3">
+              {displayName}
+            </h1>
 
-            {/* Dates — freshness signal for Google */}
-            <div class="flex flex-wrap items-center gap-3 mt-3 text-xs text-on-surface-variant font-label">
-              {d.publishedAt && (
-                <div class="flex items-center gap-1">
-                  <span class="material-symbols-outlined text-sm">calendar_today</span>
-                  <span>Published: <time datetime={d.publishedAt}>{new Date(d.publishedAt).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })}</time></span>
-                </div>
+            {/* Single unified meta row — rating, author, date */}
+            <div class="flex items-center gap-3 flex-wrap text-sm text-on-surface-variant">
+              {d.rating != null && (
+                <span class="inline-flex items-center gap-2">
+                  <RatingStars rating={d.rating} />
+                  <span class="font-bold text-on-surface">{d.rating.toFixed(1)}/10</span>
+                </span>
               )}
-              {d.updatedAt && d.updatedAt !== d.publishedAt && (
-                <div class="flex items-center gap-1">
-                  <span class="material-symbols-outlined text-sm">update</span>
-                  <span>Updated: <time datetime={d.updatedAt}>{new Date(d.updatedAt).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })}</time></span>
-                </div>
+              {authorName && (
+                <>
+                  <span class="w-1 h-1 rounded-full bg-outline-variant"></span>
+                  <span class="inline-flex items-center gap-1">
+                    <span class="material-symbols-outlined text-sm">person</span>
+                    Reviewed by {authorName}
+                  </span>
+                </>
+              )}
+              {publishedDate && (
+                <>
+                  <span class="w-1 h-1 rounded-full bg-outline-variant"></span>
+                  <time datetime={d.published_at} class="inline-flex items-center gap-1">
+                    <span class="material-symbols-outlined text-sm">calendar_today</span>
+                    {publishedDate}
+                  </time>
+                </>
               )}
             </div>
           </div>
@@ -179,19 +174,21 @@ const combinedSchema = `[${schemas.join(",")}]`;
             Exclusive Welcome Bonus
           </p>
 
-          {d.bonus_title && (
+          {d.bonus_value ? (
             <h2 class="text-primary text-3xl sm:text-4xl font-headline font-extrabold tracking-tighter mb-2">
-              {d.bonus_title}
+              {d.bonus_value}
+            </h2>
+          ) : (
+            <h2 class="text-on-surface text-2xl font-headline font-bold mb-2">
+              Claim your welcome offer
             </h2>
           )}
 
-          {d.wagering && (
+          {d.bonus_wagering && d.bonus_wagering.length < 40 ? (
             <p class="text-on-surface-variant text-sm mb-6 leading-relaxed">
-              Wagering: {d.wagering}. T&Cs apply.
+              Wagering: {d.bonus_wagering}. T&Cs apply.
             </p>
-          )}
-
-          {!d.wagering && (
+          ) : (
             <p class="text-on-surface-variant text-sm mb-6 leading-relaxed">
               T&Cs apply.
             </p>
@@ -204,7 +201,7 @@ const combinedSchema = `[${schemas.join(",")}]`;
               variant="primary"
               size="lg"
               sponsored={true}
-              ariaLabel={`Claim bonus at ${d.casinoName ?? d.title}`}
+              ariaLabel={`Claim bonus at ${displayName}`}
             />
           </div>
 
@@ -217,19 +214,19 @@ const combinedSchema = `[${schemas.join(",")}]`;
 
     {/* ───────────────── QUICK STATS GRID ───────────────── */}
     <section class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-16">
-      {d.cryptoWithdrawalSpeedMinutes != null && (
+      {d.payout_speed && (
         <div class="bg-surface-container-lowest p-6 rounded-lg border-b-2 border-primary/20">
           <span class="material-symbols-outlined text-primary mb-3">speed</span>
           <p class="text-xs text-outline font-bold tracking-wide uppercase mb-1">Payout Speed</p>
-          <p class="font-bold text-on-surface">~{d.cryptoWithdrawalSpeedMinutes} min</p>
+          <p class="font-bold text-on-surface text-sm line-clamp-2">{d.payout_speed}</p>
         </div>
       )}
 
-      {d.licences && (
+      {d.license && (
         <div class="bg-surface-container-lowest p-6 rounded-lg border-b-2 border-secondary/20">
           <span class="material-symbols-outlined text-secondary mb-3">gavel</span>
           <p class="text-xs text-outline font-bold tracking-wide uppercase mb-1">Licensing</p>
-          <p class="font-bold text-on-surface text-sm">{d.licences}</p>
+          <p class="font-bold text-on-surface text-sm line-clamp-2">{d.license}</p>
         </div>
       )}
 
@@ -249,8 +246,8 @@ const combinedSchema = `[${schemas.join(",")}]`;
         </div>
       )}
 
-      {/* Fallback stats when crypto speed is missing — show established/operator instead */}
-      {d.cryptoWithdrawalSpeedMinutes == null && d.established && (
+      {/* Fallbacks — shown only when the primary fields above are missing, so the strip stays four tiles wide */}
+      {!d.payout_speed && d.established && (
         <div class="bg-surface-container-lowest p-6 rounded-lg border-b-2 border-primary/20">
           <span class="material-symbols-outlined text-primary mb-3">history</span>
           <p class="text-xs text-outline font-bold tracking-wide uppercase mb-1">Established</p>
@@ -258,11 +255,11 @@ const combinedSchema = `[${schemas.join(",")}]`;
         </div>
       )}
 
-      {!d.min_deposit && d.company && (
+      {!d.min_deposit && d.owner && (
         <div class="bg-surface-container-lowest p-6 rounded-lg border-b-2 border-primary/20">
           <span class="material-symbols-outlined text-primary mb-3">apartment</span>
           <p class="text-xs text-outline font-bold tracking-wide uppercase mb-1">Operator</p>
-          <p class="font-bold text-on-surface text-sm">{d.company}</p>
+          <p class="font-bold text-on-surface text-sm line-clamp-2">{d.owner}</p>
         </div>
       )}
     </section>
@@ -272,9 +269,9 @@ const combinedSchema = `[${schemas.join(",")}]`;
       <div class="mb-16 rounded-xl overflow-hidden">
         <img
           src={d.image}
-          alt={d.imageAlt ?? `${d.casinoName ?? d.title} review`}
-          width={d.imageWidth ?? 1792}
-          height={d.imageHeight ?? 1024}
+          alt={d.image_alt ?? `${displayName} review`}
+          width={1792}
+          height={1024}
           class="w-full h-auto object-cover"
           loading="eager"
         />

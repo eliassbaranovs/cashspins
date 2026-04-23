@@ -8,6 +8,27 @@ const allCasinos = await getCollection("casinos");
 const casinos = allCasinos
   .sort((a, b) => (b.data.rating ?? 0) - (a.data.rating ?? 0));
 
+const currentYear = new Date().getFullYear();
+
+// ItemList structured data — documented Google pattern for ranking-listicle pages.
+// Each list item points at the casino's review; individual review pages ship their
+// own Review + AggregateRating schema, so we intentionally keep this lean.
+const siteBase = (Astro.site ?? Astro.url.origin).toString().replace(/\/$/, "");
+const itemListSchema = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "ItemList",
+  name: `Best Online Casinos ${currentYear}`,
+  description: `Ranked list of the best online casinos for ${currentYear}, reviewed and rated by CashSpins.`,
+  numberOfItems: casinos.length,
+  itemListOrder: "https://schema.org/ItemListOrderDescending",
+  itemListElement: casinos.map((c: any, i: number) => ({
+    "@type": "ListItem",
+    position: i + 1,
+    url: `${siteBase}/casinos/${c.data.slug}/`,
+    name: c.data.name || c.data.slug,
+  })),
+});
+
 // Collect unique categories from data, skip ones every casino has (redundant filters)
 const catCounts = new Map<string, number>();
 casinos.forEach((c) => {
@@ -42,9 +63,10 @@ function catLabel(cat: string) {
 ---
 
 <BaseLayout
-  title="Best Online Casinos 2026 — Expert Reviews | CashSpins"
-  description="Discover the best online casinos for 2026. Our experts test bonuses, game libraries, payout speeds, and player protections so you don't have to."
+  title={`Best Online Casinos ${currentYear} — Expert Reviews | CashSpins`}
+  description={`Discover the best online casinos for ${currentYear}. Our experts test bonuses, game libraries, payout speeds, and player protections so you don't have to.`}
   canonical="https://cashspins.online/casinos/"
+  schemaJsonLd={itemListSchema}
 >
   <div class="max-w-screen-2xl mx-auto px-4 md:px-8 pt-8 pb-20">
     {/* Breadcrumbs */}
@@ -62,10 +84,10 @@ function catLabel(cat: string) {
         <span class="font-label text-xs font-bold uppercase tracking-[0.2em] text-secondary">Verified Selections</span>
       </div>
       <h1 class="text-5xl md:text-7xl font-headline font-extrabold tracking-tighter mb-6 leading-none text-on-surface">
-        The Elite Selection
+        Best Online Casinos <span class="text-primary">{currentYear}</span>
       </h1>
       <p class="max-w-2xl text-lg text-on-surface-variant leading-relaxed">
-        Every casino on this list has been vetted by our team for fairness, payout reliability, bonus transparency, and player protection. Updated {new Date().getFullYear()}.
+        The {casinos.length} casinos below have been vetted by our team for fairness, payout reliability, bonus transparency, and player protection — ranked by our editorial score.
       </p>
     </header>
 
@@ -112,14 +134,11 @@ function catLabel(cat: string) {
     <div class="space-y-6" id="casino-list">
       {casinos.map((casino, i) => (
         <div
-          class:list={[
-            "casino-list-item rounded-xl",
-            i % 2 === 0 ? "bg-surface" : "bg-surface-container-low",
-          ]}
+          class="casino-list-item"
           data-casino-name={casino.data.name?.toLowerCase() ?? ""}
           data-categories={JSON.stringify(casino.data.categories ?? [])}
         >
-          <CasinoCard casino={casino} />
+          <CasinoCard casino={casino} rank={i + 1} />
         </div>
       ))}
     </div>

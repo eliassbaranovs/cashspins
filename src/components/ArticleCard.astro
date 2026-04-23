@@ -31,7 +31,7 @@ const formattedDate = d.published_at
   : null;
 ---
 
-<a href={linkHref} class="group block bg-surface-container-low rounded-xl overflow-hidden hover:bg-surface-container-high ghost-border transition-all">
+<a href={linkHref} class="group flex flex-col h-full bg-surface-container-low rounded-xl overflow-hidden hover:bg-surface-container-high ghost-border transition-all">
   {/* Image */}
   {d.image && (
     <div class="aspect-video overflow-hidden relative">
@@ -50,7 +50,7 @@ const formattedDate = d.published_at
   )}
 
   {/* Content */}
-  <div class="p-5">
+  <div class="p-5 flex flex-col flex-1">
     {/* Meta line */}
     {(formattedDate || d.authorName) && (
       <div class="flex items-center gap-2 text-xs font-label text-on-surface-variant mb-2">
