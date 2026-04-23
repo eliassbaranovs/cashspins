@@ -1,0 +1,36 @@
+# CashSpins
+
+> Independent online casino reviews, bonus comparisons, and gambling guides for 2026. Editorially reviewed by a small team using a published 8-step methodology. No paid placements alter ratings.
+
+CashSpins covers regulated online casinos across multiple jurisdictions, with deep focus on bonus terms (wagering, max cashout, eligible games), payout speed (tested per payment method), and licensing verification. We disclose affiliate relationships and link to responsible-gambling resources from every review.
+
+## Editorial standards
+
+- [How We Review](https://cashspins.online/how-we-review/): 8-step casino review methodology, scoring criteria, and editorial process
+- [About CashSpins](https://cashspins.online/about/): Team, mission, editorial independence
+- [Affiliate Disclosure](https://cashspins.online/affiliate-disclosure/): Revenue model and how it affects (or doesn't) ratings
+- [Responsible Gambling](https://cashspins.online/responsible-gambling/): Self-exclusion tools, support resources, age verification
+
+## Casino categories
+
+- [Best Online Casinos 2026](https://cashspins.online/best-online-casinos/): Top-rated casinos across the board
+- [Crypto Casinos](https://cashspins.online/crypto-casinos/): Bitcoin, Ethereum, USDT-friendly operators
+- [No Deposit Bonuses](https://cashspins.online/no-deposit-bonus/): Free bonuses requiring no deposit
+- [New Casinos](https://cashspins.online/new-casinos/): Recently launched platforms
+- [Fast Withdrawal Casinos](https://cashspins.online/fast-withdrawal-casinos/): Casinos paying out within 24 hours
+- [Mobile Casinos](https://cashspins.online/mobile-casinos/): Optimised for iOS and Android browsers
+
+## Content directories
+
+- [All Casino Reviews](https://cashspins.online/casinos/): Full directory of reviewed casinos
+- [Bonus Reviews](https://cashspins.online/bonus/): Detailed analyses of welcome offers and bonus terms
+- [Casino Comparisons](https://cashspins.online/compare/): Side-by-side casino vs. casino breakdowns
+- [Gambling Guides](https://cashspins.online/guides/): How-to guides on bonus mechanics, RTP, KYC, payment methods
+- [iGaming News](https://cashspins.online/news/): Industry news on regulation, operator launches, and product updates
+- [Editorial Team](https://cashspins.online/team/): Author profiles, credentials, and areas of expertise
+
+## Compliance
+
+- All content is for adults 18+ (21+ in some jurisdictions)
+- Affiliate links are marked `rel="sponsored nofollow"` and routed through `/go/{slug}/` (noindex redirects)
+- Casino licensing claims are verified against issuing authority public registers

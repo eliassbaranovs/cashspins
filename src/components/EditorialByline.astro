@@ -1,0 +1,29 @@
+---
+// E-E-A-T attribution for editorially-curated pages (category pillars, indexes)
+// that are the work of multiple reviewers, not a single named author.
+interface Props {
+  lastUpdated?: string;
+}
+const { lastUpdated } = Astro.props;
+const formatted = lastUpdated
+  ? new Date(lastUpdated).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })
+  : new Date().toLocaleDateString("en-US", { year: "numeric", month: "long" });
+---
+
+<div class="flex items-center flex-wrap gap-3 text-sm text-on-surface-variant mb-6">
+  <span class="inline-flex items-center gap-1.5">
+    <span class="material-symbols-outlined text-sm">groups</span>
+    Curated by
+    <a href="/team/" class="text-on-surface font-semibold hover:text-primary transition-colors">CashSpins Editorial Team</a>
+  </span>
+  <span class="w-1 h-1 rounded-full bg-outline-variant"></span>
+  <span class="inline-flex items-center gap-1.5">
+    <span class="material-symbols-outlined text-sm">verified</span>
+    <a href="/how-we-review/" class="hover:text-primary transition-colors">8-step methodology</a>
+  </span>
+  <span class="w-1 h-1 rounded-full bg-outline-variant"></span>
+  <span class="inline-flex items-center gap-1.5">
+    <span class="material-symbols-outlined text-sm">update</span>
+    Updated {formatted}
+  </span>
+</div>

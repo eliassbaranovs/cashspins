@@ -206,7 +206,7 @@ const combinedSchema = `[${schemas.join(",")}]`;
           </div>
 
           <p class="mt-4 text-[10px] text-outline opacity-60">
-            18+ | Play Responsibly | New Customers Only
+            18+ | <a href="/responsible-gambling/" class="hover:text-primary transition-colors">Play Responsibly</a> | <a href="/affiliate-disclosure/" class="hover:text-primary transition-colors">Affiliate Disclosure</a> | New Customers Only
           </p>
         </div>
       </div>
@@ -375,6 +375,21 @@ const combinedSchema = `[${schemas.join(",")}]`;
         {d.faqs && d.faqs.length > 0 && (
           <FAQSection faqs={d.faqs} />
         )}
+
+        {/* Responsible gambling + affiliate disclosure — YMYL trust block */}
+        <section class="bg-surface-container-low rounded-xl p-6 border-l-4 border-error/40">
+          <div class="flex items-start gap-3">
+            <span class="material-symbols-outlined text-error shrink-0 mt-0.5">info</span>
+            <div class="text-sm text-on-surface-variant leading-relaxed">
+              <p class="mb-2">
+                <strong class="text-on-surface">18+ only.</strong> Gambling involves financial risk and can become addictive. If you or someone you know needs help, see our <a href="/responsible-gambling/" class="text-primary hover:underline">responsible gambling resources</a> or contact <a href="https://www.begambleaware.org" rel="noopener noreferrer" target="_blank" class="text-primary hover:underline">GambleAware</a>.
+              </p>
+              <p>
+                CashSpins earns affiliate commission when readers sign up through links on this page. Ratings and editorial conclusions are not influenced by these payments &mdash; full details in our <a href="/affiliate-disclosure/" class="text-primary hover:underline">affiliate disclosure</a>.
+              </p>
+            </div>
+          </div>
+        </section>
       </div>
 
       {/* Sidebar */}

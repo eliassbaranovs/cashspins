@@ -40,68 +40,31 @@ const schemaJsonLd = JSON.stringify({
       </p>
     </header>
 
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
-      <div class="bg-surface-container-low rounded-xl p-6">
-        <span class="material-symbols-outlined text-primary text-2xl mb-3 block">mail</span>
-        <h3 class="font-headline font-bold text-on-surface mb-1">General Inquiries</h3>
-        <p class="text-sm text-on-surface-variant">info@cashspins.online</p>
-      </div>
-      <div class="bg-surface-container-low rounded-xl p-6">
-        <span class="material-symbols-outlined text-primary text-2xl mb-3 block">edit_note</span>
-        <h3 class="font-headline font-bold text-on-surface mb-1">Editorial</h3>
-        <p class="text-sm text-on-surface-variant">editorial@cashspins.online</p>
-      </div>
-      <div class="bg-surface-container-low rounded-xl p-6">
-        <span class="material-symbols-outlined text-primary text-2xl mb-3 block">gavel</span>
-        <h3 class="font-headline font-bold text-on-surface mb-1">Legal & Privacy</h3>
-        <p class="text-sm text-on-surface-variant">legal@cashspins.online</p>
-      </div>
-    </div>
-
     <section class="mb-16">
-      <h2 class="font-headline font-bold text-3xl text-on-surface mb-8">Send Us a Message</h2>
-
-      <form id="contact-form" class="space-y-6" novalidate>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div>
-            <label for="name" class="block text-sm font-semibold text-on-surface mb-2">Name</label>
-            <input type="text" id="name" name="name" required placeholder="Your name" class="w-full bg-surface-container-low border border-outline-variant/30 rounded-xl px-4 py-3 text-on-surface placeholder:text-on-surface-variant/40 focus:outline-none focus:border-primary transition-colors" />
-          </div>
-          <div>
-            <label for="email" class="block text-sm font-semibold text-on-surface mb-2">Email</label>
-            <input type="email" id="email" name="email" required placeholder="your@email.com" class="w-full bg-surface-container-low border border-outline-variant/30 rounded-xl px-4 py-3 text-on-surface placeholder:text-on-surface-variant/40 focus:outline-none focus:border-primary transition-colors" />
-          </div>
-        </div>
-
-        <div>
-          <label for="subject" class="block text-sm font-semibold text-on-surface mb-2">Subject</label>
-          <select id="subject" name="subject" required class="w-full bg-surface-container-low border border-outline-variant/30 rounded-xl px-4 py-3 text-on-surface focus:outline-none focus:border-primary transition-colors">
-            <option value="" disabled selected>Select a topic</option>
-            <option value="review-question">Question about a review</option>
-            <option value="report-casino">Report a casino concern</option>
-            <option value="suggest-casino">Suggest a casino for review</option>
-            <option value="affiliate">Affiliate partnership inquiry</option>
-            <option value="correction">Report an error or correction</option>
-            <option value="other">Other</option>
-          </select>
-        </div>
-
-        <div>
-          <label for="message" class="block text-sm font-semibold text-on-surface mb-2">Message</label>
-          <textarea id="message" name="message" required minlength="10" rows="6" placeholder="Tell us what's on your mind..." class="w-full bg-surface-container-low border border-outline-variant/30 rounded-xl px-4 py-3 text-on-surface placeholder:text-on-surface-variant/40 focus:outline-none focus:border-primary transition-colors resize-y"></textarea>
-        </div>
-
-        <button type="submit" class="inline-flex items-center gap-2 bg-primary text-on-primary font-headline font-bold px-8 py-3 rounded-xl hover:brightness-110 transition-all">
-          <span class="material-symbols-outlined" style="font-size: 20px;">send</span>
-          Send Message
-        </button>
-      </form>
-
-      <div id="contact-success" class="hidden bg-green-950/30 border border-green-500/30 rounded-xl p-8 text-center">
-        <span class="material-symbols-outlined text-green-400 text-4xl mb-4 block">check_circle</span>
-        <h3 class="font-headline font-bold text-xl text-on-surface mb-2">Message Sent</h3>
-        <p class="text-on-surface-variant">Thank you for reaching out. We typically respond within 48 hours.</p>
+      <h2 class="font-headline font-bold text-3xl text-on-surface mb-8">Reach the Right Inbox</h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <a href="mailto:info@cashspins.online?subject=General%20Inquiry" class="bg-surface-container-low rounded-xl p-6 hover:bg-surface-container transition-colors no-underline group">
+          <span class="material-symbols-outlined text-primary text-2xl mb-3 block">mail</span>
+          <h3 class="font-headline font-bold text-on-surface mb-1 group-hover:text-primary transition-colors">General Inquiries</h3>
+          <p class="text-sm text-on-surface-variant break-all">info@cashspins.online</p>
+          <p class="text-xs text-on-surface-variant/60 mt-3">Suggest a casino, ask about a review, or anything else.</p>
+        </a>
+        <a href="mailto:editorial@cashspins.online?subject=Editorial%20Question%20or%20Correction" class="bg-surface-container-low rounded-xl p-6 hover:bg-surface-container transition-colors no-underline group">
+          <span class="material-symbols-outlined text-primary text-2xl mb-3 block">edit_note</span>
+          <h3 class="font-headline font-bold text-on-surface mb-1 group-hover:text-primary transition-colors">Editorial &amp; Corrections</h3>
+          <p class="text-sm text-on-surface-variant break-all">editorial@cashspins.online</p>
+          <p class="text-xs text-on-surface-variant/60 mt-3">Spot an error or want to flag a casino concern? Email us directly.</p>
+        </a>
+        <a href="mailto:legal@cashspins.online?subject=Legal%20or%20Privacy%20Request" class="bg-surface-container-low rounded-xl p-6 hover:bg-surface-container transition-colors no-underline group">
+          <span class="material-symbols-outlined text-primary text-2xl mb-3 block">gavel</span>
+          <h3 class="font-headline font-bold text-on-surface mb-1 group-hover:text-primary transition-colors">Legal &amp; Privacy</h3>
+          <p class="text-sm text-on-surface-variant break-all">legal@cashspins.online</p>
+          <p class="text-xs text-on-surface-variant/60 mt-3">DMCA, privacy requests, partnership/affiliate legal.</p>
+        </a>
       </div>
+      <p class="text-sm text-on-surface-variant/70 mt-6 max-w-2xl">
+        We read every message and typically reply within 48 hours on business days. For the fastest response, include your topic in the email subject line and any relevant URLs in the body.
+      </p>
     </section>
 
     <section>
@@ -125,30 +88,4 @@ const schemaJsonLd = JSON.stringify({
     </section>
   </div>
 
-  <script>
-    const form = document.getElementById('contact-form') as HTMLFormElement;
-    const success = document.getElementById('contact-success') as HTMLDivElement;
-
-    form?.addEventListener('submit', (e) => {
-      e.preventDefault();
-
-      const name = (form.querySelector('#name') as HTMLInputElement).value.trim();
-      const email = (form.querySelector('#email') as HTMLInputElement).value.trim();
-      const subject = (form.querySelector('#subject') as HTMLSelectElement).value;
-      const message = (form.querySelector('#message') as HTMLTextAreaElement).value.trim();
-
-      if (!name || !email || !subject || message.length < 10) {
-        return;
-      }
-
-      const btn = form.querySelector('button[type="submit"]') as HTMLButtonElement;
-      btn.disabled = true;
-      btn.innerHTML = '<span class="material-symbols-outlined animate-spin" style="font-size: 20px;">progress_activity</span> Sending...';
-
-      setTimeout(() => {
-        form.classList.add('hidden');
-        success.classList.remove('hidden');
-      }, 2000);
-    });
-  </script>
 </BaseLayout>

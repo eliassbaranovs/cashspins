@@ -3,6 +3,7 @@ import { getCollection } from "astro:content";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Breadcrumbs from "../components/Breadcrumbs.astro";
 import CasinoCard from "../components/CasinoCard.astro";
+import EditorialByline from "../components/EditorialByline.astro";
 import FAQSection from "../components/FAQSection.astro";
 
 const allCasinos = await getCollection("casinos");
@@ -61,6 +62,7 @@ const faqs = [
       <h1 class="font-headline font-extrabold text-4xl md:text-5xl text-on-surface mb-6">
         Best Mobile Casinos 2026
       </h1>
+      <EditorialByline />
       <div class="max-w-3xl space-y-4 text-on-surface-variant leading-relaxed">
         <p>
           Mobile gambling now accounts for over 70% of all online casino traffic. The best mobile

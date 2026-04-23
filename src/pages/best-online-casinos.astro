@@ -2,8 +2,10 @@
 import { getCollection } from "astro:content";
 import Breadcrumbs from "../components/Breadcrumbs.astro";
 import CasinoCard from "../components/CasinoCard.astro";
+import EditorialByline from "../components/EditorialByline.astro";
 import FAQSection from "../components/FAQSection.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
+import { buildCanonical } from "../lib/seo";
 
 const allCasinos = await getCollection("casinos");
 const casinos = allCasinos
@@ -49,7 +51,7 @@ const faqs = [
 <BaseLayout
   title="Best Online Casinos 2026 — Top Rated & Reviewed | CashSpins"
   description="Discover the best online casinos of 2026, independently rated and reviewed by our expert team. Compare bonuses, payout speeds, and game selection."
-  canonical="https://cashspins.online/best-online-casinos/"
+  canonical={buildCanonical("best-online-casinos")}
   schemaJsonLd={itemListSchema}
 >
   <div class="max-w-7xl mx-auto px-4 sm:px-8 py-12">
@@ -62,6 +64,7 @@ const faqs = [
       <h1 class="font-headline font-extrabold text-4xl md:text-5xl text-on-surface mb-6">
         Best Online Casinos 2026
       </h1>
+      <EditorialByline />
       <div class="max-w-3xl space-y-4 text-on-surface-variant leading-relaxed">
         <p>
           Finding a trustworthy online casino in 2026 means navigating thousands of operators, each

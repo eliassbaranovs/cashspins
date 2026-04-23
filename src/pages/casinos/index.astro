@@ -3,6 +3,8 @@ import { getCollection } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import CasinoCard from "../../components/CasinoCard.astro";
 import Breadcrumbs from "../../components/Breadcrumbs.astro";
+import EditorialByline from "../../components/EditorialByline.astro";
+import { buildCanonical } from "../../lib/seo";
 
 const allCasinos = await getCollection("casinos");
 const casinos = allCasinos
@@ -65,7 +67,7 @@ function catLabel(cat: string) {
 <BaseLayout
   title={`Best Online Casinos ${currentYear} — Expert Reviews | CashSpins`}
   description={`Discover the best online casinos for ${currentYear}. Our experts test bonuses, game libraries, payout speeds, and player protections so you don't have to.`}
-  canonical="https://cashspins.online/casinos/"
+  canonical={buildCanonical("casinos")}
   schemaJsonLd={itemListSchema}
 >
   <div class="max-w-screen-2xl mx-auto px-4 md:px-8 pt-8 pb-20">
@@ -86,9 +88,10 @@ function catLabel(cat: string) {
       <h1 class="text-5xl md:text-7xl font-headline font-extrabold tracking-tighter mb-6 leading-none text-on-surface">
         Best Online Casinos <span class="text-primary">{currentYear}</span>
       </h1>
-      <p class="max-w-2xl text-lg text-on-surface-variant leading-relaxed">
+      <p class="max-w-2xl text-lg text-on-surface-variant leading-relaxed mb-6">
         The {casinos.length} casinos below have been vetted by our team for fairness, payout reliability, bonus transparency, and player protection — ranked by our editorial score.
       </p>
+      <EditorialByline />
     </header>
 
     {/* Search & Filter */}

@@ -168,6 +168,21 @@ const formattedDate = d.published_at
         </div>
       )}
 
+      {/* Responsible gambling + affiliate disclosure — YMYL trust block */}
+      <section class="bg-surface-container-low rounded-xl p-6 mb-12 border-l-4 border-error/40">
+        <div class="flex items-start gap-3">
+          <span class="material-symbols-outlined text-error shrink-0 mt-0.5">info</span>
+          <div class="text-sm text-on-surface-variant leading-relaxed">
+            <p class="mb-2">
+              <strong class="text-on-surface">18+ only.</strong> Gambling can be addictive &mdash; play responsibly. See <a href="/responsible-gambling/" class="text-primary hover:underline">responsible gambling resources</a> or contact <a href="https://www.begambleaware.org" rel="noopener noreferrer" target="_blank" class="text-primary hover:underline">GambleAware</a>.
+            </p>
+            <p>
+              CashSpins may earn commission on links to operators we cover. Editorial coverage is independent of commercial relationships &mdash; <a href="/affiliate-disclosure/" class="text-primary hover:underline">full disclosure</a>.
+            </p>
+          </div>
+        </div>
+      </section>
+
       {/* Related Content */}
       {related.length > 0 && (
         <RelatedContent

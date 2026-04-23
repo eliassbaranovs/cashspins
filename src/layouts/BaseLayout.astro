@@ -35,7 +35,7 @@ const {
 
 const pageTitle = seoTitle ?? title;
 const siteBase = (Astro.site ?? Astro.url.origin).toString().replace(/\/$/, "");
-const ogImage = new URL(image ?? "/images/og-default.webp", siteBase + "/").href;
+const ogImage = new URL(image ?? "/images/hero-bg.webp", siteBase + "/").href;
 const canonicalUrl = canonical ?? new URL(Astro.url.pathname, Astro.site ?? Astro.url.origin).href;
 ---
 
