@@ -7,7 +7,7 @@ published_at: "2026-04-23"
 author_slug: "ava-lindstrom"
 content_type: "guide"
 image: "/images/covers/guide/casino-payment-methods-compared-crypto-vs-cards-vs-e-wallets.webp"
-image_alt: "Casino Payment Methods Compared: Crypto vs Cards vs E-Wallets cover image"
+image_alt: "Casino Payment Methods Compared: Crypto vs Cards vs E-Wallets — guide cover image"
 excerpt: "Choosing the right payment method for online casinos can significantly impact your experience. This guide compares cryptocurrency, credit/debit cards, and e-wallets across critical factors like speed, security, fees, and anonymity, using real casino examples and current industry insights."
 tags: 
   - "casino payments"

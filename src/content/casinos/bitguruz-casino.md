@@ -7,7 +7,7 @@ published_at: "2026-04-23"
 author_slug: "nina-petrova"
 content_type: "casino-review"
 image: "/images/covers/casino/bitguruz-casino.webp"
-image_alt: "Bitguruz Casino review cover image"
+image_alt: "Bitguruz Casino casino review — crypto tech cover image"
 logo: "/images/logos/bitguruz-casino.webp"
 screenshots: 
   - url: "/images/screenshots/bitguruz-casino/1.webp"

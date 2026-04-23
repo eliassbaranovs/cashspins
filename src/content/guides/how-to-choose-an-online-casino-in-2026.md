@@ -7,7 +7,7 @@ published_at: "2026-04-23"
 author_slug: "ava-lindstrom"
 content_type: "guide"
 image: "/images/covers/guide/how-to-choose-an-online-casino-in-2026.webp"
-image_alt: "How to Choose an Online Casino in 2026 cover image"
+image_alt: "How to Choose an Online Casino in 2026 — guide cover image"
 excerpt: "Selecting the right online casino in 2026 requires careful consideration of many factors, from licensing and security to bonus terms and game fairness. This guide provides a step-by-step approach to help you make an informed decision."
 tags: 
   - "online casino"

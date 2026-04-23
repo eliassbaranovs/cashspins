@@ -7,7 +7,7 @@ published_at: "2026-04-23"
 author_slug: "ava-lindstrom"
 content_type: "guide"
 image: "/images/covers/guide/online-blackjack-guide-rules-basic-strategy-where-to-play.webp"
-image_alt: "Online Blackjack Guide: Rules, Basic Strategy & Where to Play cover image"
+image_alt: "Online Blackjack Guide: Rules, Basic Strategy & Where to Play — guide cover image"
 excerpt: "This guide provides a deep dive into online blackjack, from fundamental rules and card values to advanced basic strategy application. Learn about different game variations, how to minimize the house edge, and where to find the best online casinos for a fair and engaging experience."
 tags: ["blackjack","online casino","basic strategy","house edge","live dealer","RNG","side bets","responsible gambling"]
 category: "strategy"

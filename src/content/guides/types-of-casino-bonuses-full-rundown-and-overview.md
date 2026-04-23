@@ -7,7 +7,7 @@ published_at: "2026-04-23"
 author_slug: "ava-lindstrom"
 content_type: "guide"
 image: "/images/covers/guide/types-of-casino-bonuses-full-rundown-and-overview.webp"
-image_alt: "Types of Casino Bonuses – Full Rundown and Overview cover image"
+image_alt: "Types of Casino Bonuses – Full Rundown and Overview — guide cover image"
 excerpt: "Casino bonuses can significantly enhance your online gaming experience, but understanding their various types and complex terms is crucial. This guide breaks down welcome bonuses, no deposit offers, free spins, reload bonuses, and more, explaining how they work and what to look for."
 tags: 
   - "casino bonuses"

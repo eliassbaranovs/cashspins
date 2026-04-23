@@ -7,7 +7,7 @@ published_at: "2026-04-23"
 author_slug: "ava-lindstrom"
 content_type: "guide"
 image: "/images/covers/guide/casino-bonus-mathematics-understanding-clearing-bonuses.webp"
-image_alt: "Casino Bonus Mathematics – Understanding Clearing Bonuses cover image"
+image_alt: "Casino Bonus Mathematics – Understanding Clearing Bonuses — guide cover image"
 excerpt: "Demystify casino bonus mathematics with this comprehensive guide. We break down wagering requirements, game weighting, max bet rules, and sticky vs. non-sticky bonuses, providing real examples and calculations to help you clear bonuses effectively and maximize your winnings."
 tags: 
   - "Casino Bonuses"

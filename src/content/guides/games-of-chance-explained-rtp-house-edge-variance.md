@@ -7,7 +7,7 @@ published_at: "2026-04-23"
 author_slug: "ava-lindstrom"
 content_type: "guide"
 image: "/images/covers/guide/games-of-chance-explained-rtp-house-edge-variance.webp"
-image_alt: "Games of Chance Explained: RTP, House Edge & Variance cover image"
+image_alt: "Games of Chance Explained: RTP, House Edge & Variance — guide cover image"
 excerpt: "Demystify the core mathematical concepts behind online casino games: Return to Player (RTP), House Edge, and Variance. This guide breaks down how these factors influence your chances, manage your bankroll, and shape your gaming experience, providing actionable insights for every player."
 tags: ["RTP","House Edge","Variance","Volatility","Slots","Casino Games","Gambling Odds","Bankroll Management"]
 category: "explainer"

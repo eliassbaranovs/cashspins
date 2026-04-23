@@ -7,7 +7,7 @@ published_at: "2026-04-23"
 author_slug: "ava-lindstrom"
 content_type: "guide"
 image: "/images/covers/guide/how-casino-kyc-verification-works.webp"
-image_alt: "How Casino KYC Verification Works: Your Guide to Smooth Online Gambling cover image"
+image_alt: "How Casino KYC Verification Works — guide cover image"
 excerpt: "Navigating online casino KYC (Know Your Customer) verification can be confusing. This guide breaks down why casinos need your documents, the step-by-step process, common pitfalls, and how to ensure a fast, hassle-free experience."
 tags: ["KYC","verification","online casino","documents","AML","fraud prevention","withdrawals"]
 category: "banking"

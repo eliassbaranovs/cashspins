@@ -7,7 +7,7 @@ published_at: "2026-04-23"
 author_slug: "ava-lindstrom"
 content_type: "guide"
 image: "/images/covers/guide/casino-wagering-requirements-the-complete-guide.webp"
-image_alt: "Casino Wagering Requirements: The Complete Guide cover image"
+image_alt: "Casino Wagering Requirements: The Complete Guide — guide cover image"
 excerpt: "Casino wagering requirements can seem complex, but understanding them is key to turning bonus funds into withdrawable cash. This guide breaks down what wagering requirements are, how to calculate them, the impact of game contributions, and crucial terms like max bet rules and time limits. Learn strategies to clear bonuses efficiently and avoid common mistakes."
 tags: ["wagering requirements","casino bonuses","bonus terms","game contribution","max bet","free spins","no deposit bonus"]
 category: "explainer"

@@ -7,7 +7,7 @@ published_at: "2026-04-23"
 author_slug: "ava-lindstrom"
 content_type: "guide"
 image: "/images/covers/guide/casino-loyalty-programs-vip-tiers-tournaments.webp"
-image_alt: "Casino Loyalty Programs, VIP Tiers & Tournaments cover image"
+image_alt: "Casino Loyalty Programs, VIP Tiers & Tournaments — guide cover image"
 excerpt: "This comprehensive guide demystifies casino loyalty programs, VIP tiers, and tournaments. Understand how to earn points, climb VIP levels, and compete for prizes, with real examples and actionable strategies."
 tags: ["Loyalty Programs","VIP Tiers","Casino Tournaments","Casino Rewards","Online Gambling","Player Rewards"]
 category: "explainer"
