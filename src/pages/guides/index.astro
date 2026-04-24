@@ -3,6 +3,8 @@ import { getCollection } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import ArticleCard from "../../components/ArticleCard.astro";
 import Breadcrumbs from "../../components/Breadcrumbs.astro";
+import EditorialByline from "../../components/EditorialByline.astro";
+import { buildCanonical } from "../../lib/seo";
 
 let allGuides: Awaited<ReturnType<typeof getCollection>> = [];
 try {
@@ -17,6 +19,23 @@ const guides = allGuides
       new Date(b.data.published_at).getTime() -
       new Date(a.data.published_at).getTime()
   );
+
+const siteBase = "https://cashspins.online";
+const itemListSchema = guides.length > 0
+  ? JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "ItemList",
+      "name": "CashSpins Casino Guides",
+      "description": "In-depth casino strategy, bonus, and responsible-gambling guides from the CashSpins editorial team.",
+      "numberOfItems": guides.length,
+      "itemListElement": guides.slice(0, 15).map((g: any, i: number) => ({
+        "@type": "ListItem",
+        "position": i + 1,
+        "url": `${siteBase}/guides/${g.data.slug}/`,
+        "name": g.data.title ?? g.data.slug,
+      })),
+    })
+  : undefined;
 
 // Derive category tags — normalize to lowercase to deduplicate across mixed-case tags
 const allTags = [...new Set(guides.flatMap((g: any) => (g.data.tags ?? []).map((t: string) => t.toLowerCase())))];
@@ -43,6 +62,8 @@ const breadcrumbs = [
   title="Casino Guides & Strategy | CashSpins"
   seoTitle="Casino Guides & Strategy 2026 — Expert Tips | CashSpins"
   description="In-depth casino guides covering game strategies, bonus optimization, responsible gambling, and everything you need to play smarter. Written by CashSpins experts."
+  canonical={buildCanonical("guides")}
+  schemaJsonLd={itemListSchema}
 >
   <div class="max-w-screen-2xl mx-auto px-4 sm:px-8 pt-8 pb-20">
     <!-- Breadcrumbs -->
@@ -55,9 +76,10 @@ const breadcrumbs = [
       <h1 class="font-headline text-4xl md:text-6xl font-extrabold tracking-tighter text-on-surface mb-4">
         Expert <span class="text-primary">Guides</span>
       </h1>
-      <p class="text-on-surface-variant text-lg md:text-xl max-w-2xl leading-relaxed">
+      <p class="text-on-surface-variant text-lg md:text-xl max-w-2xl leading-relaxed mb-6">
         Comprehensive guides covering game strategies, bonus mechanics, and responsible gambling — written for players who want to play smarter.
       </p>
+      <EditorialByline />
     </header>
 
     {guides.length > 0 ? (

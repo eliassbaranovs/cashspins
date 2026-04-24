@@ -2,6 +2,7 @@
 import { getCollection } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import Breadcrumbs from "../../components/Breadcrumbs.astro";
+import { buildCanonical, generatePersonSchema } from "../../lib/seo";
 
 export async function getStaticPaths() {
   const authors = await getCollection("authors");
@@ -33,29 +34,22 @@ const authorComparisons = comparisons.filter(byAuthor);
 
 const totalArticles = authorCasinos.length + authorBonuses.length + authorGuides.length + authorNews.length + authorComparisons.length;
 
-const personSchema = JSON.stringify({
-  "@context": "https://schema.org",
-  "@type": "Person",
-  "name": author.data.name,
-  "jobTitle": author.data.role ?? "Casino Analyst",
-  "description": author.data.bio,
-  "knowsAbout": author.data.expertise ?? [],
-  ...(author.data.credentials?.length ? {
-    "hasCredential": author.data.credentials.map((c: string) => ({
-      "@type": "EducationalOccupationalCredential",
-      "credentialCategory": "Certification",
-      "name": c,
-    })),
-  } : {}),
-  "sameAs": [],
-  "url": `https://cashspins.online/team/${author.data.slug}/`,
-  ...(author.data.avatar ? { "image": `https://cashspins.online${author.data.avatar}` } : {}),
+const personSchema = generatePersonSchema({
+  name: author.data.name,
+  slug: author.data.slug,
+  role: author.data.role,
+  bio: author.data.bio,
+  avatar: author.data.avatar,
+  expertise: author.data.expertise,
+  credentials: author.data.credentials,
+  sameAs: author.data.sameAs,
 });
 ---
 
 <BaseLayout
   title={`${d.name} — ${d.role ?? "Casino Analyst"} | CashSpins`}
   description={d.bio.length > 160 ? d.bio.slice(0, 157) + "..." : d.bio}
+  canonical={buildCanonical(`team/${d.slug}`)}
   ogType="profile"
   schemaJsonLd={personSchema}
 >

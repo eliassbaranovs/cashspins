@@ -19,6 +19,7 @@ interface Props {
       categories?: string[];
       license?: string | null;
       license_status?: string | null;
+      published_at?: string;
     };
   };
   rank?: number;
@@ -28,6 +29,10 @@ const { casino, rank } = Astro.props;
 const d = casino.data;
 const name = d.name || d.slug;
 const topPros = d.pros?.slice(0, 2) || [];
+
+const siteBase = "https://cashspins.online";
+const reviewUrl = `${siteBase}/casinos/${d.slug}/`;
+const logoUrl = d.logo ? (d.logo.startsWith("http") ? d.logo : `${siteBase}${d.logo}`) : null;
 
 // Top 3 get medal styling; everything else gets a muted numeric chip.
 const rankStyle = rank === 1
@@ -47,10 +52,30 @@ const wagering = d.bonus_wagering
   : null;
 ---
 
-<div class:list={[
-  "group relative bg-surface-container-low rounded-xl p-4 sm:p-6 hover:bg-surface-container-high ghost-border transition-all overflow-hidden min-h-44",
-  featured && "ring-1 ring-yellow-400/40",
-]}>
+<article
+  itemscope
+  itemtype="https://schema.org/Review"
+  class:list={[
+    "group relative bg-surface-container-low rounded-xl p-4 sm:p-6 hover:bg-surface-container-high ghost-border transition-all overflow-hidden min-h-44",
+    featured && "ring-1 ring-yellow-400/40",
+  ]}
+>
+  {/* Structured-data meta tags — invisible to users, readable by crawlers */}
+  <meta itemprop="url" content={reviewUrl} />
+  <meta itemprop="name" content={`${name} Review`} />
+  {d.published_at && <meta itemprop="datePublished" content={d.published_at} />}
+  <div itemprop="author" itemscope itemtype="https://schema.org/Organization" style="display:none">
+    <meta itemprop="name" content="CashSpins Editorial Team" />
+    <meta itemprop="url" content={`${siteBase}/team/`} />
+  </div>
+  <div itemprop="publisher" itemscope itemtype="https://schema.org/Organization" style="display:none">
+    <meta itemprop="name" content="CashSpins" />
+    <meta itemprop="url" content={siteBase} />
+  </div>
+  {rank != null && (
+    <div itemprop="position" style="display:none">{rank}</div>
+  )}
+
   {/* Green accent bar on hover */}
   <div class="absolute left-0 top-1/2 -translate-y-1/2 w-1.5 h-16 bg-primary rounded-r-full opacity-0 group-hover:opacity-100 transition-opacity duration-300" aria-hidden="true"></div>
 
@@ -61,8 +86,11 @@ const wagering = d.bonus_wagering
   )}
 
   <div class="flex flex-col lg:flex-row gap-6 items-start lg:items-center">
-    {/* Logo + Rank */}
-    <div class="shrink-0 relative">
+    {/* Logo + Rank + itemReviewed (Organization) */}
+    <div class="shrink-0 relative" itemprop="itemReviewed" itemscope itemtype="https://schema.org/Organization">
+      <meta itemprop="name" content={name} />
+      <meta itemprop="url" content={reviewUrl} />
+      {logoUrl && <meta itemprop="logo" content={logoUrl} />}
       {rank != null && (
         <span class={`absolute -top-2 -left-2 z-10 w-8 h-8 rounded-full flex items-center justify-center text-xs font-headline font-black shadow-md ${rankStyle}`}>
           {rank}
@@ -70,6 +98,7 @@ const wagering = d.bonus_wagering
       )}
       {d.logo ? (
         <img
+          itemprop="image"
           src={d.logo}
           alt={`${name} logo`}
           class="w-28 h-28 rounded-xl bg-surface-container-lowest object-contain p-3"
@@ -85,11 +114,24 @@ const wagering = d.bonus_wagering
     {/* Center info */}
     <div class="flex-1 min-w-0">
       <div class="flex items-center gap-3 flex-wrap mb-1">
-        <h3 class="text-2xl font-headline font-bold text-on-surface">{name}</h3>
-        {d.rating != null && <RatingBadge rating={d.rating} size="sm" />}
+        <h3 class="text-2xl font-headline font-bold text-on-surface">
+          <a href={`/casinos/${d.slug}/`} class="hover:text-primary transition-colors">{name}</a>
+        </h3>
+        {d.rating != null && (
+          <span
+            itemprop="reviewRating"
+            itemscope
+            itemtype="https://schema.org/Rating"
+          >
+            <meta itemprop="ratingValue" content={String(d.rating)} />
+            <meta itemprop="bestRating" content="10" />
+            <meta itemprop="worstRating" content="1" />
+            <RatingBadge rating={d.rating} size="sm" />
+          </span>
+        )}
       </div>
       {d.best_for && (
-        <p class="text-on-surface-variant text-sm mb-2">{d.best_for}</p>
+        <p itemprop="reviewBody" class="text-on-surface-variant text-sm mb-2">{d.best_for}</p>
       )}
       {d.license && (
         <div class="mb-2">
@@ -142,4 +184,4 @@ const wagering = d.bonus_wagering
       </a>
     </div>
   </div>
-</div>
+</article>

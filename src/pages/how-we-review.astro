@@ -2,7 +2,7 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Breadcrumbs from "../components/Breadcrumbs.astro";
 import FAQSection from "../components/FAQSection.astro";
-import { generateFAQSchema } from "../lib/seo";
+import { buildCanonical, generateFAQSchema, generateHowToSchema, generateArticleSchema } from "../lib/seo";
 import { getCollection } from "astro:content";
 
 const authors = await getCollection("authors");
@@ -100,11 +100,35 @@ const ratingTiers = [
   { range: "6.0 – 6.9", label: "Average", color: "orange", icon: "info", desc: "Acceptable but not recommended over better alternatives." },
   { range: "Below 6.0", label: "Below Average", color: "red", icon: "warning", desc: "Significant issues — proceed with caution or avoid." },
 ];
+
+// Schema: Article (for author=Organization, publisher graph) + HowTo (for the
+// 8-step methodology, eligible for How-to rich results) + FAQPage.
+// This page is referenced by Organization.publishingPrinciples, so its schema
+// graph needs to validate independently.
+const howToSchema = generateHowToSchema({
+  name: "How We Review Online Casinos — 8-Step Methodology",
+  description: "CashSpins' hands-on, real-money review process. Every casino is tested against the same 8 steps before it receives a rating.",
+  path: "how-we-review",
+  steps: steps.map((s) => ({ name: s.title, text: s.description })),
+});
+
+const articleSchema = generateArticleSchema({
+  title: "How We Review Online Casinos — Our 8-Step Methodology",
+  description: "Learn about CashSpins' 8-step review process. We deposit real crypto, test withdrawals, audit bonus terms, verify licenses, and rate casinos on 5 weighted criteria.",
+  author_name: "CashSpins Editorial Team",
+  section_path: "how-we-review",
+});
+
+const faqSchema = generateFAQSchema(faqs);
+const combinedSchema = `[${articleSchema},${howToSchema},${faqSchema}]`;
 ---
 
 <BaseLayout
   title="How We Review Online Casinos — Our 8-Step Methodology | CashSpins"
   description="Learn about CashSpins' 8-step review process. We deposit real crypto, test withdrawals, audit bonus terms, verify licenses, and rate casinos on 5 weighted criteria."
+  canonical={buildCanonical("how-we-review")}
+  schemaJsonLd={combinedSchema}
+  ogType="article"
 >
   <div class="max-w-4xl mx-auto px-4 md:px-8 pt-8 pb-20">
     <Breadcrumbs
@@ -131,9 +155,9 @@ const ratingTiers = [
     <!-- 8-Step Process -->
     <section class="mb-20">
       <h2 class="font-headline font-bold text-3xl text-on-surface mb-10">Our 8-Step Review Process</h2>
-      <div class="space-y-6">
+      <ol class="space-y-6 list-none p-0">
         {steps.map((step, i) => (
-          <div class="bg-surface-container-low rounded-xl p-8">
+          <li class="bg-surface-container-low rounded-xl p-8">
             <div class="flex items-start gap-4 mb-4">
               <span class="text-4xl font-headline font-extrabold text-primary/30 leading-none shrink-0">{String(i + 1).padStart(2, "0")}</span>
               <div class="flex-1">
@@ -145,17 +169,17 @@ const ratingTiers = [
               </div>
             </div>
             <p class="text-on-surface-variant leading-relaxed mb-4">{step.description}</p>
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            <ul class="grid grid-cols-1 sm:grid-cols-2 gap-2 list-none p-0">
               {step.checks.map((check) => (
-                <div class="flex items-center gap-2 text-sm text-on-surface-variant">
+                <li class="flex items-center gap-2 text-sm text-on-surface-variant">
                   <span class="material-symbols-outlined text-primary shrink-0" style="font-size: 16px;">check</span>
                   <span>{check}</span>
-                </div>
+                </li>
               ))}
-            </div>
-          </div>
+            </ul>
+          </li>
         ))}
-      </div>
+      </ol>
     </section>
 
     <!-- Scoring Criteria Table -->
@@ -300,6 +324,4 @@ const ratingTiers = [
       <FAQSection faqs={faqs} />
     </section>
   </div>
-
-  <script type="application/ld+json" set:html={generateFAQSchema(faqs)} />
 </BaseLayout>

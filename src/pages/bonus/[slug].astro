@@ -40,7 +40,9 @@ const articleSchema = generateArticleSchema({
   description: d.description,
   image: d.image,
   author_name: authorName,
+  author_slug: d.author_slug,
   published_at: d.published_at,
+  section_path: `bonus/${d.slug}`,
 });
 
 const faqSchema =
@@ -142,7 +144,7 @@ const withdrawalArr = d.withdrawal_methods ?? [];
               {authorEntry && (
                 <div class="flex items-center gap-1">
                   <span class="material-symbols-outlined text-sm">person</span>
-                  <span>{authorEntry.data?.name ?? d.author_slug}</span>
+                  <a href={`/team/${authorEntry.data.slug}/`} class="hover:text-primary transition-colors">{authorEntry.data?.name ?? d.author_slug}</a>
                 </div>
               )}
             </div>

@@ -47,7 +47,9 @@ const articleSchema = generateArticleSchema({
   description: d.description,
   image: d.image,
   author_name: authorName,
+  author_slug: d.author_slug,
   published_at: d.published_at,
+  section_path: `guides/${d.slug}`,
 });
 
 const faqSchema =
@@ -112,7 +114,11 @@ const formattedDate = d.published_at
             {authorName && (
               <span class="flex items-center gap-1.5">
                 <span class="material-symbols-outlined text-sm">person</span>
-                {authorName}
+                {authorEntry ? (
+                  <a href={`/team/${authorEntry.data.slug}/`} class="hover:text-primary transition-colors">{authorName}</a>
+                ) : (
+                  authorName
+                )}
               </span>
             )}
             {formattedDate && (
@@ -208,7 +214,13 @@ const formattedDate = d.published_at
               {authorName && (
                 <div class="flex justify-between">
                   <dt class="text-on-surface-variant">Author</dt>
-                  <dd class="text-on-surface font-semibold">{authorName}</dd>
+                  <dd class="text-on-surface font-semibold">
+                    {authorEntry ? (
+                      <a href={`/team/${authorEntry.data.slug}/`} class="hover:text-primary transition-colors">{authorName}</a>
+                    ) : (
+                      authorName
+                    )}
+                  </dd>
                 </div>
               )}
               {formattedDate && (

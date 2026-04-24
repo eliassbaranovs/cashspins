@@ -2,8 +2,9 @@
 import { getCollection, render } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import Breadcrumbs from "../../components/Breadcrumbs.astro";
+import FAQSection from "../../components/FAQSection.astro";
 import RelatedContent from "../../components/RelatedContent.astro";
-import { buildCanonical, generateArticleSchema } from "../../lib/seo";
+import { buildCanonical, generateArticleSchema, generateFAQSchema } from "../../lib/seo";
 import { getRelatedByTags } from "../../lib/collections";
 
 export async function getStaticPaths() {
@@ -40,14 +41,20 @@ try {
 } catch {}
 const authorName = authorEntry?.data?.name ?? d.author_slug;
 
-// Schema
+// Schema — NewsArticle is the Article subtype Google uses for Top Stories eligibility.
 const articleSchema = generateArticleSchema({
   title: d.title,
   description: d.description,
   image: d.image,
   author_name: authorName,
+  author_slug: d.author_slug,
   published_at: d.published_at,
+  type: "NewsArticle",
+  section_path: `news/${d.slug}`,
 });
+
+const faqSchema = d.faqs?.length ? generateFAQSchema(d.faqs) : undefined;
+const combinedSchema = faqSchema ? `[${articleSchema},${faqSchema}]` : articleSchema;
 
 const breadcrumbs = [
   { label: "Home", href: "/" },
@@ -71,7 +78,7 @@ const formattedDate = d.published_at
   image={d.image}
   imageAlt={d.image_alt}
   canonical={buildCanonical(`news/${d.slug}`)}
-  schemaJsonLd={articleSchema}
+  schemaJsonLd={combinedSchema}
   ogType="article"
 >
   <div class="max-w-screen-2xl mx-auto px-4 sm:px-8 pt-8 pb-20">
@@ -103,7 +110,11 @@ const formattedDate = d.published_at
               <span class="w-1 h-1 rounded-full bg-outline-variant"></span>
               <span class="flex items-center gap-1.5">
                 <span class="material-symbols-outlined text-sm">person</span>
-                {authorName}
+                {authorEntry ? (
+                  <a href={`/team/${authorEntry.data.slug}/`} class="hover:text-primary transition-colors">{authorName}</a>
+                ) : (
+                  authorName
+                )}
               </span>
             </>
           )}
@@ -144,6 +155,13 @@ const formattedDate = d.published_at
       ">
         <Content />
       </div>
+
+      {/* FAQs (rendered only if the news entry includes them) */}
+      {d.faqs?.length > 0 && (
+        <div class="mb-12">
+          <FAQSection faqs={d.faqs} />
+        </div>
+      )}
 
       {/* Tags */}
       {d.tags?.length > 0 && (

@@ -3,6 +3,8 @@ import { getCollection } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import BonusCard from "../../components/BonusCard.astro";
 import Breadcrumbs from "../../components/Breadcrumbs.astro";
+import EditorialByline from "../../components/EditorialByline.astro";
+import { buildCanonical } from "../../lib/seo";
 
 const allBonuses = await getCollection("bonuses");
 const bonuses = allBonuses
@@ -11,6 +13,29 @@ const bonuses = allBonuses
       new Date(b.data.published_at).getTime() -
       new Date(a.data.published_at).getTime()
   );
+
+const currentYear = new Date().getFullYear();
+const siteBase = "https://cashspins.online";
+
+// ItemList over the listed bonus pages — gives Google a ranked-list signal
+// for this category pillar without duplicating the Review schema that lives
+// on each bonus's own page.
+const itemListSchema = bonuses.length > 0
+  ? JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "ItemList",
+      "name": `Best Casino Bonuses ${currentYear}`,
+      "description": "Verified welcome bonuses, free spins, no-deposit offers, and cashback deals reviewed by CashSpins editors.",
+      "numberOfItems": bonuses.length,
+      "itemListOrder": "https://schema.org/ItemListOrderDescending",
+      "itemListElement": bonuses.slice(0, 15).map((b: any, i: number) => ({
+        "@type": "ListItem",
+        "position": i + 1,
+        "url": `${siteBase}/bonus/${b.data.slug}/`,
+        "name": b.data.title ?? b.data.name ?? b.data.slug,
+      })),
+    })
+  : undefined;
 
 // Bonus-type taxonomy — maps normalized tag keywords to user-facing filter labels.
 // Order matters: higher-priority types (rarer / more differentiating) appear first.
@@ -47,6 +72,8 @@ const breadcrumbs = [
   title="Best Casino Bonuses 2026 | CashSpins"
   seoTitle="Best Casino Bonuses 2026 — Top Welcome Offers & Free Spins"
   description="Compare the best casino bonuses in 2026. Welcome bonuses, no-deposit free spins, cashback deals — ranked and reviewed by CashSpins experts."
+  canonical={buildCanonical("bonus")}
+  schemaJsonLd={itemListSchema}
 >
   <div class="max-w-screen-2xl mx-auto px-4 sm:px-8 pt-8 pb-20">
     <!-- Breadcrumbs -->
@@ -59,9 +86,10 @@ const breadcrumbs = [
       <h1 class="font-headline text-4xl md:text-5xl font-extrabold tracking-tight text-on-surface mb-4">
         Casino Bonuses & <span class="text-primary">Promotions</span>
       </h1>
-      <p class="text-on-surface-variant text-lg max-w-2xl leading-relaxed">
+      <p class="text-on-surface-variant text-lg max-w-2xl leading-relaxed mb-6">
         Curated bonus offers verified by our editorial team. Welcome packages, free spins, no-deposit deals, and cashback promotions — all with transparent terms.
       </p>
+      <EditorialByline />
     </header>
 
     {/* Summary line */}

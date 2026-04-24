@@ -3,7 +3,12 @@ import { getCollection } from "astro:content";
 import ArticleCard from "../components/ArticleCard.astro";
 import CasinoCard from "../components/CasinoCard.astro";
 import CTAButton from "../components/CTAButton.astro";
+import EditorialByline from "../components/EditorialByline.astro";
+import FAQSection from "../components/FAQSection.astro";
+import RatingBadge from "../components/RatingBadge.astro";
+import LicenseBadge from "../components/LicenseBadge.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
+import { generateFAQSchema } from "../lib/seo";
 
 // ── Fetch collections ────────────────────────────────────────────────────────
 
@@ -86,25 +91,133 @@ const categories = [
   },
 ];
 
+// ── SEO content ─────────────────────────────────────────────────────────────
+
+const siteBase = "https://cashspins.online";
+const dateModified = new Date().toISOString().split("T")[0];
+const dateModifiedLong = new Date().toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" });
+const currentYear = new Date().getFullYear();
+
+// Top 5 for the on-page leaderboard table — one of the documented pattern
+// Google uses to render ranking rich results on "best of" pages.
+const leaderboardTop = allCasinos.slice(0, 5);
+
+// Popular head-to-heads: built from the highest-rated casinos so every pairing
+// points at two real review pages. Comparison page itself handles unknown slugs
+// by showing all listings, so orphan links are harmless.
+const comparisonSlugs = allCasinos
+  .filter((c) => c.data.slug)
+  .slice(0, 8)
+  .map((c) => ({ slug: c.data.slug, name: c.data.name ?? c.data.slug }));
+const popularComparisons: { a: { slug: string; name: string }; b: { slug: string; name: string } }[] = [];
+for (let i = 0; i < Math.min(comparisonSlugs.length - 1, 8); i++) {
+  const pair = comparisonSlugs[(i + 1) % comparisonSlugs.length];
+  if (comparisonSlugs[i].slug !== pair.slug) {
+    popularComparisons.push({ a: comparisonSlugs[i], b: pair });
+  }
+}
+
+// Bonus-terms glossary — 8 entries lifted from standard casino vocabulary.
+// These live here (in the page template) rather than in a content collection
+// so the homepage stays self-contained and no content files get touched.
+const glossary = [
+  { t: "Wagering", d: "The multiple of your bonus you must bet before any withdrawal. Example: 35× on a €100 bonus = €3,500 total wagered." },
+  { t: "Game weighting", d: "How much each game type contributes to wagering. Slots are usually 100%, table games 5–20%." },
+  { t: "Max bet", d: "The largest single stake permitted while a bonus is active. Break it and the casino can void the bonus." },
+  { t: "Expiry", d: "How long you have to clear wagering before the bonus and its winnings are removed from your balance." },
+  { t: "Cashout cap", d: "An upper limit on how much you can withdraw from bonus winnings, regardless of how much you've won." },
+  { t: "Match percentage", d: "How much of your deposit the casino matches. A 100% match doubles your bankroll up to the stated limit." },
+  { t: "Sticky bonus", d: "A bonus that can't itself be withdrawn — you can only cash out the winnings it generates." },
+  { t: "KYC", d: "Know-Your-Customer checks: ID + proof of address, typically required before a first withdrawal is processed." },
+];
+
+// General FAQs for the homepage — cover the top SERP-driving queries
+// ("are online casinos legal", "what is wagering", etc.). Hardcoded here,
+// no content folder changes.
+const faqs = [
+  {
+    question: "How do you rank the best online casinos?",
+    answer: "Every casino in our index is scored against a four-pillar rubric: licensing (25%), bonus-term clarity (25%), payout policy (30%), and customer support & UX (20%). We verify every license directly with the issuing regulator and read every bonus term in full before assigning a rating. Full methodology is published at /how-we-review/."
+  },
+  {
+    question: "What is a wagering requirement?",
+    answer: "A wagering (or playthrough) requirement is the number of times you must bet your bonus amount before any winnings can be withdrawn. A 35× wagering requirement on a €100 bonus means you must place €3,500 in total bets before cashout is eligible. Lower wagering is better — anything above 50× is considered high."
+  },
+  {
+    question: "Are online casinos legal?",
+    answer: "Legality depends on your jurisdiction. Every casino we review holds at least one active license from a recognised authority — Malta Gaming Authority, UK Gambling Commission, Curaçao eGaming, Ontario iGO, or equivalent. Always check your local laws before playing, and never deposit at an unlicensed operator."
+  },
+  {
+    question: "Which casinos have the fastest payouts?",
+    answer: "Payout speed depends on payment method, KYC status, and cashier policy. Crypto withdrawals at our top-rated casinos are typically processed in under an hour; e-wallet payouts in 1–3 days; bank transfers can take up to a week. Our fast-withdrawal casino list ranks operators by tested payout time."
+  },
+  {
+    question: "How do I claim a welcome bonus?",
+    answer: "Create an account, verify your email and identity, make a qualifying first deposit above the bonus minimum, and enter the bonus code if one is required. The welcome bonus is usually credited automatically and the wagering clock begins immediately. Read the full bonus T&Cs before depositing — every casino sets its own game-weighting and max-bet rules."
+  },
+];
+
 // ── JSON-LD Schemas ─────────────────────────────────────────────────────────
 
-const orgSchema = JSON.stringify({
+const orgSchema = {
   "@context": "https://schema.org",
   "@type": "Organization",
+  "@id": `${siteBase}/#organization`,
   "name": "CashSpins",
-  "url": "https://cashspins.online",
-  "description": "Expert online casino reviews, exclusive bonuses, and comprehensive guides.",
-  "sameAs": []
-});
+  "url": siteBase,
+  "description": "Independent editorial reviews of online casinos and bonuses — published since 2019.",
+  "logo": {
+    "@type": "ImageObject",
+    "url": `${siteBase}/favicon.svg`,
+  },
+  "foundingDate": "2019",
+  "sameAs": [],
+  "publishingPrinciples": `${siteBase}/how-we-review/`,
+  "actionableFeedbackPolicy": `${siteBase}/contact/`,
+  "ethicsPolicy": `${siteBase}/affiliate-disclosure/`,
+};
 
-const siteSchema = JSON.stringify({
+const siteSchema = {
   "@context": "https://schema.org",
   "@type": "WebSite",
+  "@id": `${siteBase}/#website`,
   "name": "CashSpins",
-  "url": "https://cashspins.online",
-});
+  "url": siteBase,
+  "publisher": { "@id": `${siteBase}/#organization` },
+  "inLanguage": "en",
+};
 
-const homeSchema = JSON.stringify([JSON.parse(orgSchema), JSON.parse(siteSchema)]);
+const webPageSchema = {
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "@id": `${siteBase}/#webpage`,
+  "url": siteBase,
+  "name": `CashSpins — Best Online Casino Reviews & Bonuses ${currentYear}`,
+  "isPartOf": { "@id": `${siteBase}/#website` },
+  "about": { "@id": `${siteBase}/#organization` },
+  "datePublished": "2019-01-01",
+  "dateModified": dateModified,
+  "reviewedBy": { "@id": `${siteBase}/#organization` },
+};
+
+const itemListSchema = {
+  "@context": "https://schema.org",
+  "@type": "ItemList",
+  "name": `Best Online Casinos ${currentYear}`,
+  "description": `Top-ranked online casinos for ${currentYear}, editorially reviewed by CashSpins.`,
+  "numberOfItems": topCasinos.length,
+  "itemListOrder": "https://schema.org/ItemListOrderDescending",
+  "itemListElement": topCasinos.map((c: any, i: number) => ({
+    "@type": "ListItem",
+    "position": i + 1,
+    "url": `${siteBase}/casinos/${c.data.slug}/`,
+    "name": c.data.name ?? c.data.slug,
+  })),
+};
+
+const faqSchema = JSON.parse(generateFAQSchema(faqs));
+
+const homeSchema = JSON.stringify([orgSchema, siteSchema, webPageSchema, itemListSchema, faqSchema]);
 
 const seoLinks = [
   {
@@ -135,6 +248,34 @@ const seoLinks = [
   description="Find the best online casinos, exclusive bonuses, and expert reviews. Compare top-rated crypto casinos, no-deposit bonuses, and more."
   schemaJsonLd={homeSchema}
 >
+  {/* ═══════════════════════════════════════════════════════════════════════════
+      0. TRUST RIBBON — E-E-A-T eyebrow, visible + crawlable
+  ═══════════════════════════════════════════════════════════════════════════ */}
+  <div class="bg-surface-container-lowest border-b border-outline-variant/15">
+    <div class="max-w-7xl mx-auto px-6 lg:px-8 py-2.5 flex flex-wrap items-center justify-between gap-3 text-xs">
+      <div class="flex flex-wrap items-center gap-x-5 gap-y-1.5 text-on-surface-variant">
+        <span class="inline-flex items-center gap-1.5">
+          <span class="material-symbols-outlined text-primary text-sm">fact_check</span>
+          <strong class="text-on-surface font-semibold">Independent</strong> editorial team
+        </span>
+        <span class="hidden sm:inline w-px h-3.5 bg-outline-variant/40"></span>
+        <span class="inline-flex items-center gap-1.5">
+          <span class="material-symbols-outlined text-secondary text-sm">shield_person</span>
+          Reviewing casinos since <strong class="text-on-surface font-semibold">2019</strong>
+        </span>
+        <span class="hidden sm:inline w-px h-3.5 bg-outline-variant/40"></span>
+        <span class="inline-flex items-center gap-1.5">
+          <span class="material-symbols-outlined text-primary text-sm">verified</span>
+          18+ · <a href="https://www.begambleaware.org" rel="noopener noreferrer" target="_blank" class="hover:text-primary transition-colors">begambleaware.org</a>
+        </span>
+      </div>
+      <a href="/how-we-review/" class="inline-flex items-center gap-1 text-primary font-semibold hover:gap-1.5 transition-all whitespace-nowrap">
+        How we review
+        <span class="material-symbols-outlined text-sm">arrow_forward</span>
+      </a>
+    </div>
+  </div>
+
   {/* ═══════════════════════════════════════════════════════════════════════════
       1. HERO SECTION
   ═══════════════════════════════════════════════════════════════════════════ */}
@@ -169,9 +310,12 @@ const seoLinks = [
           Your Guide to the Best <span class="text-primary">Online Casinos</span>
         </h1>
 
-        <p class="text-lg text-on-surface-variant mb-10 font-body leading-relaxed max-w-lg">
+        <p class="text-lg text-on-surface-variant mb-6 font-body leading-relaxed max-w-lg">
           Expert reviews, exclusive bonuses, and transparent ratings. We help you find safe, rewarding casinos you can trust.
         </p>
+
+        {/* Editorial byline — E-E-A-T signal above the fold */}
+        <div class="mb-8"><EditorialByline lastUpdated={dateModified} /></div>
 
         {/* Featured casino bonus highlight */}
         {featured && (
@@ -235,9 +379,103 @@ const seoLinks = [
       </div>
 
       <div class="space-y-6">
-        {topCasinos.map((casino) => (
-          <CasinoCard casino={casino} />
+        {topCasinos.map((casino, i) => (
+          <CasinoCard casino={casino} rank={i + 1} />
         ))}
+      </div>
+    </section>
+  )}
+
+  {/* ═══════════════════════════════════════════════════════════════════════════
+      2b. LEADERBOARD TABLE — real <table> for table-rich-result eligibility
+  ═══════════════════════════════════════════════════════════════════════════ */}
+  {leaderboardTop.length > 0 && (
+    <section id="leaderboard" class="py-16 max-w-7xl mx-auto px-6 lg:px-8">
+      <div class="mb-6">
+        <div class="text-xs font-label font-extrabold text-primary tracking-[0.16em] uppercase mb-2">CashSpins Index</div>
+        <h2 class="text-3xl md:text-4xl font-headline font-extrabold tracking-tight text-on-surface mb-2">Full ranking: best online casinos for {currentYear}</h2>
+        <p class="text-on-surface-variant text-sm max-w-2xl leading-relaxed">
+          The top {leaderboardTop.length} operators from our index, sorted by composite editorial rating. Every cell is drawn from our own review data and re-verified monthly.
+        </p>
+      </div>
+      <div class="bg-surface-container-low rounded-xl border border-outline-variant/15 overflow-hidden">
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm border-collapse">
+            <caption class="sr-only">CashSpins composite ranking of the top {leaderboardTop.length} online casinos, updated {dateModifiedLong}.</caption>
+            <thead>
+              <tr class="bg-surface-container border-b border-outline-variant/15 text-[10px] font-bold tracking-[0.14em] uppercase text-on-surface-variant">
+                <th scope="col" class="px-3 py-3 text-center w-14">Rank</th>
+                <th scope="col" class="px-3 py-3 text-left">Casino</th>
+                <th scope="col" class="px-3 py-3 text-center">Rating</th>
+                <th scope="col" class="px-3 py-3 text-left hidden md:table-cell">Welcome bonus</th>
+                <th scope="col" class="px-3 py-3 text-left hidden lg:table-cell">License</th>
+                <th scope="col" class="px-3 py-3 text-right">
+                  <span class="sr-only">Actions</span>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {leaderboardTop.map((c: any, i: number) => (
+                <tr class="border-b border-outline-variant/10 last:border-b-0 hover:bg-surface-container/40 transition-colors">
+                  <td class="px-3 py-4 text-center">
+                    <span class:list={[
+                      "inline-flex items-center justify-center w-7 h-7 rounded-full text-xs font-headline font-black",
+                      i === 0 ? "bg-yellow-400 text-neutral-900" : i === 1 ? "bg-slate-300 text-neutral-900" : i === 2 ? "bg-amber-600 text-white" : "bg-surface-container-highest text-on-surface-variant",
+                    ]}>{i + 1}</span>
+                  </td>
+                  <th scope="row" class="px-3 py-4 text-left font-normal">
+                    <div class="flex items-center gap-3">
+                      {c.data.logo ? (
+                        <img src={c.data.logo} alt={`${c.data.name ?? c.data.slug} logo`} class="w-10 h-10 rounded-lg bg-surface-container-lowest object-contain p-1.5 shrink-0" loading="lazy" width="40" height="40" />
+                      ) : (
+                        <div class="w-10 h-10 rounded-lg bg-surface-container-lowest flex items-center justify-center shrink-0">
+                          <span class="material-symbols-outlined text-outline text-lg">casino</span>
+                        </div>
+                      )}
+                      <div class="min-w-0">
+                        <a href={`/casinos/${c.data.slug}/`} class="font-headline font-bold text-on-surface hover:text-primary transition-colors truncate block">{c.data.name ?? c.data.slug} review</a>
+                        {c.data.best_for && <div class="text-xs text-on-surface-variant truncate">{c.data.best_for}</div>}
+                      </div>
+                    </div>
+                  </th>
+                  <td class="px-3 py-4 text-center">
+                    {c.data.rating != null ? (
+                      <span class="inline-flex items-baseline gap-1">
+                        <span class="font-headline font-extrabold text-primary text-base">{c.data.rating.toFixed(1)}</span>
+                        <span class="text-[10px] text-on-surface-variant">/10</span>
+                      </span>
+                    ) : (
+                      <span class="text-on-surface-variant">—</span>
+                    )}
+                  </td>
+                  <td class="px-3 py-4 text-left hidden md:table-cell">
+                    {c.data.bonus_value ? (
+                      <div>
+                        <div class="font-headline font-bold text-secondary text-sm line-clamp-1">{c.data.bonus_value}</div>
+                        {c.data.bonus_wagering && <div class="text-[10px] text-on-surface-variant mt-0.5 line-clamp-1">Wagering: {c.data.bonus_wagering}</div>}
+                      </div>
+                    ) : (
+                      <span class="text-on-surface-variant">—</span>
+                    )}
+                  </td>
+                  <td class="px-3 py-4 text-left hidden lg:table-cell">
+                    {c.data.license ? (
+                      <span class="text-xs text-on-surface-variant line-clamp-1">{c.data.license.split(/[·,(]/)[0].trim()}</span>
+                    ) : (
+                      <span class="text-on-surface-variant">—</span>
+                    )}
+                  </td>
+                  <td class="px-3 py-4 text-right">
+                    <a href={`/casinos/${c.data.slug}/`} class="inline-flex items-center gap-1 text-primary font-semibold text-xs hover:gap-2 transition-all whitespace-nowrap">
+                      Read review
+                      <span class="material-symbols-outlined text-xs">arrow_forward</span>
+                    </a>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
     </section>
   )}
@@ -351,6 +589,61 @@ const seoLinks = [
         </a>
       ))}
     </div>
+  </section>
+
+  {/* ═══════════════════════════════════════════════════════════════════════════
+      4b. POPULAR COMPARISONS — internal link hub for /compare/?a=x&b=y
+  ═══════════════════════════════════════════════════════════════════════════ */}
+  {popularComparisons.length > 0 && (
+    <section class="py-16 max-w-7xl mx-auto px-6 lg:px-8">
+      <div class="mb-8">
+        <h2 class="text-2xl md:text-3xl font-headline font-bold text-on-surface mb-2">Popular comparisons</h2>
+        <p class="text-on-surface-variant text-sm max-w-xl">Head-to-head breakdowns our readers check most often.</p>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+        {popularComparisons.map(({ a, b }) => (
+          <a
+            href={`/compare/?a=${a.slug}&b=${b.slug}`}
+            class="group flex items-center justify-between gap-3 px-4 py-4 bg-surface-container-low border border-outline-variant/15 rounded-lg hover:border-primary/40 hover:bg-surface-container-high transition-all"
+          >
+            <span class="font-headline font-bold text-sm text-on-surface truncate">
+              {a.name} <span class="text-on-surface-variant font-medium">vs</span> {b.name}
+            </span>
+            <span class="material-symbols-outlined text-primary text-base shrink-0 group-hover:translate-x-0.5 transition-transform">arrow_forward</span>
+          </a>
+        ))}
+      </div>
+    </section>
+  )}
+
+  {/* ═══════════════════════════════════════════════════════════════════════════
+      4c. BONUS GLOSSARY — plain-language casino vocabulary
+  ═══════════════════════════════════════════════════════════════════════════ */}
+  <section class="py-16 max-w-7xl mx-auto px-6 lg:px-8">
+    <div class="mb-8">
+      <h2 class="text-2xl md:text-3xl font-headline font-bold text-on-surface mb-2">Bonus terms, decoded</h2>
+      <p class="text-on-surface-variant text-sm max-w-xl">The eight clauses you'll see in every welcome offer — in plain language.</p>
+    </div>
+    <dl class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+      {glossary.map((g) => (
+        <div class="bg-surface-container-low border border-outline-variant/15 rounded-lg p-5">
+          <dt class="font-headline font-extrabold text-primary text-sm mb-1.5">{g.t}</dt>
+          <dd class="text-xs text-on-surface-variant leading-relaxed m-0">{g.d}</dd>
+        </div>
+      ))}
+    </dl>
+  </section>
+
+  {/* ═══════════════════════════════════════════════════════════════════════════
+      4d. FAQ — FAQPage schema shipped in <head>
+  ═══════════════════════════════════════════════════════════════════════════ */}
+  <section class="py-16 max-w-4xl mx-auto px-6 lg:px-8">
+    <div class="mb-8">
+      <div class="text-xs font-label font-extrabold text-primary tracking-[0.16em] uppercase mb-2">Frequently asked</div>
+      <h2 class="text-3xl md:text-4xl font-headline font-extrabold tracking-tight text-on-surface mb-2">Online casino questions, answered</h2>
+      <p class="text-on-surface-variant text-sm max-w-2xl">The questions our readers ask most before choosing a casino. Want more depth? The <a href="/guides/" class="text-primary font-semibold hover:underline">guides library</a> goes further.</p>
+    </div>
+    <FAQSection faqs={faqs} />
   </section>
 
   {/* ═══════════════════════════════════════════════════════════════════════════

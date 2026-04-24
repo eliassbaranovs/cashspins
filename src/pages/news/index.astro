@@ -3,6 +3,8 @@ import { getCollection } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import ArticleCard from "../../components/ArticleCard.astro";
 import Breadcrumbs from "../../components/Breadcrumbs.astro";
+import EditorialByline from "../../components/EditorialByline.astro";
+import { buildCanonical } from "../../lib/seo";
 
 let allNews: Awaited<ReturnType<typeof getCollection>> = [];
 try {
@@ -17,6 +19,23 @@ const news = allNews
       new Date(b.data.published_at).getTime() -
       new Date(a.data.published_at).getTime()
   );
+
+const siteBase = "https://cashspins.online";
+const itemListSchema = news.length > 0
+  ? JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "ItemList",
+      "name": "CashSpins Casino News",
+      "description": "Latest online casino industry news, regulatory updates, and market analysis from the CashSpins editorial desk.",
+      "numberOfItems": news.length,
+      "itemListElement": news.slice(0, 15).map((n: any, i: number) => ({
+        "@type": "ListItem",
+        "position": i + 1,
+        "url": `${siteBase}/news/${n.data.slug}/`,
+        "name": n.data.title ?? n.data.slug,
+      })),
+    })
+  : undefined;
 
 // Derive category tags from all articles
 const allTags = [...new Set(news.flatMap((n: any) => n.data.tags ?? []))];
@@ -42,6 +61,8 @@ const breadcrumbs = [
   title="Casino News & Industry Updates | CashSpins"
   seoTitle="Casino News & Industry Updates 2026 | CashSpins"
   description="Stay informed with the latest casino industry news, regulatory updates, game releases, and market insights from the CashSpins editorial team."
+  canonical={buildCanonical("news")}
+  schemaJsonLd={itemListSchema}
 >
   <div class="max-w-screen-2xl mx-auto px-4 sm:px-8 pt-8 pb-20">
     <!-- Breadcrumbs -->
@@ -54,9 +75,10 @@ const breadcrumbs = [
       <h1 class="font-headline text-4xl md:text-6xl font-extrabold tracking-tighter text-on-surface mb-4">
         Industry <span class="text-primary">Intelligence</span>
       </h1>
-      <p class="text-on-surface-variant text-lg md:text-xl max-w-2xl leading-relaxed">
+      <p class="text-on-surface-variant text-lg md:text-xl max-w-2xl leading-relaxed mb-6">
         Expert analysis, regulatory shifts, and market intelligence curated by our editorial desk.
       </p>
+      <EditorialByline />
     </header>
 
     {news.length > 0 ? (

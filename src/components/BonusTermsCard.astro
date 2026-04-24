@@ -35,57 +35,57 @@ const hasData = cleanWagering || cleanMinDeposit || cleanMaxBet || cleanTimeLimi
       Terms at a Glance
     </h3>
 
-    <div class="space-y-3">
+    <dl class="space-y-3 m-0">
       {cleanWagering && (
         <div class="flex items-start gap-3">
-          <span class="material-symbols-outlined text-primary text-base mt-0.5 shrink-0">calculate</span>
+          <span class="material-symbols-outlined text-primary text-base mt-0.5 shrink-0" aria-hidden="true">calculate</span>
           <div class="min-w-0">
-            <p class="text-[10px] font-label text-on-surface-variant uppercase tracking-widest">Wagering</p>
-            <p class="text-sm font-semibold text-on-surface">{cleanWagering}</p>
+            <dt class="text-[10px] font-label text-on-surface-variant uppercase tracking-widest">Wagering</dt>
+            <dd class="text-sm font-semibold text-on-surface m-0">{cleanWagering}</dd>
           </div>
         </div>
       )}
 
       {cleanMinDeposit && (
         <div class="flex items-start gap-3">
-          <span class="material-symbols-outlined text-primary text-base mt-0.5 shrink-0">savings</span>
+          <span class="material-symbols-outlined text-primary text-base mt-0.5 shrink-0" aria-hidden="true">savings</span>
           <div class="min-w-0">
-            <p class="text-[10px] font-label text-on-surface-variant uppercase tracking-widest">Min Deposit</p>
-            <p class="text-sm font-semibold text-on-surface">{cleanMinDeposit}</p>
+            <dt class="text-[10px] font-label text-on-surface-variant uppercase tracking-widest">Min Deposit</dt>
+            <dd class="text-sm font-semibold text-on-surface m-0">{cleanMinDeposit}</dd>
           </div>
         </div>
       )}
 
       {cleanMaxBet && (
         <div class="flex items-start gap-3">
-          <span class="material-symbols-outlined text-primary text-base mt-0.5 shrink-0">do_not_disturb</span>
+          <span class="material-symbols-outlined text-primary text-base mt-0.5 shrink-0" aria-hidden="true">do_not_disturb</span>
           <div class="min-w-0">
-            <p class="text-[10px] font-label text-on-surface-variant uppercase tracking-widest">Max Bet</p>
-            <p class="text-sm font-semibold text-on-surface">{cleanMaxBet}</p>
+            <dt class="text-[10px] font-label text-on-surface-variant uppercase tracking-widest">Max Bet</dt>
+            <dd class="text-sm font-semibold text-on-surface m-0">{cleanMaxBet}</dd>
           </div>
         </div>
       )}
 
       {cleanTimeLimit && (
         <div class="flex items-start gap-3">
-          <span class="material-symbols-outlined text-primary text-base mt-0.5 shrink-0">schedule</span>
+          <span class="material-symbols-outlined text-primary text-base mt-0.5 shrink-0" aria-hidden="true">schedule</span>
           <div class="min-w-0">
-            <p class="text-[10px] font-label text-on-surface-variant uppercase tracking-widest">Time Limit</p>
-            <p class="text-sm font-semibold text-on-surface">{cleanTimeLimit}</p>
+            <dt class="text-[10px] font-label text-on-surface-variant uppercase tracking-widest">Time Limit</dt>
+            <dd class="text-sm font-semibold text-on-surface m-0">{cleanTimeLimit}</dd>
           </div>
         </div>
       )}
 
       {cleanBonusCode && (
         <div class="flex items-start gap-3">
-          <span class="material-symbols-outlined text-primary text-base mt-0.5 shrink-0">confirmation_number</span>
+          <span class="material-symbols-outlined text-primary text-base mt-0.5 shrink-0" aria-hidden="true">confirmation_number</span>
           <div class="min-w-0">
-            <p class="text-[10px] font-label text-on-surface-variant uppercase tracking-widest">Bonus Code</p>
-            <p class="text-sm font-mono font-bold text-secondary tracking-wider">{cleanBonusCode}</p>
+            <dt class="text-[10px] font-label text-on-surface-variant uppercase tracking-widest">Bonus Code</dt>
+            <dd class="text-sm font-mono font-bold text-secondary tracking-wider m-0">{cleanBonusCode}</dd>
           </div>
         </div>
       )}
-    </div>
+    </dl>
 
     <p class="text-[10px] text-outline mt-4">T&Cs apply. 18+ only.</p>
   </div>

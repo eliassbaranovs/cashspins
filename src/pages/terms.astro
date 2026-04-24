@@ -1,11 +1,21 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Breadcrumbs from "../components/Breadcrumbs.astro";
+import { buildCanonical, generateWebPageSchema } from "../lib/seo";
+
+const schemaJsonLd = generateWebPageSchema({
+  name: "Terms of Service — CashSpins",
+  path: "terms",
+  description: "The Terms of Service that govern your use of cashspins.online, including editorial, affiliate, and liability clauses.",
+  lastReviewed: "2026-04-04",
+});
 ---
 
 <BaseLayout
   title="Terms of Service | CashSpins"
   description="Read the Terms of Service for CashSpins.online. By using our website you agree to these terms."
+  canonical={buildCanonical("terms")}
+  schemaJsonLd={schemaJsonLd}
 >
   <div class="max-w-4xl mx-auto px-4 sm:px-8 py-12">
     <Breadcrumbs items={[
@@ -16,9 +26,9 @@ import Breadcrumbs from "../components/Breadcrumbs.astro";
     <h1 class="font-headline font-extrabold text-4xl md:text-5xl text-on-surface mt-8 mb-4">
       Terms of Service
     </h1>
-    <p class="text-on-surface-variant text-sm mb-10">Last updated: April 4, 2026</p>
+    <p class="text-on-surface-variant text-sm mb-10">Last updated: <time datetime="2026-04-04">April 4, 2026</time></p>
 
-    <div class="prose">
+    <article class="prose">
       <h2>1. Acceptance of Terms</h2>
       <p>
         By accessing and using CashSpins.online (the "Website"), you acknowledge that you have read,
@@ -115,6 +125,6 @@ import Breadcrumbs from "../components/Breadcrumbs.astro";
         If you have any questions about these Terms of Service, please contact us at
         <strong>legal@cashspins.online</strong>.
       </p>
-    </div>
+    </article>
   </div>
 </BaseLayout>

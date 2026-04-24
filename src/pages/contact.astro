@@ -1,17 +1,49 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Breadcrumbs from "../components/Breadcrumbs.astro";
+import { buildCanonical } from "../lib/seo";
 
+const siteBase = "https://cashspins.online";
+
+// ContactPage + contactPoint array. Each inbox is a separate ContactPoint so
+// Google can surface the right email for "contact customer service" vs.
+// "contact editorial" vs. "legal" queries.
 const schemaJsonLd = JSON.stringify({
   "@context": "https://schema.org",
   "@type": "ContactPage",
   name: "Contact CashSpins",
-  url: "https://cashspins.online/contact/",
+  url: `${siteBase}/contact/`,
   description: "Get in touch with the CashSpins editorial team. Questions about reviews, affiliate partnerships, or responsible gambling resources.",
-  publisher: {
+  isPartOf: { "@id": `${siteBase}/#website` },
+  publisher: { "@id": `${siteBase}/#organization` },
+  mainEntity: {
     "@type": "Organization",
+    "@id": `${siteBase}/#organization`,
     name: "CashSpins",
-    url: "https://cashspins.online",
+    url: siteBase,
+    contactPoint: [
+      {
+        "@type": "ContactPoint",
+        contactType: "customer service",
+        email: "info@cashspins.online",
+        availableLanguage: ["English"],
+        areaServed: "Worldwide",
+      },
+      {
+        "@type": "ContactPoint",
+        contactType: "editorial",
+        email: "editorial@cashspins.online",
+        availableLanguage: ["English"],
+        areaServed: "Worldwide",
+      },
+      {
+        "@type": "ContactPoint",
+        contactType: "legal",
+        email: "legal@cashspins.online",
+        availableLanguage: ["English"],
+        areaServed: "Worldwide",
+      },
+    ],
   },
 });
 ---
@@ -19,6 +51,7 @@ const schemaJsonLd = JSON.stringify({
 <BaseLayout
   title="Contact Us | CashSpins"
   description="Get in touch with the CashSpins team. Questions about casino reviews, affiliate partnerships, or responsible gambling — we're here to help."
+  canonical={buildCanonical("contact")}
   schemaJsonLd={schemaJsonLd}
 >
   <div class="max-w-4xl mx-auto px-4 md:px-8 pt-8 pb-20">

@@ -2,6 +2,7 @@
 import { getCollection } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import Breadcrumbs from "../../components/Breadcrumbs.astro";
+import { buildCanonical } from "../../lib/seo";
 
 const authors = await getCollection("authors");
 const allCasinos = await getCollection("casinos");
@@ -12,11 +13,48 @@ for (const entry of [...allCasinos, ...allBonuses]) {
   const slug = entry.data.author_slug;
   if (slug) articleCount.set(slug, (articleCount.get(slug) ?? 0) + 1);
 }
+
+const siteBase = "https://cashspins.online";
+
+// CollectionPage + embedded ItemList of Person objects. Each Person has an @id
+// that lines up with the hash-id the /team/[slug] page emits, so Google can
+// fold the list entry into the full author profile.
+const teamSchema = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  "@id": `${siteBase}/team/#collection`,
+  name: "The CashSpins Editorial Team",
+  url: `${siteBase}/team/`,
+  description: "Every review on CashSpins is written and fact-checked by a specialist with real hands-on iGaming experience.",
+  isPartOf: { "@id": `${siteBase}/#website` },
+  publisher: { "@id": `${siteBase}/#organization` },
+  mainEntity: {
+    "@type": "ItemList",
+    name: "CashSpins Editors and Reviewers",
+    numberOfItems: authors.length,
+    itemListElement: authors.map((a: any, i: number) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      item: {
+        "@type": "Person",
+        "@id": `${siteBase}/team/${a.data.slug}/#person`,
+        name: a.data.name,
+        url: `${siteBase}/team/${a.data.slug}/`,
+        jobTitle: a.data.role ?? "Casino Analyst",
+        ...(a.data.avatar && { image: `${siteBase}${a.data.avatar}` }),
+        ...(a.data.expertise?.length && { knowsAbout: a.data.expertise }),
+        worksFor: { "@id": `${siteBase}/#organization` },
+      },
+    })),
+  },
+});
 ---
 
 <BaseLayout
   title="Our Expert Team | CashSpins"
   description="Meet the CashSpins editorial team — certified iGaming specialists who write and verify every casino review and bonus analysis."
+  canonical={buildCanonical("team")}
+  schemaJsonLd={teamSchema}
 >
   <div class="max-w-7xl mx-auto px-4 sm:px-8 py-12">
     <Breadcrumbs items={[

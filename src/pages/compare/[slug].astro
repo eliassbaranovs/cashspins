@@ -61,7 +61,9 @@ const articleSchema = generateArticleSchema({
   description: d.description,
   image: d.image,
   author_name: authorName,
+  author_slug: d.author_slug,
   published_at: d.published_at,
+  section_path: `compare/${d.slug}`,
 });
 
 const faqSchema =
@@ -237,7 +239,11 @@ const winnerSlug = isAWinner ? d.casino_a_slug : isBWinner ? d.casino_b_slug : n
           {authorName && (
             <span class="flex items-center gap-1.5">
               <span class="material-symbols-outlined text-sm">person</span>
-              {authorName}
+              {authorEntry ? (
+                <a href={`/team/${authorEntry.data.slug}/`} class="hover:text-primary transition-colors">{authorName}</a>
+              ) : (
+                authorName
+              )}
             </span>
           )}
           {formattedDate && (
@@ -253,60 +259,61 @@ const winnerSlug = isAWinner ? d.casino_a_slug : isBWinner ? d.casino_b_slug : n
       </div>
     </header>
 
-    {/* Quick Comparison Grid */}
+    {/* Quick Comparison Table — real <table> so Google can extract it as a
+        side-by-side rich result and screen readers can walk it row-by-row. */}
     {(d.casino_a_bonus_value || d.casino_b_bonus_value || d.casino_a_game_count || d.casino_b_game_count || d.casino_a_payout_speed || d.casino_b_payout_speed || d.casino_a_license || d.casino_b_license) && (
       <section class="mb-12">
         <h2 class="font-headline font-bold text-2xl text-on-surface mb-6">Quick Comparison</h2>
         <div class="bg-surface-container-low rounded-xl overflow-hidden ghost-border">
-          <div class="grid grid-cols-3 text-sm font-label font-bold text-on-surface-variant bg-surface-container-high">
-            <div class="p-4 text-center">{d.casino_a_name}</div>
-            <div class="p-4 text-center">Category</div>
-            <div class="p-4 text-center">{d.casino_b_name}</div>
+          <div class="overflow-x-auto">
+            <table class="w-full text-sm border-collapse">
+              <caption class="sr-only">Side-by-side comparison of {d.casino_a_name} and {d.casino_b_name} across rating, welcome bonus, games, payout speed, and license.</caption>
+              <thead>
+                <tr class="bg-surface-container-high text-sm font-label font-bold text-on-surface-variant">
+                  <th scope="col" class="p-4 text-center">{d.casino_a_name}</th>
+                  <th scope="col" class="p-4 text-center">Category</th>
+                  <th scope="col" class="p-4 text-center">{d.casino_b_name}</th>
+                </tr>
+              </thead>
+              <tbody>
+                {d.casino_a_rating !== undefined && d.casino_b_rating !== undefined && (
+                  <tr class="border-t border-outline-variant/20">
+                    <td class="p-4 text-center"><div class="flex justify-center"><RatingBadge rating={d.casino_a_rating} size="sm" /></div></td>
+                    <th scope="row" class="p-4 text-center text-on-surface-variant text-sm font-semibold">Rating</th>
+                    <td class="p-4 text-center"><div class="flex justify-center"><RatingBadge rating={d.casino_b_rating} size="sm" /></div></td>
+                  </tr>
+                )}
+                {(d.casino_a_bonus_value || d.casino_b_bonus_value) && (
+                  <tr class="border-t border-outline-variant/20">
+                    <td class="p-4 text-center text-on-surface text-sm">{d.casino_a_bonus_value || "—"}</td>
+                    <th scope="row" class="p-4 text-center text-on-surface-variant text-sm font-semibold">Welcome Bonus</th>
+                    <td class="p-4 text-center text-on-surface text-sm">{d.casino_b_bonus_value || "—"}</td>
+                  </tr>
+                )}
+                {(d.casino_a_game_count || d.casino_b_game_count) && (
+                  <tr class="border-t border-outline-variant/20">
+                    <td class="p-4 text-center text-on-surface text-sm">{d.casino_a_game_count || "—"}</td>
+                    <th scope="row" class="p-4 text-center text-on-surface-variant text-sm font-semibold">Games</th>
+                    <td class="p-4 text-center text-on-surface text-sm">{d.casino_b_game_count || "—"}</td>
+                  </tr>
+                )}
+                {(d.casino_a_payout_speed || d.casino_b_payout_speed) && (
+                  <tr class="border-t border-outline-variant/20">
+                    <td class="p-4 text-center text-on-surface text-sm">{d.casino_a_payout_speed || "—"}</td>
+                    <th scope="row" class="p-4 text-center text-on-surface-variant text-sm font-semibold">Payout Speed</th>
+                    <td class="p-4 text-center text-on-surface text-sm">{d.casino_b_payout_speed || "—"}</td>
+                  </tr>
+                )}
+                {(d.casino_a_license || d.casino_b_license) && (
+                  <tr class="border-t border-outline-variant/20">
+                    <td class="p-4 text-center text-on-surface text-sm">{d.casino_a_license || "—"}</td>
+                    <th scope="row" class="p-4 text-center text-on-surface-variant text-sm font-semibold">License</th>
+                    <td class="p-4 text-center text-on-surface text-sm">{d.casino_b_license || "—"}</td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
           </div>
-
-          {d.casino_a_rating !== undefined && d.casino_b_rating !== undefined && (
-            <div class="grid grid-cols-3 border-t border-outline-variant/20">
-              <div class="p-4 text-center flex justify-center">
-                <RatingBadge rating={d.casino_a_rating} size="sm" />
-              </div>
-              <div class="p-4 text-center text-on-surface-variant text-sm font-semibold flex items-center justify-center">Rating</div>
-              <div class="p-4 text-center flex justify-center">
-                <RatingBadge rating={d.casino_b_rating} size="sm" />
-              </div>
-            </div>
-          )}
-
-          {(d.casino_a_bonus_value || d.casino_b_bonus_value) && (
-            <div class="grid grid-cols-3 border-t border-outline-variant/20">
-              <div class="p-4 text-center text-on-surface text-sm">{d.casino_a_bonus_value || "—"}</div>
-              <div class="p-4 text-center text-on-surface-variant text-sm font-semibold flex items-center justify-center">Welcome Bonus</div>
-              <div class="p-4 text-center text-on-surface text-sm">{d.casino_b_bonus_value || "—"}</div>
-            </div>
-          )}
-
-          {(d.casino_a_game_count || d.casino_b_game_count) && (
-            <div class="grid grid-cols-3 border-t border-outline-variant/20">
-              <div class="p-4 text-center text-on-surface text-sm">{d.casino_a_game_count || "—"}</div>
-              <div class="p-4 text-center text-on-surface-variant text-sm font-semibold flex items-center justify-center">Games</div>
-              <div class="p-4 text-center text-on-surface text-sm">{d.casino_b_game_count || "—"}</div>
-            </div>
-          )}
-
-          {(d.casino_a_payout_speed || d.casino_b_payout_speed) && (
-            <div class="grid grid-cols-3 border-t border-outline-variant/20">
-              <div class="p-4 text-center text-on-surface text-sm">{d.casino_a_payout_speed || "—"}</div>
-              <div class="p-4 text-center text-on-surface-variant text-sm font-semibold flex items-center justify-center">Payout Speed</div>
-              <div class="p-4 text-center text-on-surface text-sm">{d.casino_b_payout_speed || "—"}</div>
-            </div>
-          )}
-
-          {(d.casino_a_license || d.casino_b_license) && (
-            <div class="grid grid-cols-3 border-t border-outline-variant/20">
-              <div class="p-4 text-center text-on-surface text-sm">{d.casino_a_license || "—"}</div>
-              <div class="p-4 text-center text-on-surface-variant text-sm font-semibold flex items-center justify-center">License</div>
-              <div class="p-4 text-center text-on-surface text-sm">{d.casino_b_license || "—"}</div>
-            </div>
-          )}
         </div>
       </section>
     )}

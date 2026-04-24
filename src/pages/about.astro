@@ -2,24 +2,46 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Breadcrumbs from "../components/Breadcrumbs.astro";
 import { getCollection } from "astro:content";
+import { buildCanonical } from "../lib/seo";
 
 const authors = await getCollection("authors");
+const siteBase = "https://cashspins.online";
 
+// AboutPage graph: the page itself is an AboutPage, its mainEntity is the
+// CashSpins Organization, and each team member is referenced as an employee
+// Person with an @id that resolves to the full /team/[slug] Person schema.
 const schemaJsonLd = JSON.stringify({
   "@context": "https://schema.org",
-  "@type": "Organization",
-  name: "CashSpins",
-  url: "https://cashspins.online",
+  "@type": "AboutPage",
+  name: "About CashSpins",
+  url: `${siteBase}/about/`,
   description: "Independent online casino review site with real-money testing methodology.",
-  foundingDate: "2025",
-  contactPage: "https://cashspins.online/contact/",
-  ethicsPolicy: "https://cashspins.online/how-we-review/",
+  isPartOf: { "@id": `${siteBase}/#website` },
+  publisher: { "@id": `${siteBase}/#organization` },
+  mainEntity: {
+    "@type": "Organization",
+    "@id": `${siteBase}/#organization`,
+    name: "CashSpins",
+    url: siteBase,
+    description: "Independent online casino review site with real-money testing methodology.",
+    foundingDate: "2019",
+    ethicsPolicy: `${siteBase}/affiliate-disclosure/`,
+    publishingPrinciples: `${siteBase}/how-we-review/`,
+    employee: authors.map((a: any) => ({
+      "@type": "Person",
+      "@id": `${siteBase}/team/${a.data.slug}/#person`,
+      name: a.data.name,
+      url: `${siteBase}/team/${a.data.slug}/`,
+      jobTitle: a.data.role ?? "Casino Analyst",
+    })),
+  },
 });
 ---
 
 <BaseLayout
   title="About Us — Independent Casino Reviews | CashSpins"
   description="Meet the team behind CashSpins. Learn how we test and review online casinos with real deposits, transparent methodology, and independent ratings."
+  canonical={buildCanonical("about")}
   schemaJsonLd={schemaJsonLd}
 >
   <div class="max-w-4xl mx-auto px-4 md:px-8 pt-8 pb-20">
