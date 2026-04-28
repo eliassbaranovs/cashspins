@@ -3,7 +3,7 @@ title: "Lamabet Casino Review 2026: A Deep Dive into Bonuses, Payments, and Play
 slug: "lamabet-casino"
 description: "Our expert Lamabet Casino Review for 2026 covers bonuses, withdrawal times, KYC, and player complaints. Is Lamabet Casino legit? Find out here."
 seo_title: "Lamabet Casino Review 2026: Bonuses & Payouts"
-published_at: "2026-04-23"
+published_at: "2026-04-28"
 author_slug: "jake-morrison"
 content_type: "casino-review"
 image: "/images/covers/casino/lamabet-casino.webp"
